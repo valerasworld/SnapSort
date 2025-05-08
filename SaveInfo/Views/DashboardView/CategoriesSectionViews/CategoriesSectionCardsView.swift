@@ -11,12 +11,12 @@ struct CategoriesSectionCardsView: View {
     var userData: UserData
     
     let columns: [GridItem] = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
     ]
     
     var body: some View {
-        LazyVGrid(columns: columns) {
+        LazyVGrid(columns: columns, spacing: 12) {
             ForEach(userData.findUniqueCategories(), id: \.rawValue) { category in
                 NavigationLink {
                     InfoObjectsListView(category: category, infoObjects: userData.filterByCategory(category: category))
