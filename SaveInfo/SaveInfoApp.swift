@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct SaveInfoLayoutAppDemoApp: App {
+struct SaveInfoApp: App {
     var body: some Scene {
         WindowGroup {
             DashboardView()
