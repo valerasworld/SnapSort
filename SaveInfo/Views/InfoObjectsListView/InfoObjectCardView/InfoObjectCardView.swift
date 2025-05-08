@@ -26,7 +26,7 @@ struct InfoObjectCardView: View {
                     case .dashboard:
                         LinkPreview(metadata: metadata, fixedWidth: 250, fixedHeight: 400)
                     case .category:
-                        LinkPreview(metadata: metadata, fixedWidth: 300)
+                        LinkPreview(metadata: metadata, fixedWidth: 100)
                     }
                     
                 } else {

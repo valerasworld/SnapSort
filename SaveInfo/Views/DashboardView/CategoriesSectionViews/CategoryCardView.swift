@@ -14,7 +14,7 @@ struct CategoryCardView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .foregroundStyle(Color("white"))
-                .frame(height: 70)
+                .frame(height: 90)
                 
             HStack {
                 
@@ -42,7 +42,7 @@ struct CategoryCardView: View {
             .overlay {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(category.color.gradient, lineWidth: 3)
-                    .frame(height: 70)
+                    .frame(height: 90)
             }
         }
     }

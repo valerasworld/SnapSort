@@ -11,9 +11,14 @@ struct InfoObjectsListView: View {
     var category: Category?
     var infoObjects: [InfoObject]
     
+    let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
         ScrollView {
-            VStack {
+            LazyVGrid(columns: columns) {
                 ForEach(infoObjects, id: \.self) { object in
                     InfoObjectCardView(infoObject: object, previewMode: .category)
                 }
