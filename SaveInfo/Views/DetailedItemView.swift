@@ -1,67 +1,52 @@
 //
-//  Untitled.swift
+//  SwiftUIView.swift
 //  SaveInfo
 //
-//  Created by Pasquale Piserchia on 08/05/25.
+//  Created by Pasquale Piserchia on 09/05/25.
 //
+
 import SwiftUI
 
 struct DetailedItemView: View {
-    
-    var category: Category
+    let infoObject: InfoObject
+    let category: Category
     
     var body: some View {
-        
-        NavigationStack {
-            
-            ZStack {
+        ScrollView {
+            VStack(alignment: .leading) {
+                Image("image1")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
                 
-                Color(category.color)
-                    .ignoresSafeArea()
+                Text(infoObject.title ?? "")
+                    .foregroundStyle(category.color)
+                    .font(.title3)
+                    .bold()
                 
-                VStack(spacing: 5) {
-                    Text("Description:")
-                        .bold()
-                    
-                    Text("""
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ultrices ante et arcu aliquam fermentum. Cras porta urna sed luctus condimentum. Quisque in sodales nunc.
-Integer volutpat enim urna, eu convallis mi vestibulum eget.
-Nam placerat, augue ac laoreet tempor, arcu felis dapibus nibh, id ornare orci ligula vel nisl. Vestibulum nec lorem tristique, egestas enim vel, tristique augue. Aliquam erat volutpat.
-""")
-                    .padding(.horizontal, 20)
-                    
-                    
-                    
-                    Text("Link:")
-                        .bold()
-                    
-                    Text("https://www.linkedin.com")
-                    
-                    
-                }
-                Spacer()
+                Text(infoObject.description ?? "")
+                    .foregroundStyle(.black)
+                    .font(.body)
                 
-                //                .toolbar {
-                //                    ToolbarItem(placement: .topBarLeading) {
-                //                        VStack(spacing: 0) {
-                //
-                //                            Text("Detail Item")
-                //                                .font(.title)
-                //                                .bold()
-//                              Text("#\(category)")
-                //                                .font(.subheadline)
-                //                                .foregroundColor(category.color)
-                //                        }
-                //                }
-                //        }
+                TagsView(infoObject: infoObject)
+                    
                 
-                    .navigationTitle("Detailed Item")
             }
-            
+            .padding(.horizontal)
         }
     }
 }
 
 #Preview {
-    DetailedItemView(category: Category.restaurants)
+    @Previewable
+    @State var infoObject = InfoObject(
+        title: "Among Us",
+        description: "Lore ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor quam id massa faucibus dignissim. Nullam eget metus id nisl malesuada condimentum. Nam viverra fringilla erat, ut fermentum nunc feugiat eu.",
+        image: UIImage(contentsOfFile: "image1"),
+        tags: ["Multiplayer", "Party game"],
+        category: .electronics,
+        dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
+    )
+    
+    DetailedItemView(infoObject: infoObject, category: .electronics)
 }
