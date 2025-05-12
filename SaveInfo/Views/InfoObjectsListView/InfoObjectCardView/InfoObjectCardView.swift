@@ -24,7 +24,9 @@ struct InfoObjectCardView: View {
                     // Link Preview...
                     switch previewMode {
                     case .dashboard:
-                        LinkPreview(metadata: metadata, fixedWidth: 250, fixedHeight: 400)
+                        LinkPreview(metadata: metadata, fixedWidth: 200, fixedHeight: 200)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: 250, maxHeight: 200)
                     case .category:
                         LinkPreview(metadata: metadata, fixedWidth: 100)
                     }
@@ -44,7 +46,7 @@ struct InfoObjectCardView: View {
                     .padding(.horizontal)
                     .background(Color.gray.opacity(0.35))
                     .cornerRadius(10)
-                    .frame(width: 250, height: 100, alignment: .bottomLeading)
+                    .frame(width: 250, height: 200, alignment: .bottomLeading)
                     .frame(maxWidth: .infinity, alignment: .bottomTrailing)
                 }
             } else {
@@ -74,39 +76,23 @@ struct InfoObjectCardView: View {
     }
     
     func loadPreview() async throws {
-        if !hasURL() {
+        // This already handles URL validity
+        guard let stringURL = infoObject.stringURL,
+              let url = URL(string: stringURL),
+              UIApplication.shared.canOpenURL(url) else {
             return
         }
-        // Extracting URL Metadata...
-        // Before that adding loading indicator...
-        guard let stringURL = infoObject.stringURL,
-                let url = URL(string: stringURL) else {
-                    return
-                }
+        
         infoObject.previewLoading = true
         infoObject.linkURL = url
         
-        // Extracting data...
         let provider = LPMetadataProvider()
         do {
             let metadata = try await provider.startFetchingMetadata(for: url)
             infoObject.linkMetaData = metadata
-            
-        } catch let error {
+        } catch {
             print(error)
         }
-        
-    }
-    
-    // Checking if InfoObject has URL...
-    func hasURL() -> Bool {
-        guard let stringURL = infoObject.stringURL else {
-            return false
-        }
-        if let url = URL(string: stringURL) {
-            return UIApplication.shared.canOpenURL(url)
-        }
-        return false
     }
 }
 
@@ -116,7 +102,8 @@ struct InfoObjectCardView: View {
         title: "Harry Potter",
         author: "J.K. Rowling",
         stringURL: "https://www.apple.com/iphone/",
-        category: .books
+        category: .books,
+        dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
     )
     InfoObjectCardView(infoObject: infoObject)
 }

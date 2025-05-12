@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import LinkPresentation
+import UniformTypeIdentifiers
 
 @Observable
 class InfoObject: Hashable, Identifiable {
@@ -18,7 +19,7 @@ class InfoObject: Hashable, Identifiable {
     var stringURL: String?
     var tags: [String] = []
     var category: Category
-    var dateAdded: Date?
+    var dateAdded: Date
     var completed: Bool?
     var comment: String?
     
@@ -41,7 +42,7 @@ class InfoObject: Hashable, Identifiable {
         stringURL: String? = nil,
         tags: [String] = [],
         category: Category,
-        dateAdded: Date? = nil,
+        dateAdded: Date,
         completed: Bool? = nil,
         comment: String? = nil,
         previewLoading: Bool = false,

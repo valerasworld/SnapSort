@@ -17,7 +17,6 @@ struct CategoryCardView: View {
                 .frame(height: 90)
                 
             HStack {
-                
                 HStack(alignment: .center, spacing: 2) {
                     Text(category.rawValue.capitalized)
                         .font(.headline)

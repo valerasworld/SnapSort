@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import LinkPresentation
+import UniformTypeIdentifiers
 
 struct LinkPreview: UIViewRepresentable {
     
@@ -30,6 +31,8 @@ struct LinkPreview: UIViewRepresentable {
             uiView.heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
+    
+    
 }
 
 enum LinkPreviewMode {

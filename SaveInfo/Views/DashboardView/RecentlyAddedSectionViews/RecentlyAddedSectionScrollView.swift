@@ -12,16 +12,18 @@ struct RecentlyAddedSectionScrollView: View {
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                Spacer()
-                    .frame(width: 15)
+            HStack(spacing: 12) {
                 ForEach(userData.objects, id: \.self) { object in
-                    InfoObjectCardView(infoObject: object, previewMode: .dashboard)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+//                    InfoObjectCardView(infoObject: object, previewMode: .dashboard)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+                    InfoObjectCardCustomView(viewModel: InfoObjectCardViewModel(infoObject: object), infoObject: object)
                 }
-                Spacer()
-                    .frame(width: 15)
+                
             }
+            .padding()
         }
+        .frame(height: 130)
+        .padding(.vertical)
+        .padding(.bottom, 4)
     }
 }
