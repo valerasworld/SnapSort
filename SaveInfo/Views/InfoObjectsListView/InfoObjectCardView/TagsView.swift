@@ -8,20 +8,17 @@ import SwiftUI
 
 struct TagsView: View {
     
-    var category: Category
+    var infoObject: InfoObject
     
     var body: some View {
         ScrollView([.horizontal]) {
             HStack {
-                Spacer()
-                    .frame(width: 15)
-                ForEach(Category.allCases, id: \.self) { category in
-                    HStack {
-                        Image(systemName: category.iconName)
-                            .foregroundStyle(category.color)
-                        Text(category.rawValue.capitalized)
 
-                    }
+                ForEach(infoObject.tags, id: \.self) { tag in
+                    
+                    Text(tag.capitalized)
+                    
+                
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background {
