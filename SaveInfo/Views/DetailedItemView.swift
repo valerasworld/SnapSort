@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DetailedItemView: View {
     let infoObject: InfoObject
-    let category: Category
     
     var body: some View {
         ScrollView {
@@ -20,7 +19,7 @@ struct DetailedItemView: View {
                     .frame(maxWidth: .infinity)
                 
                 Text(infoObject.title ?? "")
-                    .foregroundStyle(category.color)
+                    .foregroundStyle(infoObject.category.color)
                     .font(.title3)
                     .bold()
                 
@@ -48,5 +47,5 @@ struct DetailedItemView: View {
         dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
     )
     
-    DetailedItemView(infoObject: infoObject, category: .electronics)
+    DetailedItemView(infoObject: infoObject)
 }
