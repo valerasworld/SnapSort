@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DetailedItemView: View {
+struct DetailedPhotoItemView: View {
     let infoObject: InfoObject
     
     var body: some View {
@@ -47,5 +47,5 @@ struct DetailedItemView: View {
         dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
     )
     
-    DetailedItemView(infoObject: infoObject)
+    DetailedPhotoItemView(infoObject: infoObject)
 }
