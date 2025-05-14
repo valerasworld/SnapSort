@@ -12,14 +12,14 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct DetailUrlItemView: View {
     let infoObject: InfoObject
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
-                
+            VStack(alignment: .leading, spacing: 20) {
                 Text(infoObject.stringURL ?? "")
                     .font(.title3)
                     .background(RoundedRectangle(cornerRadius: 10)
@@ -28,18 +28,41 @@ struct DetailUrlItemView: View {
                 
                     .padding(.top)
                 
-                Text(infoObject.title ?? "")
-                    .foregroundStyle(infoObject.category.color)
-                    .font(.title3)
-                    .bold()
+                HStack {
+                    Button(action: {
+                        UIPasteboard.general.string = infoObject.stringURL ?? ""
+                    }) {
+                        Text("Copy Link")
+                    }
+                    
+                    Button(action: {
+                        
+                    }) {
+                        Text("Visit Link")
+                    }
+                }
+                .padding(.horizontal, 80)
+                .buttonStyle(.bordered)
                 
-                Text(infoObject.description ?? "")
-                    .font(.title3)
-               
-                TagsView(infoObject: infoObject)
+                VStack(alignment: .leading) {
+                    Text(infoObject.title ?? "")
+                        .foregroundStyle(infoObject.category.color)
+                        .font(.title3)
+                        .bold()
+                    
+                    
+                    Text(infoObject.description ?? "")
+                        .font(.title3)
+                    
+                    TagsView(infoObject: infoObject)
+                }
                 
             }
             .padding(.horizontal)
+        }
+        .onTapGesture(count: 2) {
+            let clipboard = UIPasteboard.general
+            clipboard.setValue(infoObject.linkURL, forPasteboardType: UTType.plainText.identifier)
         }
     }
 }
