@@ -18,6 +18,7 @@ struct InfoObjectCardCustomView: View {
     @State var showProgressView: Bool = true
     
     @Bindable var infoObject: InfoObject
+    @State var presentSheet: Bool = false
     
     var body: some View {
         let bgColor = viewModel.infoObject.category.color
@@ -83,14 +84,21 @@ struct InfoObjectCardCustomView: View {
                     showProgressView = true
                     
                     try await viewModel.loadPreview()
-                    
+                    if infoObject.image != nil {
+                        showProgressView = false
+                    }
                 } catch let error {
                     print("Error: \(error)")
                 }
+                
             }
-            if infoObject.image != nil {
-                showProgressView = false
-            }
+            
+        }
+        .onTapGesture {
+            presentSheet.toggle()
+        }
+        .sheet(isPresented: $presentSheet) {
+            DetailedItemView(infoObject: infoObject)
         }
     }
 }

@@ -12,11 +12,18 @@ struct DetailedItemView: View {
     
     var body: some View {
         ScrollView {
+            if let image = infoObject.image {
+                ZStack {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                    Color.black
+                        .opacity(0.03)
+                }
+            }
             VStack(alignment: .leading) {
-                Image("image1")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
+                
                 
                 Text(infoObject.title ?? "")
                     .foregroundStyle(infoObject.category.color)
