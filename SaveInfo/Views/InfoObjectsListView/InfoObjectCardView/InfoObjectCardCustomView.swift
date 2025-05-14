@@ -98,7 +98,7 @@ struct InfoObjectCardCustomView: View {
             presentSheet.toggle()
         }
         .sheet(isPresented: $presentSheet) {
-            DetailedItemView(infoObject: infoObject)
+            DetailedPhotoItemView(infoObject: infoObject)
         }
     }
 }
