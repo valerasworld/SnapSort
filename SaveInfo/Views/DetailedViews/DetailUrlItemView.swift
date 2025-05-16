@@ -62,7 +62,7 @@ struct DetailUrlItemView: View {
         }
         .onTapGesture(count: 2) {
             let clipboard = UIPasteboard.general
-            clipboard.setValue(infoObject.linkURL, forPasteboardType: UTType.plainText.identifier)
+            clipboard.setValue(infoObject.linkURL ?? "" as Any, forPasteboardType: UTType.plainText.identifier)
         }
     }
 }
