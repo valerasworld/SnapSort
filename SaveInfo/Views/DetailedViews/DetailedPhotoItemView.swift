@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct DetailedPhotoItemView: View {
-    let infoObject: InfoObject
+    let viewModel: InfoObjectCardViewModel
     
     var body: some View {
         ScrollView {
  
             VStack(alignment: .leading, spacing: 12) {
                 ZStack(alignment: .bottomLeading) {
-                    if infoObject.image != nil {
-                        if let uiImage = infoObject.image {
+                    if viewModel.infoObject.image != nil {
+                        if let uiImage = viewModel.infoObject.image {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFit()
@@ -30,8 +30,8 @@ struct DetailedPhotoItemView: View {
                                 .foregroundStyle(.gray)
                         }
                     }
-                    if infoObject.stringURL != nil {
-                        LinkButtonOnDetailView(infoObject: infoObject)
+                    if viewModel.infoObject.stringURL != nil {
+                        LinkButtonOnDetailView(infoObject: viewModel.infoObject)
                     }
                     
                     
@@ -40,16 +40,16 @@ struct DetailedPhotoItemView: View {
                 
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(infoObject.title ?? "")
+                    Text(viewModel.infoObject.title ?? "")
                         .foregroundStyle(.black)
                         .font(.title)
                         .bold()
                     
-                    Text(infoObject.description ?? "")
+                    Text(viewModel.infoObject.description ?? "")
                         .foregroundStyle(.black)
                         .font(.body)
                     
-                    TagsView(infoObject: infoObject)
+                    TagsView(infoObject: viewModel.infoObject)
                 }
                 .padding(.horizontal)
             }
@@ -73,7 +73,9 @@ struct DetailedPhotoItemView: View {
         dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
     )
     
-    DetailedPhotoItemView(infoObject: infoObject)
+    var viewModel = InfoObjectCardViewModel(infoObject: infoObject)
+    
+    DetailedPhotoItemView(viewModel: viewModel)
 }
 
 struct LinkButtonOnDetailView: View {
