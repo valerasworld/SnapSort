@@ -12,8 +12,10 @@ class UserData {
         
         InfoObject(
 //            title: "Harry Potter",
+            description: "Renata is the best actress of the Moscow Art Theater",
             author: "J.K. Rowling",
             stringURL: "https://t.me/renatalitvinova/5500",
+            tags: ["Actress", "Theater", "Zemfira", "Art", "Kirill Trubetskoy"],
             category: .restaurants,
             dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!
         ),

@@ -33,19 +33,16 @@ struct DashboardView: View {
             }
             .navigationTitle("Dashboard")
             .searchable(text: $searchText)
-            .overlay {
-                Image(systemName: "plus")
-                    .frame(width: 30, height: 30)
-                    .foregroundStyle(.white)
-                    .padding()
-                    .font(.title2)
-                    .bold()
-                    .background {
-                        Color.black
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundStyle(Color("black"))
                     }
-                    .clipShape(Circle())
-                    .shadow(radius: 3)
-                    .offset(x: 155, y: 220)
+                }
+                
             }
         }
         .environment(userData)
