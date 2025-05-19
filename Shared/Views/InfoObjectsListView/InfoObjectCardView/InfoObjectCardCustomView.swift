@@ -57,11 +57,7 @@ struct InfoObjectCardCustomView: View {
             presentSheet.toggle()
         }
         .sheet(isPresented: $presentSheet) {
-<<<<<<< HEAD:SaveInfo/Views/InfoObjectsListView/InfoObjectCardView/InfoObjectCardCustomView.swift
-            DetailedPhotoItemView(infoObject: infoObject)
-=======
             DetailedItemView(infoObject: viewModel.infoObject)
->>>>>>> Valery'sCardPressLogicBranch:Shared/Views/InfoObjectsListView/InfoObjectCardView/InfoObjectCardCustomView.swift
         }
     }
 }
