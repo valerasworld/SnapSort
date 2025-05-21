@@ -13,27 +13,32 @@ struct CategoryCardView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .foregroundStyle(Color("white"))
+//                .foregroundStyle(Color("white"))
+                .foregroundStyle(category.color.gradient)
                 .frame(height: 90)
                 
             HStack {
                 HStack(alignment: .center, spacing: 2) {
                     Text(category.rawValue.capitalized)
                         .font(.headline)
+//                        .font(.title3)
                         .foregroundStyle(
-                            category.color.gradient
+//                            category.color.gradient
+                            .white
                         )
                         .bold()
                         .lineLimit(1)
                         .minimumScaleFactor(0.3)
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundStyle(category.color.gradient)
-                        .bold()
+                        .shadow(radius: 3)
+//                    Image(systemName: "chevron.right")
+//                        .font(.caption)
+//                        .foregroundStyle(category.color.gradient)
+//                        .bold()
                 }
                 Spacer()
                 Image(systemName: category.iconName)
-                    .foregroundStyle(category.color.gradient)
+//                    .foregroundStyle(category.color.gradient)
+                    .foregroundStyle(.white)
                     .font(.largeTitle)
 
             }
