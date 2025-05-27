@@ -21,6 +21,8 @@ struct AddItemView: View {
     @State var selectedCategory: Category?
     @State var isPresented: Bool = false
     
+    @Binding var userData: UserData
+    
     var body: some View {
         NavigationView {
             Form {
@@ -82,6 +84,26 @@ struct AddItemView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Add") {
+                        userData.objects.append(
+                            InfoObject(
+                                id: UUID().uuidString,
+                                title: titleNewItem,
+                                description: descriptionNewItem,
+                                author: nil,
+                                image: nil,
+                                genre: nil,
+                                stringURL: nil,
+                                tags: [],
+                                category: selectedCategory ?? Category.allCases.first!,
+                                dateAdded: Date.now,
+                                completed: nil,
+                                comment: nil,
+                                previewLoading: false,
+                                linkMetaData: nil,
+                                linkURL: nil
+                            )
+                            
+                        )
                     }
                 }
             }
@@ -105,7 +127,7 @@ struct AddItemView: View {
         category: .restaurants,
         dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
     
-    AddItemView(infoObject: infoObject2, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: .constant(true))
+    AddItemView(infoObject: infoObject2, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: .constant(true), userData: .constant(UserData()))
 }
 
 struct CategoryPicker: View {
@@ -129,7 +151,7 @@ struct CategoryPicker: View {
                         Text(
                             selectedCategory != nil ? "Category" : "Select category"
                         )
-                        //                    .foregroundStyle(selectedCategory?.color ?? .gray)
+                        //.foregroundStyle(selectedCategory?.color ?? .gray)
                         
                     }) {
                         ForEach(

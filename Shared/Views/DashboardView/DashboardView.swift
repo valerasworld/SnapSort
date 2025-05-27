@@ -159,7 +159,7 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $showModal) {
-                AddItemView(infoObject: infoObject, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: $showModal)
+                AddItemView(infoObject: infoObject, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: $showModal, userData: $userData)
             }
             
         }
