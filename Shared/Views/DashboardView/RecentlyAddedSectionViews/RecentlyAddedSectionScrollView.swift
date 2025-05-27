@@ -16,7 +16,8 @@ struct RecentlyAddedSectionScrollView: View {
                 ForEach(userData.objects, id: \.self) { object in
 //                    InfoObjectCardView(infoObject: object, previewMode: .dashboard)
 //                        .frame(maxWidth: .infinity, alignment: .leading)
-                    InfoObjectCardCustomView(viewModel: InfoObjectCardViewModel(infoObject: object))
+//                    InfoObjectCardCustomView(viewModel: InfoObjectCardViewModel(infoObject: object))
+                    NewVerticalInfoObjectCardView(viewModel: InfoObjectCardViewModel(infoObject: object))
                 }
                 
             }
