@@ -37,17 +37,17 @@ enum Category: String, CaseIterable {
     var iconName: String {
         switch self {
         case .books:
-            return "books.vertical.fill"
+            return "book.fill"
         case .music:
             return "music.note"
         case .movies:
-            return "popcorn"
+            return "popcorn.fill"
         case .clothes:
             return "tshirt.fill"
         case .restaurants:
             return "fork.knife"
         case .memes:
-            return "face.smiling"
+            return "face.smiling.fill"
         case .electronics:
             return "iphone.sizes"
         }

@@ -13,7 +13,7 @@ struct RecentlyAddedSectionHeaderView: View {
     var body: some View {
         HStack {
             NavigationLink {
-                InfoObjectsListView(infoObjects: userData.objects.reversed())
+//                InfoObjectsListView(infoObjects: userData.objects.reversed())
             } label: {
                 HStack {
                     Text("Recently Added") // Link to Timeline

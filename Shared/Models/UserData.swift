@@ -57,7 +57,6 @@ class UserData {
         InfoObject(
             title: "Titanic",
             author: "James Cameron",
-            stringURL: "https://sdsdb.fsdgj",
             category: .movies,
             dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
         ),
@@ -109,8 +108,7 @@ class UserData {
             dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 7))!
         ),
         InfoObject(
-            title: "LinkedIn Page",
-            stringURL:"https://www.linkedin.com/",
+            title: "iPhone 16",
             category: .electronics,
             dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 8))!
         ),
