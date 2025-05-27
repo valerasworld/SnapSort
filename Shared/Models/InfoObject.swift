@@ -9,7 +9,7 @@ import LinkPresentation
 import UniformTypeIdentifiers
 
 @Observable
-class InfoObject: Hashable, Identifiable {
+class InfoObject: Hashable, Identifiable, ObservableObject {
     var id = UUID().uuidString
     var title: String?
     var description: String?

@@ -11,6 +11,8 @@ struct DashboardView: View {
     
     @State var userData = UserData()
     @State var searchText: String = ""
+    @State var showModal: Bool = false
+    let infoObject: InfoObject
     
     var body: some View {
         
@@ -35,15 +37,20 @@ struct DashboardView: View {
             .searchable(text: $searchText)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "plus")
-                            .foregroundStyle(Color("black"))
-                    }
+                    Button(action: {
+                        showModal = true
+                    })
+                        {
+                            Image(systemName: "plus")
+                                .foregroundStyle(Color("black"))
+                        }
+                    
                 }
-                
             }
+            .sheet(isPresented: $showModal) {
+                AddItemView(infoObject: infoObject, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: $showModal)
+            }
+            
         }
         .environment(userData)
         
@@ -51,7 +58,7 @@ struct DashboardView: View {
 }
 
 #Preview {
-    DashboardView()
+    DashboardView(infoObject: .init(category: Category.books, dateAdded: Date()))
 }
 
 
