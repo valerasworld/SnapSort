@@ -8,8 +8,7 @@ import SwiftUI
 
 struct InfoObjectsListView: View {
     
-    var category: Category?
-    var infoObjects: [InfoObject]
+    var userData: UserData
     
     let columns: [GridItem] = [
         GridItem(.flexible()),
@@ -17,7 +16,7 @@ struct InfoObjectsListView: View {
     ]
     
     var groupedObjects: [(date: Date, infoObjects: [InfoObject])] {
-        let groupedDictionary = Dictionary(grouping: infoObjects) { infoObject in
+        let groupedDictionary = Dictionary(grouping: userData.objects) { infoObject in
             (infoObject.dateAdded).startOfDay()
         }
         return groupedDictionary
@@ -31,34 +30,41 @@ struct InfoObjectsListView: View {
                 Section(header: DateSectionHeaderView(group: group)) {
                     LazyVGrid(columns: columns) {
                         ForEach(group.infoObjects, id: \.self) { object in
-                            InfoObjectCardView(infoObject: object, previewMode: .category)
+//                            InfoObjectCardView(infoObject: object, previewMode: .category)
+                            NewVerticalInfoObjectCardView(viewModel: InfoObjectCardViewModel(infoObject: object))
                         }
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal)
+                    Spacer().frame(height: 20)
                 }
             }
-            .navigationTitle(category?.rawValue.capitalized ?? "Timeline")
+//            .navigationTitle(category?.rawValue.capitalized ?? "Timeline")
         }
     }
     
 }
 
-struct DateSectionHeaderView: View {
-    var group: (date: Date, infoObjects: [InfoObject])
-    
-    var body: some View {
-        Text(formattedDate(group.date))
-            .font(.title2)
-            .bold()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading)
-    }
-    
-    // Helper for formatting dates
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
-    }
+//struct DateSectionHeaderView: View {
+//    var group: (date: Date, infoObjects: [InfoObject])
+//    
+//    var body: some View {
+//        Text(formattedDate(group.date))
+//            .font(.title2)
+//            .bold()
+//            .frame(maxWidth: .infinity, alignment: .leading)
+//            .padding(.leading)
+//    }
+//    
+//    // Helper for formatting dates
+//    func formattedDate(_ date: Date) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateStyle = .medium
+//        return formatter.string(from: date)
+//    }
+//}
+
+#Preview {
+    let userData = UserData()
+    InfoObjectsListView(userData: userData)
 }

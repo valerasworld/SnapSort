@@ -19,7 +19,7 @@ struct CategoriesSectionCardsView: View {
         LazyVGrid(columns: columns, spacing: 12) {
             ForEach(userData.findUniqueCategories(), id: \.rawValue) { category in
                 NavigationLink {
-                    InfoObjectsListView(category: category, infoObjects: userData.filterByCategory(category: category))
+//                    InfoObjectsListView(category: category, infoObjects: userData.filterByCategory(category: category))
                 } label: {
                     CategoryCardView(category: category)
                 }
