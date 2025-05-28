@@ -9,29 +9,33 @@ import SwiftUI
 
 struct DetailedItemView: View {
     let infoObject: InfoObject
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack {
-            
-            ZStack {
-                Text(" ")
-                    .font(.title3)
-                    .bold()
-                    .frame(maxWidth: .infinity)
-                    .overlay(alignment: .leading) {
-                        HStack {
-                            Button ("Cancel") {
-                                
-                            }
-                            .tint(.red)
-                            Spacer()
-                            Button ("Edit") {
-                                
-                            }
-                        }
-                    }
+        NavigationStack {
+            VStack {
+                BackButtonView()
                 
-                Spacer (minLength: 0)
+                //            VStack {
+                //                ZStack {
+                //                    Text(" ")
+                //                        .font(.title3)
+                //                        .bold()
+                //                        .frame(maxWidth: .infinity)
+                ////                        .overlay(alignment: .leading) {
+                ////                            HStack {
+                ////                                Button ("Cancel") {
+                ////
+                ////                                }
+                ////                                .tint(.red)
+                ////                                Spacer()
+                ////                                Button ("Edit") {
+                ////
+                ////                                }
+                ////                            }
+                ////                        }
+                //
+                //                    Spacer (minLength: 0)
             }
             
             .padding([.leading, .trailing, .top])
@@ -49,7 +53,7 @@ struct DetailedItemView: View {
                 VStack(alignment: .leading) {
                     Group {
                         Text(infoObject.title ?? "")
-//                            .foregroundStyle(infoObject.category.color)
+                        //                            .foregroundStyle(infoObject.category.color)
                             .foregroundStyle(Color.black)
                             .font(.title3)
                             .bold()
@@ -68,9 +72,11 @@ struct DetailedItemView: View {
                 
                 
             }
+            .navigationBarBackButtonHidden(true)
+        }
         }
     }
-}
+
 
 #Preview {
     @Previewable
@@ -94,4 +100,26 @@ struct DetailedItemView: View {
         dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
     
     DetailedItemView(infoObject: infoObject2)
+}
+
+struct BackButtonView: View {
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        HStack {
+            Button(action: {
+                dismiss()
+            }) {
+                HStack(spacing: 4) {
+                    Image(systemName: "chevron.left")
+                    Text("Back")
+                }
+                .font(.body)
+                .foregroundColor(.blue)
+            }
+            Spacer()
+        }
+        .padding([.top, .horizontal], 2)
+        .background(Color(.systemBackground))
+        .zIndex(1)
+    }
 }
