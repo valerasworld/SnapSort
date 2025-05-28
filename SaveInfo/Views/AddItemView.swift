@@ -21,7 +21,7 @@ struct AddItemView: View {
     @State var selectedCategory: Category?
     @State var isPresented: Bool = false
     
-    @Binding var userData: UserData
+    @Binding var userData: UserDataManager
     
     var body: some View {
         NavigationView {
@@ -76,7 +76,7 @@ struct AddItemView: View {
                 
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
-                        showModal.toggle()
+                        showModal = false
                     }) {
                         Text("Cancel")
                     }
@@ -84,8 +84,7 @@ struct AddItemView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Add") {
-                        userData.objects.append(
-                            InfoObject(
+                        let newObject = InfoObject(
                                 id: UUID().uuidString,
                                 title: titleNewItem,
                                 description: descriptionNewItem,
@@ -102,8 +101,13 @@ struct AddItemView: View {
                                 linkMetaData: nil,
                                 linkURL: nil
                             )
-                            
-                        )
+
+                            if userData.useMockData {
+                                userData.mockData.append(newObject)
+                            } else {
+                                userData.liveObjects.append(newObject)
+                            }
+
                     }
                 }
             }
@@ -127,7 +131,7 @@ struct AddItemView: View {
         category: .restaurants,
         dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
     
-    AddItemView(infoObject: infoObject2, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: .constant(true), userData: .constant(UserData()))
+    AddItemView(infoObject: infoObject2, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: .constant(true), userData: .constant(UserDataManager()))
 }
 
 struct CategoryPicker: View {

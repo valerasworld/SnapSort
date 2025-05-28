@@ -8,7 +8,7 @@ import SwiftUI
 
 struct InfoObjectsListView: View {
     
-    var userData: UserData
+    var userData: UserDataManager
     
     let columns: [GridItem] = [
         GridItem(.flexible()),
@@ -65,6 +65,6 @@ struct InfoObjectsListView: View {
 //}
 
 #Preview {
-    let userData = UserData()
+    let userData = UserDataManager()
     InfoObjectsListView(userData: userData)
 }

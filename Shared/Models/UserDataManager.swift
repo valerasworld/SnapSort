@@ -7,11 +7,13 @@
 import SwiftUI
 
 @Observable
-class UserData {
-    var objects: [InfoObject] = [
+class UserDataManager {
+    var useMockData: Bool = true
+    
+    var mockData: [InfoObject] = [
         
         InfoObject(
-//            title: "Harry Potter",
+            //            title: "Harry Potter",
             description: "Renata is the best actress of the Moscow Art Theater",
             author: "J.K. Rowling",
             stringURL: "https://t.me/renatalitvinova/5500",
@@ -27,7 +29,7 @@ class UserData {
             dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
         ),
         InfoObject(
-//            title: "Harry Potter",
+            //            title: "Harry Potter",
             author: "J.K. Rowling",
             stringURL: "https://www.apple.com/iphone/",
             category: .books,
@@ -113,6 +115,10 @@ class UserData {
             dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 8))!
         ),
     ]
+    var liveObjects: [InfoObject] = []
+    var objects: [InfoObject] {
+        return useMockData ? mockData : liveObjects
+    }
     
     func findUniqueCategories() -> [Category] {
         var categories: [Category] = []

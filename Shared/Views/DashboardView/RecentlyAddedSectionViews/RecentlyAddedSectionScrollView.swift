@@ -8,7 +8,7 @@ import SwiftUI
 
 struct RecentlyAddedSectionScrollView: View {
     
-    var userData: UserData
+    var userData: UserDataManager
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {

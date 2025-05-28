@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InfoObjectListViewMainScreenView: View {
     
-    var userData: UserData
+    var userData: UserDataManager
     
     let columns: [GridItem] = [
         GridItem(.flexible()),
@@ -77,6 +77,6 @@ struct DateSectionHeaderView: View {
 }
 
 #Preview {
-    let userData = UserData()
+    let userData = UserDataManager()
     InfoObjectListViewMainScreenView(userData: userData)
 }

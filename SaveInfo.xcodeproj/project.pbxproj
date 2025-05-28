@@ -53,7 +53,7 @@
 				Category.swift,
 				InfoObject.swift,
 				LinkPreview.swift,
-				UserData.swift,
+				UserDataManager.swift,
 			);
 			target = 9F63BE082DC2785800A09138 /* SaveInfo */;
 		};
@@ -83,7 +83,7 @@
 				Category.swift,
 				InfoObject.swift,
 				LinkPreview.swift,
-				UserData.swift,
+				UserDataManager.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
 		};

@@ -8,7 +8,7 @@ import SwiftUI
 
 struct RecentlyAddedSectionHeaderView: View {
     
-    var userData: UserData
+    var userData: UserDataManager
     
     var body: some View {
         HStack {

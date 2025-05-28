@@ -11,7 +11,7 @@ let types: [String] = ["All", "Links", "Images"]
 
 struct DashboardView: View {
     
-    @State var userData = UserData()
+    @State var userData = UserDataManager()
     @State var searchText: String = ""
     @State var showModal: Bool = false
     let infoObject: InfoObject
@@ -59,6 +59,11 @@ struct DashboardView: View {
                             .bold()
                     }
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    Toggle("", isOn: $userData.useMockData)
+                        .toggleStyle(.switch)
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showModal = true
@@ -138,7 +143,7 @@ struct CategoryButtonView: View {
 }
 
 struct SegmentedControlCapsuleView: View {
-    var userData: UserData
+    var userData: UserDataManager
     var uniqueCategories: [Category]
     
     var body: some View {
@@ -161,7 +166,7 @@ struct SegmentedControlCapsuleView: View {
 struct ObjectTypeSegmentedControlView: View {
     
     @Binding var selectedType: String
-    var userData: UserData
+    var userData: UserDataManager
     @Namespace private var animation
     var uniqueCategories: [Category]
     

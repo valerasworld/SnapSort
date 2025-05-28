@@ -8,7 +8,7 @@ import SwiftUI
 
 struct CategoriesSectionCardsView: View {
     
-    var userData: UserData
+    var userData: UserDataManager
     
     let columns: [GridItem] = [
         GridItem(.flexible(), spacing: 12),
