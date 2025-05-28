@@ -15,98 +15,27 @@ struct DashboardView: View {
     @State var searchText: String = ""
     @State var showModal: Bool = false
     let infoObject: InfoObject
-    
-    @State private var selectedType: String = types.first!
-    @Namespace private var animation
+    @State var selectedType: String = types.first!
     
     @State var selectedCategories: [Category] = []
     
-    
-    
+    var uniqueCategories: [Category] {
+        return userData.findUniqueCategories()
+    }
     
     var body: some View {
         
         NavigationStack {
             ResizableHeaderScrollView {
-//                HStack(spacing: 12) {
-//                    Button {
-//                        
-//                    } label: {
-//                        Image(systemName: "line.horizontal.3")
-//                            .font(.title3)
-//                    }
-//                    
-//                    Spacer(minLength: 0)
-//                    
-////                    Button {
-////                        
-////                    } label: {
-////                        Image(systemName: "magnifyingglass")
-////                            .font(.title3)
-////                    }
-//                    
-//                    Button {
-//                        
-//                    } label: {
-//                        Image(systemName: "plus")
-//                            .font(.title3)
-//                    }
-//                        
-//                }
-//                .overlay {
-//                    Text("SnapSort")
-//                        .fontWeight(.semibold)
-//                }
-//                .foregroundStyle(.primary)
-//                .padding(.horizontal, 15)
-//                .padding(.top, 15)
-            
-            } stickyHeader: {
-                HStack(spacing: 10) {
-                    ForEach(types, id: \.self) { type in
-                        Text(type)
-                            .foregroundStyle(selectedType == type ? .white : .black)
-                            .cornerRadius(10)
-                            .fontWeight(selectedType == type ? .semibold : .semibold) // ??
-                            .padding(.horizontal, 20)
-                            .frame(height: 30)
-                            .frame(maxWidth: .infinity)
-                            .background {
-                                if selectedType == type {
-                                    SegmentedControlCapsuleView(userData: userData)
-                                        .matchedGeometryEffect(id: "ACTIVETAB", in: animation)
-                                        .padding(.horizontal, 3)
-                                        .shadow(color: .black.opacity(0.17), radius: 1)
-                                }
-                            }
-                            .contentShape(.rect)
-                            .onTapGesture {
-                                withAnimation(.snappy/*(duration: 0.3)*/) {
-                                    selectedType = type
-                                }
-                            }
-                    }
-                }
                 
-                .foregroundStyle(.primary)
-//                .safeAreaPadding(15)
-                .padding(.vertical, 3)
-                .background {
-                    Capsule()
-//                        .fill(.black.gradient.opacity(0.07))
-                        .fill(.white)
-                    //                        .safeAreaPadding(10)
-                }
-                .padding(.top, -10)
-                .padding(.horizontal, 16)
-            } categorySelection: {
-                HStack {
-                    ForEach(userData.findUniqueCategories(), id: \.self) { category in
-                        CategoryButtonView(category: category)
-                    }
-                }
-                .padding(.bottom, 12)
-                .padding(.horizontal, 16)
+            } stickyHeader: {
+                ObjectTypeSegmentedControlView(
+                    selectedType: $selectedType,
+                    userData: userData,
+                    uniqueCategories: uniqueCategories
+                )
+            } categoryFilter: {
+                CtegoriesFilterView(uniqueCategories: uniqueCategories)
             } background: {
                 Rectangle()
                     .fill(.ultraThinMaterial)
@@ -114,33 +43,16 @@ struct DashboardView: View {
                         Divider()
                     }
             } content: {
-                LazyVStack(alignment: .leading) {
-//                    Group {
-//                        RecentlyAddedSectionHeaderView(userData: userData)
-//                        RecentlyAddedSectionScrollView(userData: userData)
-//                    }
-//                    
-//                    
-//                    // SEGMENTED CONTROL ?????????!!!!!!!!!!!!
-//                    // ADDING NEW ELEMENT BUTTON !!!!!
-//                    Group {
-//                        CategoriesSectionHeaderView()
-//                        CategoriesSectionCardsView(userData: userData)
-//                    }
                     InfoObjectListViewMainScreenView(userData: userData)
-                       
-                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("SnapSort")
             .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
-            
-            
             .searchable(text: $searchText, placement: .navigationBarDrawer)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        
+                        //
                     } label: {
                         Image(systemName: "line.horizontal.3")
                             .foregroundStyle(.black)
@@ -148,14 +60,12 @@ struct DashboardView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
+                    Button {
                         showModal = true
-                    })
-                        {
-                            Image(systemName: "plus")
-                                .foregroundStyle(Color("black"))
-                        }
-                    
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundStyle(Color("black"))
+                    }
                 }
             }
             .sheet(isPresented: $showModal) {
@@ -229,6 +139,7 @@ struct CategoryButtonView: View {
 
 struct SegmentedControlCapsuleView: View {
     var userData: UserData
+    var uniqueCategories: [Category]
     
     var body: some View {
         Capsule()
@@ -239,10 +150,68 @@ struct SegmentedControlCapsuleView: View {
                 Capsule()
                     .fill(
                         LinearGradient(
-                            colors: userData.findUniqueCategories().map{ $0.color },
+                            colors: uniqueCategories.map{ $0.color },
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing)
                     )
             )
+    }
+}
+
+struct ObjectTypeSegmentedControlView: View {
+    
+    @Binding var selectedType: String
+    var userData: UserData
+    @Namespace private var animation
+    var uniqueCategories: [Category]
+    
+    var body: some View {
+        HStack(spacing: 10) {
+            ForEach(types, id: \.self) { type in
+                Text(type)
+                    .foregroundStyle((selectedType == type) ? .white : .black)
+                    .cornerRadius(10)
+                    .fontWeight(.semibold) // ??
+                    .padding(.horizontal, 20)
+                    .frame(height: 30)
+                    .frame(maxWidth: .infinity)
+                    .background {
+                        if selectedType == type {
+                            SegmentedControlCapsuleView(userData: userData, uniqueCategories: uniqueCategories)
+                                .matchedGeometryEffect(id: "ACTIVETAB", in: animation)
+                                .padding(.horizontal, 3)
+                                .shadow(color: .black.opacity(0.17), radius: 1)
+                        }
+                    }
+                    .contentShape(.rect)
+                    .onTapGesture {
+                        withAnimation(.snappy/*(duration: 0.3)*/) {
+                            selectedType = type
+                        }
+                    }
+            }
+        }
+        .foregroundStyle(.primary)
+        .padding(.vertical, 3)
+        .background {
+            Capsule()
+                .fill(.white)
+        }
+        .padding(.top, -10)
+        .padding(.horizontal, 16)
+    }
+}
+
+struct CtegoriesFilterView: View {
+    var uniqueCategories: [Category]
+    
+    var body: some View {
+        HStack {
+            ForEach(uniqueCategories, id: \.self) { category in
+                CategoryButtonView(category: category)
+            }
+        }
+        .padding(.bottom, 12)
+        .padding(.horizontal, 16)
     }
 }
