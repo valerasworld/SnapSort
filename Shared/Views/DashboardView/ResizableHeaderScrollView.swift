@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct ResizableHeaderScrollView<Header: View, StickyHeader: View, CategorySelection: View, Background: View, Content: View>: View {
+struct ResizableHeaderScrollView<Header: View, StickyHeader: View, CategoryFilter: View, Background: View, Content: View>: View {
     
     var spacing: CGFloat = 8
     @ViewBuilder var header: Header
     @ViewBuilder var stickyHeader: StickyHeader
-    @ViewBuilder var categorySelection: CategorySelection
+    @ViewBuilder var categoryFilter: CategoryFilter
     // Only for header background, not for the entire View
     @ViewBuilder var background: Background
     @ViewBuilder var content: Content
@@ -78,7 +78,7 @@ struct ResizableHeaderScrollView<Header: View, StickyHeader: View, CategorySelec
                 }
 
             stickyHeader
-            categorySelection
+            categoryFilter
         }
 //        .offset(y: -headerOffset)
 //        .clipped()
