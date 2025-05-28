@@ -1,0 +1,131 @@
+//
+//  TagsView.swift
+//  SaveInfo
+//
+//  Created by Valery Zazulin on 08/05/25.
+//
+import SwiftUI
+
+struct TagsView: View {
+    
+    var infoObject: InfoObject
+    var spacing: CGFloat = 10
+    var typedTagName: String = "+"
+    
+    // View Properties
+//    @State
+    
+    var body: some View {
+        CustomTagsLayout(spacing: spacing) {
+            ForEach(infoObject.tags, id: \.self) { tag in
+                Text(tag.capitalized)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(.white)
+                            .shadow(color: .black.opacity(0.12), radius: 5)
+                    }
+            }
+            Text(typedTagName)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.white)
+                        .shadow(color: .black.opacity(0.12), radius: 5)
+                }
+                .onTapGesture {
+                    
+                }
+        }
+        
+//        ScrollView([.horizontal]) {
+//            HStack {
+//                Spacer()
+//                    .frame(width: 15)
+//                ForEach(infoObject.tags, id: \.self) { tag in
+//                    
+//                    Text(tag.capitalized)
+//                    .padding(.horizontal, 12)
+//                    .padding(.vertical, 6)
+//                    .background {
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .fill(.white)
+//                            .shadow(color: .black.opacity(0.12), radius: 5)
+//                    }
+//                }
+//                
+//                Spacer()
+//                    .frame(width: 15)
+//            }
+//            .padding(.vertical, 10)
+//            
+//        }
+//        .scrollIndicators(.hidden)
+    }
+}
+
+fileprivate struct CustomTagsLayout: Layout {
+    var spacing: CGFloat
+    
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.width ?? 0
+        return .init(width: width, height: maxHeight(proposal: proposal, subviews: subviews))
+    }
+    
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var origin = bounds.origin
+        
+        for subview in subviews {
+            let fitsize = subview.sizeThatFits(proposal)
+            
+            if (origin.x + fitsize.width) > bounds.maxX {
+                origin.x = bounds.minX
+                origin.y += fitsize.height + spacing
+                
+                subview.place(at: origin, proposal: proposal)
+                origin.x += fitsize.width + spacing
+            } else {
+                subview.place(at: origin, proposal: proposal)
+                origin.x += fitsize.width + spacing
+            }
+        }
+    }
+    
+    private func maxHeight(proposal: ProposedViewSize, subviews: Subviews) -> CGFloat {
+        var origin: CGPoint = .zero
+        
+        for subview in subviews {
+            let fitsize = subview.sizeThatFits(proposal)
+            
+            if (origin.x + fitsize.width) > (proposal.width ?? 0) {
+                origin.x = 0
+                origin.y += fitsize.height + spacing
+                
+                origin.x += fitsize.width + spacing
+            } else {
+                origin.x += fitsize.width + spacing
+            }
+            
+            if subview == subviews.last {
+                origin.y += fitsize.height
+            }
+        }
+        
+        return origin.y
+    }
+}
+
+#Preview {
+    TagsView(infoObject:
+                InfoObject(
+//            title: "Harry Potter",
+                    description: "Renata is the best actress of the Moscow Art Theater",
+                    author: "J.K. Rowling",
+                    stringURL: "https://t.me/renatalitvinova/5500",
+                    tags: ["Actress", "Theater", "Zemfira", "Art", "Kirill Trubetskoy"],
+                    category: .restaurants,
+                    dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
+    )
+}
