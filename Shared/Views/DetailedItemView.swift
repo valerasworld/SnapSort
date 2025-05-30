@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DetailedItemView: View {
     let infoObject: InfoObject
+    @Environment(Favorites.self) var favorites
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -69,7 +70,16 @@ struct DetailedItemView: View {
                         .padding(.horizontal)
                     
                 }
-                
+               
+                Button(favorites.contains(infoObject: infoObject) ? "Remove from Favorites" : "Add to Favorites") {
+                    if favorites.contains(infoObject: infoObject) {
+                                    favorites.remove(infoObject)
+                                } else {
+                                    favorites.add(infoObject: infoObject)
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .padding()
                 
             }
             .navigationBarBackButtonHidden(true)
@@ -100,6 +110,7 @@ struct DetailedItemView: View {
         dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
     
     DetailedItemView(infoObject: infoObject2)
+        .environment(Favorites())
 }
 
 struct BackButtonView: View {

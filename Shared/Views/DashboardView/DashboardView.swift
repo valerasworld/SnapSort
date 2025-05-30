@@ -18,6 +18,7 @@ struct DashboardView: View {
     @State var selectedType: String = types.first!
     
     @State var selectedCategories: [Category] = []
+    @State private var favorites = Favorites()
     
     var uniqueCategories: [Category] {
         return userData.findUniqueCategories()
@@ -74,12 +75,12 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $showModal) {
-                AddItemView(infoObject: infoObject, category: Category.allCases, titleNewItem: "", descriptionNewItem: "", showModal: $showModal, userData: $userData)
+                AddItemView(infoObject: infoObject, category: Category.allCases, userData: $userData, titleNewItem: "", descriptionNewItem: "", showModal: $showModal)
             }
             
         }
         .environment(userData)
-        
+        .environment(favorites)
     }
 }
 
