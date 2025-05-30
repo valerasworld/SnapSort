@@ -15,143 +15,148 @@ struct NewVerticalInfoObjectCardView: View {
 //    @State var glassOpacity: Double = 100
     
     var body: some View {
-        let width = UIScreen.main.bounds.width / 2
-        VStack(spacing: 0) {
-            // Image
-            ZStack {
-                if let image = viewModel.infoObject.image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .clipped()
+        NavigationLink(destination: DetailedItemView(infoObject: viewModel.infoObject)) {
+            let width = UIScreen.main.bounds.width / 2
+            VStack(spacing: 0) {
+                // Image
+                ZStack {
+                    if let image = viewModel.infoObject.image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
                         
-                } else {
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .background(
-                            ZStack {
-                                Rectangle()
-                                    .fill(viewModel.infoObject.category.color)
-//                                Text("Text")
-//                                    .font(.largeTitle)
-//                                    .bold()
-                                Rectangle()
-                                    .fill(.ultraThinMaterial)
-//                                    .opacity(glassOpacity)
-                            }
-                        )
-//                        .onAppear {
-//                            withAnimation(.spring(duration: 7)) {
-//                                glassOpacity = 0
-//                            }
-//                        }
-                }
-                Color.black.opacity(0.02)
-            }
-            .aspectRatio(CGSize(width: width, height: width / 16 * 9), contentMode: .fill)
-            .frame(
-                maxWidth: width - gridPadding * 1.5 - viewModel.padding / 2,
-                maxHeight: (width - gridPadding * 1.5 - viewModel.padding / 2) / 16 * 9
-            )
-//            .padding()
-            
-            // Text BLOCK
-            ZStack {
-                Color.white
-                HStack(alignment: .top, spacing: 6) {
-                    // Text Layer
-                    VStack(alignment: .leading) {
-                        Group {
-                            if let title = viewModel.infoObject.title {
-                                Text(title)
-                            } else {
-                                Text("No Text")
-                                    .opacity(0)
-                            }
-                        }
-                        .font(.subheadline)
-                        .bold()
-                        .lineLimit(1)
-                        .multilineTextAlignment(.leading)
-                        
-                            
-                        //                    .foregroundStyle(.white/*bgColor.isLight() ? .black : .white*/)
-                            .foregroundStyle(.black/*bgColor.isLight() ? .black : .white*/)
-                        Group {
-                            if let stringURL = viewModel.infoObject.stringURL {
-                                Text(URL(string: stringURL)?.host?.replacingOccurrences(of: "www.",with: "") ?? "")
-                                    .foregroundStyle(.black.opacity(0.6))
-                            } else {
-                                Text("www.com")
-                                    .opacity(0)
-                            }
-                        }
-                        .font(.footnote)
-                        .lineLimit(1)
-                        .multilineTextAlignment(.leading)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 8)
-                    
-                    // Bookmark
-                    ZStack(alignment: .bottom) {
-//                        Rectangle()
-//                            .foregroundStyle(viewModel.infoObject.category.color)
+                    } else {
                         Rectangle()
-                        .foregroundColor(.clear)
-                        .background(
-                            ZStack {
-                                Rectangle()
-                                    .fill(viewModel.infoObject.category.color)
-                                
-                                Rectangle()
-                                    .fill(.ultraThinMaterial)
-                            })
-                        VStack {
-                            Spacer()
-                            Image(systemName: viewModel.infoObject.category.iconName)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 18, height: 18)
-                                .foregroundStyle(.white)
-//                                .foregroundStyle(.black)
-//                                .foregroundStyle(viewModel.infoObject.category.color)
-                                .bold()
-                            Spacer()
-                                
-                        }
-                        
+                            .foregroundColor(.clear)
+                            .background(
+                                ZStack {
+                                    Rectangle()
+                                        .fill(viewModel.infoObject.category.color)
+                                    //                                Text("Text")
+                                    //                                    .font(.largeTitle)
+                                    //                                    .bold()
+                                    Rectangle()
+                                        .fill(.ultraThinMaterial)
+                                    //                                    .opacity(glassOpacity)
+                                }
+                            )
+                        //                        .onAppear {
+                        //                            withAnimation(.spring(duration: 7)) {
+                        //                                glassOpacity = 0
+                        //                            }
+                        //                        }
                     }
-                    .frame(width: 30)
-                    .roundedCorners(10, corners: [.bottomLeft, .bottomRight])
-                    .padding(.bottom, 8)
+                    Color.black.opacity(0.02)
                 }
-                .padding(.horizontal, viewModel.padding)
-            }
+                .aspectRatio(CGSize(width: width, height: width / 16 * 9), contentMode: .fill)
+                .frame(
+                    maxWidth: width - gridPadding * 1.5 - viewModel.padding / 2,
+                    maxHeight: (width - gridPadding * 1.5 - viewModel.padding / 2) / 16 * 9
+                )
+                //            .padding()
                 
-        }
-        .roundedCorners(10, corners: .allCorners)
-//        .padding(.horizontal)
-//        .frame(width: width - gridPadding / 2)
-//        .frame(maxWidth: width - gridPadding / 2)
-        .frame(maxWidth: width - gridPadding * 1.5 - viewModel.padding / 2)
-        .shadow(color: .black.opacity(0.17), radius: 5, x: 0, y: 0)
-        
-        .onAppear {
-            Task {
-                try? await viewModel.loadPreview()
+                // Text BLOCK
+                ZStack {
+                    Color.white
+                    HStack(alignment: .top, spacing: 6) {
+                        // Text Layer
+                        VStack(alignment: .leading) {
+                            Group {
+                                if let title = viewModel.infoObject.title {
+                                    Text(title)
+                                } else {
+                                    Text("No Text")
+                                        .opacity(0)
+                                }
+                            }
+                            .font(.subheadline)
+                            .bold()
+                            .lineLimit(1)
+                            .multilineTextAlignment(.leading)
+                            
+                            
+                            //                    .foregroundStyle(.white/*bgColor.isLight() ? .black : .white*/)
+                            .foregroundStyle(.black/*bgColor.isLight() ? .black : .white*/)
+                            Group {
+                                if let stringURL = viewModel.infoObject.stringURL {
+                                    Text(URL(string: stringURL)?.host?.replacingOccurrences(of: "www.",with: "") ?? "")
+                                        .foregroundStyle(.black.opacity(0.6))
+                                } else {
+                                    Text("www.com")
+                                        .opacity(0)
+                                }
+                            }
+                            .font(.footnote)
+                            .lineLimit(1)
+                            .multilineTextAlignment(.leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 8)
+                        
+                        // Bookmark
+                        ZStack(alignment: .bottom) {
+                            //                        Rectangle()
+                            //                            .foregroundStyle(viewModel.infoObject.category.color)
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .background(
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(viewModel.infoObject.category.color)
+                                        
+                                        Rectangle()
+                                            .fill(.ultraThinMaterial)
+                                    })
+                            VStack {
+                                Spacer()
+                                Image(systemName: viewModel.infoObject.category.iconName)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 18, height: 18)
+                                    .foregroundStyle(.white)
+                                //                                .foregroundStyle(.black)
+                                //                                .foregroundStyle(viewModel.infoObject.category.color)
+                                    .bold()
+                                Spacer()
+                                
+                            }
+                            
+                        }
+                        .frame(width: 30)
+                        .roundedCorners(10, corners: [.bottomLeft, .bottomRight])
+                        .padding(.bottom, 8)
+                    }
+                    .padding(.horizontal, viewModel.padding)
+                }
+                
             }
+            .roundedCorners(10, corners: .allCorners)
+            //        .padding(.horizontal)
+            //        .frame(width: width - gridPadding / 2)
+            //        .frame(maxWidth: width - gridPadding / 2)
+            .frame(maxWidth: width - gridPadding * 1.5 - viewModel.padding / 2)
+            .shadow(color: .black.opacity(0.17), radius: 5, x: 0, y: 0)
+       
+            .buttonStyle(PlainButtonStyle()) // Removes default blue highlight
+
+            
+            .onAppear {
+                Task {
+                    try? await viewModel.loadPreview()
+                }
+            }
+//            .onTapGesture {
+//                presentSheet.toggle()
+//            }
+//            .sheet(isPresented: $presentSheet) {
+//                DetailedItemView(infoObject: viewModel.infoObject)
+//            }
         }
-        .onTapGesture {
-            presentSheet.toggle()
-        }
-        .sheet(isPresented: $presentSheet) {
-            DetailedItemView(infoObject: viewModel.infoObject)
-        }
-        
-        
     }
 }
+
+
 
 
 #Preview {

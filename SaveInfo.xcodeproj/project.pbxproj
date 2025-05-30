@@ -69,6 +69,7 @@
 				DashboardView/RecentlyAddedSectionViews/RecentlyAddedSectionScrollView.swift,
 				DashboardView/ResizableHeaderScrollView.swift,
 				DetailedItemView.swift,
+				Favorites.swift,
 				InfoObjectsListView/InfoObjectCardView/InfoObjectCardCustomView.swift,
 				InfoObjectsListView/InfoObjectCardView/InfoObjectCardView.swift,
 				InfoObjectsListView/InfoObjectCardView/NewVerticalInfoObjectCardView.swift,
@@ -98,6 +99,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DetailedItemView.swift,
+				Favorites.swift,
 				InfoObjectsListView/InfoObjectCardView/TagsView.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
