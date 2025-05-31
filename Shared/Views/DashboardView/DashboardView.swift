@@ -20,10 +20,6 @@ struct DashboardView: View {
     @State var selectedCategories: [Category] = []
     @State private var favorites = Favorites()
     
-    var uniqueCategories: [Category] {
-        return userData.findUniqueCategories()
-    }
-    
     var body: some View {
         
         NavigationStack {
@@ -33,10 +29,10 @@ struct DashboardView: View {
                 ObjectTypeSegmentedControlView(
                     selectedType: $selectedType,
                     userData: userData,
-                    uniqueCategories: uniqueCategories
+                    uniqueCategories: userData.uniqueCategories
                 )
             } categoryFilter: {
-                CtegoriesFilterView(uniqueCategories: uniqueCategories)
+                CtegoriesFilterView(uniqueCategories: userData.uniqueCategories)
             } background: {
                 Rectangle()
                     .fill(.ultraThinMaterial)

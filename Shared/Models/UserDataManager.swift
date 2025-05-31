@@ -120,6 +120,10 @@ class UserDataManager {
         return useMockData ? mockData : liveObjects
     }
     
+    var uniqueCategories: [Category] {
+        return findUniqueCategories()
+    }
+    
     func findUniqueCategories() -> [Category] {
         var categories: [Category] = []
         categories = Array(Set(objects.map { $0.category }))
