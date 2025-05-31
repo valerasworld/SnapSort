@@ -55,8 +55,8 @@ struct DashboardView: View {
                     Button {
                         //
                     } label: {
-                        Image(systemName: "line.horizontal.3")
-                            .foregroundStyle(.black)
+                        Image(systemName: "heart.fill")
+                            .foregroundStyle(.red)
                             .bold()
                     }
                 }
@@ -75,7 +75,7 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $showModal) {
-                AddItemView(infoObject: infoObject, category: Category.allCases, userData: $userData, titleNewItem: "", descriptionNewItem: "", showModal: $showModal)
+                AddItemView(infoObject: infoObject, category: Category.allCases, userData: $userData, titleNewItem: "", descriptionNewItem: "", tagNewItem: "", showModal: $showModal)
             }
             
         }

@@ -31,12 +31,13 @@ struct AddItemView: View {
     @State var descriptionNewItem: String
     @State var selectedCategory: Category?
     @State var selectedItem: PhotosPickerItem?
-    //    @State var tagNewItem: String
+    @State var tagNewItem: String
 
     //MARK: Wrappers for Modals: showModal (for adding a new category) and isPresented, isPhotoPickerPresented for the Photo Picker modal.
     @Binding var showModal: Bool
     @State var isPresented: Bool = false
     @State var isPhotoPickerPresented: Bool = false
+    @State var isTagsPickerPresented: Bool = false
     
 //MARK: For the PhotoPicker
     @State private var filterIntensity = 0.5
@@ -46,7 +47,7 @@ struct AddItemView: View {
     var body: some View {
         NavigationView {
             Form {
-//                ---
+                
                 //MARK: Image section
                 Section("Image") {
                     VStack {
@@ -77,12 +78,11 @@ struct AddItemView: View {
 //                                .onTapGesture {
 //                                    isPhotoPickerPresented.toggle()
 //                                }
-//                                
+//
 //                            }
 //                        }
-//                        
-//                        
-//                        }
+//
+//
                     .sheet(isPresented: $isPhotoPickerPresented) {
                         PhotosPicker(selection: $selectedItem, matching: .images) { }
                             .photosPickerStyle(.inline)
@@ -90,6 +90,7 @@ struct AddItemView: View {
                             .presentationDetents([.medium, .large])
                             .presentationBackground(.clear)
                             .presentationBackgroundInteraction(.enabled(upThrough: .large))
+                        
 
                     }
                     .onChange(of: selectedItem) { _ in
@@ -104,11 +105,11 @@ struct AddItemView: View {
 //                            .scaledToFit()
 //                            .foregroundStyle(.gray)
 //                            .frame(maxWidth: .infinity)
-//                        
-//                        
+//
+//
 //                        Button("+") {
 //                        }
-//                        
+//
 //                        //                    Image(systemName: "plus")
 //                        // Rectangle(cornerRadius: 5)
 //                    }
@@ -120,6 +121,10 @@ struct AddItemView: View {
                         .font(.title)
                 }
                 
+                //MARK: Detail section
+                Section("Details") {
+                }
+                
                 //MARK: Description field
                 Section("Description") {
                     TextEditor(text: $descriptionNewItem)
@@ -128,8 +133,35 @@ struct AddItemView: View {
                 
                 //MARK: Tags field
                 Section("Tags") {
-                    Button("Add tag +") {
-                        // Label(systemImage: "plus.circle.fill")
+                    Button {
+                        isTagsPickerPresented.toggle()
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                            Text("Add a tag")
+                            // Label(systemImage: "plus.circle.fill")
+                        }
+                    }
+                    .sheet(isPresented: $isTagsPickerPresented) {
+                        NavigationView {
+                            VStack {
+                                Text("Add a tag")
+                                    .font(.title)
+                                    .bold()
+                                
+                                TextField("Tag", text: $tagNewItem)
+                                    .padding(.horizontal, 180)
+                            }
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button("Add") {
+                                        // logic to add tags
+                                    }
+                                }
+                            }
+                        }
+                        .presentationDetents([.medium])
+                        .presentationDragIndicator(.visible)
                     }
                 }
                 //MARK: Category field with Menu
@@ -147,6 +179,7 @@ struct AddItemView: View {
                     }
                 }
             }
+            
             .toolbar {
                 
                 ToolbarItem(placement: .topBarLeading) {
@@ -203,15 +236,6 @@ struct AddItemView: View {
             imageNewItem = Image(uiImage: uiImage)
         }
     }
-    
-//    func applyProcessing() {
-//        currentFilter.intensity = Float(filterIntensity)
-//        guard let outputImage = currentFilter.outputImage else { return }
-//        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return }
-//        
-//        let uiImage = UIImage(cgImage: cgImage)
-//        
-//    }
 }
 
 #Preview {
@@ -225,7 +249,7 @@ struct AddItemView: View {
         category: .restaurants,
         dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
     
-    AddItemView(infoObject: infoObject2, category: Category.allCases, userData: .constant(UserDataManager()), titleNewItem: "", descriptionNewItem: "", showModal: .constant(true))
+    AddItemView(infoObject: infoObject2, category: Category.allCases, userData: .constant(UserDataManager()), titleNewItem: "", descriptionNewItem: "", tagNewItem: "", showModal: .constant(true))
 }
 
 struct CategoryPicker: View {
@@ -277,6 +301,9 @@ struct MenuCategory: View {
     let category: Category.AllCases
     @Binding var selectedCategory: Category?
     @Binding var isPresented: Bool
+    @State var newCategory: String = ""
+    @State private var bgColor =
+           Color(.sRGB, red: 0.98, green: 0.9, blue: 0.2)
     
     var body: some View {
         Menu {
@@ -308,9 +335,12 @@ struct MenuCategory: View {
                 Text("Add New Category")
                     .font(.title3)
                     .bold()
-                TextField("New Category Name", text: .constant(""))
+                TextField("New Category Name", text: $newCategory)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
+                
+                ColorPicker("Choose a color :)", selection: $bgColor)
+                
             }
             .padding()
             
