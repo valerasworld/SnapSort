@@ -53,6 +53,7 @@
 				Category.swift,
 				InfoObject.swift,
 				LinkPreview.swift,
+				SwiftData/UsersCategory.swift,
 				UserDataManager.swift,
 			);
 			target = 9F63BE082DC2785800A09138 /* SaveInfo */;
@@ -83,6 +84,7 @@
 				Category.swift,
 				InfoObject.swift,
 				LinkPreview.swift,
+				SwiftData/UsersCategory.swift,
 				UserDataManager.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
@@ -113,6 +115,13 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				LinkPreviewLoader.swift,
+			);
+			target = 9F619C0A2DD4E7E000D068BD /* Share */;
+		};
+		9FF1A5DF2DE9E312005A6C3A /* Exceptions for "SaveInfo" folder in "Share" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Views/AddItemView.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
 		};
@@ -164,6 +173,9 @@
 		};
 		9F63BE0B2DC2785800A09138 /* SaveInfo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9FF1A5DF2DE9E312005A6C3A /* Exceptions for "SaveInfo" folder in "Share" target */,
+			);
 			path = SaveInfo;
 			sourceTree = "<group>";
 		};

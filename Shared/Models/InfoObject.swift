@@ -51,15 +51,15 @@ class InfoObject: Hashable, Identifiable, ObservableObject {
     ) {
         self.id = id
         self.title = title
-        self.description = description
-        self.author = author
+//        self.description = description
+//        self.author = author
         self.image = image
-        self.genre = genre
+//        self.genre = genre
         self.stringURL = stringURL
         self.tags = tags
         self.category = category
         self.dateAdded = dateAdded
-        self.completed = completed
+//        self.completed = completed
         self.comment = comment
         self.previewLoading = previewLoading
         self.linkMetaData = linkMetaData
