@@ -52,8 +52,7 @@
 			membershipExceptions = (
 				Category.swift,
 				InfoObject.swift,
-				LinkPreview.swift,
-				SwiftData/UsersCategory.swift,
+				SampleObjects.swift,
 				UserDataManager.swift,
 			);
 			target = 9F63BE082DC2785800A09138 /* SaveInfo */;
@@ -61,21 +60,14 @@
 		9F619C462DD5490200D068BD /* Exceptions for "Views" folder in "SaveInfo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				DashboardView/CategoriesSectionViews/CategoriesSectionCardsView.swift,
-				DashboardView/CategoriesSectionViews/CategoriesSectionHeaderView.swift,
-				DashboardView/CategoriesSectionViews/CategoryCardView.swift,
 				DashboardView/DashboardView.swift,
-				DashboardView/InfoObjectListViewMainScreenView.swift,
-				DashboardView/RecentlyAddedSectionViews/RecentlyAddedSectionHeaderView.swift,
-				DashboardView/RecentlyAddedSectionViews/RecentlyAddedSectionScrollView.swift,
+				DashboardView/InfoObjectsGridView.swift,
+				DashboardView/InfoObjectsGridView/InfoObjectCardView/InfoObjectCardView.swift,
+				DashboardView/InfoObjectsGridView/InfoObjectCardView/TagsView.swift,
+				DashboardView/InfoObjectsGridView/InfoObjectsListView.swift,
 				DashboardView/ResizableHeaderScrollView.swift,
 				DetailedItemView.swift,
 				Favorites.swift,
-				InfoObjectsListView/InfoObjectCardView/InfoObjectCardCustomView.swift,
-				InfoObjectsListView/InfoObjectCardView/InfoObjectCardView.swift,
-				InfoObjectsListView/InfoObjectCardView/NewVerticalInfoObjectCardView.swift,
-				InfoObjectsListView/InfoObjectCardView/TagsView.swift,
-				InfoObjectsListView/InfoObjectsListView.swift,
 			);
 			target = 9F63BE082DC2785800A09138 /* SaveInfo */;
 		};
@@ -84,8 +76,7 @@
 			membershipExceptions = (
 				Category.swift,
 				InfoObject.swift,
-				LinkPreview.swift,
-				SwiftData/UsersCategory.swift,
+				SampleObjects.swift,
 				UserDataManager.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
@@ -100,9 +91,9 @@
 		9F619C4F2DD5497800D068BD /* Exceptions for "Views" folder in "Share" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				DashboardView/InfoObjectsGridView/InfoObjectCardView/TagsView.swift,
 				DetailedItemView.swift,
 				Favorites.swift,
-				InfoObjectsListView/InfoObjectCardView/TagsView.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
 		};
@@ -370,7 +361,7 @@
 				DEVELOPMENT_TEAM = JBSA6RAK79;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Share/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Share;
+				INFOPLIST_KEY_CFBundleDisplayName = SnapSort;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -396,7 +387,7 @@
 				DEVELOPMENT_TEAM = JBSA6RAK79;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Share/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Share;
+				INFOPLIST_KEY_CFBundleDisplayName = SnapSort;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (

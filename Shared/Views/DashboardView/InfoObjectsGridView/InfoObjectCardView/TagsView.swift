@@ -8,16 +8,13 @@ import SwiftUI
 
 struct TagsView: View {
     
-    var infoObject: InfoObject
+    var tags: [String]
     var spacing: CGFloat = 10
     var typedTagName: String = "+"
     
-    // View Properties
-//    @State
-    
     var body: some View {
         CustomTagsLayout(spacing: spacing) {
-            ForEach(infoObject.tags, id: \.self) { tag in
+            ForEach(tags, id: \.self) { tag in
                 Text(tag.capitalized)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
@@ -39,30 +36,6 @@ struct TagsView: View {
                     
                 }
         }
-        
-//        ScrollView([.horizontal]) {
-//            HStack {
-//                Spacer()
-//                    .frame(width: 15)
-//                ForEach(infoObject.tags, id: \.self) { tag in
-//                    
-//                    Text(tag.capitalized)
-//                    .padding(.horizontal, 12)
-//                    .padding(.vertical, 6)
-//                    .background {
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .fill(.white)
-//                            .shadow(color: .black.opacity(0.12), radius: 5)
-//                    }
-//                }
-//                
-//                Spacer()
-//                    .frame(width: 15)
-//            }
-//            .padding(.vertical, 10)
-//            
-//        }
-//        .scrollIndicators(.hidden)
     }
 }
 
@@ -118,14 +91,5 @@ fileprivate struct CustomTagsLayout: Layout {
 }
 
 #Preview {
-    TagsView(infoObject:
-                InfoObject(
-//            title: "Harry Potter",
-                    description: "Renata is the best actress of the Moscow Art Theater",
-                    author: "J.K. Rowling",
-                    stringURL: "https://t.me/renatalitvinova/5500",
-                    tags: ["Actress", "Theater", "Zemfira", "Art", "Kirill Trubetskoy"],
-                    category: .restaurants,
-                    dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
-    )
+    TagsView(tags: ["Actress", "Theater", "Zemfira", "Art", "Kirill Trubetskoy"])
 }

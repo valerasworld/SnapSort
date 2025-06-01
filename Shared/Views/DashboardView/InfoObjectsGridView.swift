@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InfoObjectListViewMainScreenView: View {
+struct InfoObjectsGridView: View {
     
     var userData: UserDataManager
     
@@ -16,23 +16,14 @@ struct InfoObjectListViewMainScreenView: View {
         GridItem(.flexible())
     ]
     
-    var groupedByDateObjects: [(date: Date, infoObjects: [InfoObject])] {
-        let groupedDictionary = Dictionary(grouping: userData.objects) { infoObject in
-            (infoObject.dateAdded).startOfDay()
-        }
-        return groupedDictionary
-            .map { ($0.key, $0.value) }
-            .sorted { $0.0 > $1.0 }
-    }
-    
     var body: some View {
         ScrollView {
-            ForEach(groupedByDateObjects, id: \.date) { group in
+            ForEach(userData.groupedObjects, id: \.date) { group in
                 Section(header: DateSectionHeaderView(group: group)) {
                     LazyVGrid(columns: columns, spacing: 12) {
                         ForEach(group.infoObjects, id: \.self) { object in
 //                            InfoObjectCardView(infoObject: object, previewMode: .category)
-                            NewVerticalInfoObjectCardView(viewModel: InfoObjectCardViewModel(infoObject: object))
+                            InfoObjectCardView(viewModel: InfoObjectCardViewModel(infoObject: object))
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -78,5 +69,5 @@ struct DateSectionHeaderView: View {
 
 #Preview {
     let userData = UserDataManager()
-    InfoObjectListViewMainScreenView(userData: userData)
+    InfoObjectsGridView(userData: userData)
 }

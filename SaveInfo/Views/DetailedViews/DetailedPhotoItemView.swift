@@ -45,11 +45,11 @@ struct DetailedPhotoItemView: View {
                         .font(.title)
                         .bold()
                     
-                    Text(viewModel.infoObject.description ?? "")
-                        .foregroundStyle(.black)
-                        .font(.body)
+//                    Text(viewModel.infoObject.description ?? "")
+//                        .foregroundStyle(.black)
+//                        .font(.body)
                     
-                    TagsView(infoObject: viewModel.infoObject)
+                    TagsView(tags: viewModel.infoObject.tags)
                 }
                 .padding(.horizontal)
             }
@@ -62,20 +62,7 @@ struct DetailedPhotoItemView: View {
 }
 
 #Preview {
-    @Previewable
-    @State var infoObject = InfoObject(
-        title: "Among Us",
-        description: "Lore ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor quam id massa faucibus dignissim. Nullam eget metus id nisl malesuada condimentum. Nam viverra fringilla erat, ut fermentum nunc feugiat eu.",
-        image: UIImage(named: "amongUs"),
-        stringURL: "https://www.apple.com/iphone/",
-        tags: ["Multiplayer", "Party game", "Online game"],
-        category: .electronics,
-        dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 1))!
-    )
-    
-    var viewModel = InfoObjectCardViewModel(infoObject: infoObject)
-    
-    DetailedPhotoItemView(viewModel: viewModel)
+    DetailedPhotoItemView(viewModel: InfoObjectCardViewModel(infoObject: SampleObjects.contents.first!))
 }
 
 struct LinkButtonOnDetailView: View {

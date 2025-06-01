@@ -115,7 +115,7 @@ fileprivate struct ShareView: View {
     func createInfoObject(from url: URL) async {
         let infoObject = InfoObject(
             stringURL: url.absoluteString,
-            category: .movies,
+            category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"),
             dateAdded: Date()
         )
         let viewModel = InfoObjectCardViewModel(infoObject: infoObject)

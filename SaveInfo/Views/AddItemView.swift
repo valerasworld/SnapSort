@@ -21,14 +21,12 @@ import CoreImage.CIFilterBuiltins
 
 struct AddItemView: View {
     //MARK: grab items from the Models: infoObject, category
-    let infoObject: InfoObject
-    let category: Category.AllCases
+//    let infoObject: InfoObject
     @Binding var userData: UserDataManager
     
 //    MARK: Set the items to add
     @State var titleNewItem: String
     @State var imageNewItem: Image?
-    @State var descriptionNewItem: String
     @State var selectedCategory: Category?
     @State var selectedItem: PhotosPickerItem?
     @State var tagNewItem: String
@@ -126,10 +124,10 @@ struct AddItemView: View {
                 }
                 
                 //MARK: Description field
-                Section("Description") {
-                    TextEditor(text: $descriptionNewItem)
-                        .font(.title3)
-                }
+//                Section("Description") {
+//                    TextEditor(text: $descriptionNewItem)
+//                        .font(.title3)
+//                }
                 
                 //MARK: Tags field
                 Section("Tags") {
@@ -143,7 +141,7 @@ struct AddItemView: View {
                         }
                     }
                     .sheet(isPresented: $isTagsPickerPresented) {
-                        NavigationView {
+                        NavigationStack {
                             VStack {
                                 Text("Add a tag")
                                     .font(.title)
@@ -152,13 +150,13 @@ struct AddItemView: View {
                                 TextField("Tag", text: $tagNewItem)
                                     .padding(.horizontal, 180)
                             }
-                            .toolbar {
-                                ToolbarItem(placement: .topBarTrailing) {
-                                    Button("Add") {
-                                        // logic to add tags
-                                    }
-                                }
-                            }
+//                            .toolbar {
+//                                ToolbarItem(placement: .topBarTrailing) {
+//                                    Button("Add") {
+//                                        // logic to add tags
+//                                    }
+//                                }
+//                            }
                         }
                         .presentationDetents([.medium])
                         .presentationDragIndicator(.visible)
@@ -166,7 +164,7 @@ struct AddItemView: View {
                 }
                 //MARK: Category field with Menu
                 Section("Category") {
-                    MenuCategory(category: Category.allCases, selectedCategory: $selectedCategory, isPresented: $isPresented)
+                    MenuCategory(categories: userData.uniqueCategories, selectedCategory: $selectedCategory, isPresented: $isPresented)
                     // CategoryPicker(category: Category.allCases, selectedCategory: $selectedCategory)
                     Button {
                         isPresented.toggle()
@@ -195,16 +193,11 @@ struct AddItemView: View {
                         let newObject = InfoObject(
                                 id: UUID().uuidString,
                                 title: titleNewItem,
-                                description: descriptionNewItem,
-                                author: nil,
                                 image: nil,
-                                genre: nil,
                                 stringURL: nil,
                                 tags: [],
-                                category: selectedCategory ?? Category.allCases.first!,
+                                category: selectedCategory ?? userData.initialCategory,
                                 dateAdded: Date.now,
-                                completed: nil,
-                                comment: nil,
                                 previewLoading: false,
                                 linkMetaData: nil,
                                 linkURL: nil
@@ -239,21 +232,16 @@ struct AddItemView: View {
 }
 
 #Preview {
-    @Previewable
-    @State var infoObject2 = InfoObject(
-        title: "Harry Potter",
-        description: "Renata is the best actress of the Moscow Art Theater",
-        author: "J.K. Rowling",
-        stringURL: "https://t.me/renatalitvinova/5500",
-        tags: ["Actress", "Theater", "Zemfira", "Art", "Kirill Trubetskoy"],
-        category: .restaurants,
-        dateAdded: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 1))!)
-    
-    AddItemView(infoObject: infoObject2, category: Category.allCases, userData: .constant(UserDataManager()), titleNewItem: "", descriptionNewItem: "", tagNewItem: "", showModal: .constant(true))
+    AddItemView(
+        userData: .constant(UserDataManager()),
+        titleNewItem: "",
+        tagNewItem: "",
+        showModal: .constant(true)
+    )
 }
 
 struct CategoryPicker: View {
-    let category: Category.AllCases
+    let categories: [Category]
     @Binding var selectedCategory: Category?
     @Binding var isPresented: Bool
     
@@ -263,28 +251,28 @@ struct CategoryPicker: View {
                 selection: $selectedCategory,
                 label:
                     HStack {
-                        //                    Image(
-                        //                        systemName: selectedCategory?.iconName ?? ""
-                        //                    )
-                        //                    .tint(
-                        //                        selectedCategory?.color ?? .gray
-                        //                    )
+//                        Image(
+//                            systemName: selectedCategory?.iconName ?? ""
+//                        )
+//                        .tint(
+//                            selectedCategory?.color ?? .gray
+//                        )
                         
                         Text(
                             selectedCategory != nil ? "Category" : "Select category"
                         )
-                        //.foregroundStyle(selectedCategory?.color ?? .gray)
+//                        .foregroundStyle(selectedCategory?.color ?? .gray)
                         
                     }) {
                         ForEach(
-                            Category.allCases,
+                            categories,
                             id: \.self
                         ) { category in
                             HStack {
                                 Image(systemName: category.iconName)
                                     .tint(category.color)
                                 
-                                Text(category.rawValue.capitalized)
+                                Text(category.name)
                                     .foregroundStyle(.secondary)
                             }
                             .tint(category.color)
@@ -298,7 +286,7 @@ struct CategoryPicker: View {
 
 
 struct MenuCategory: View {
-    let category: Category.AllCases
+    let categories: [Category]
     @Binding var selectedCategory: Category?
     @Binding var isPresented: Bool
     @State var newCategory: String = ""
@@ -307,11 +295,11 @@ struct MenuCategory: View {
     
     var body: some View {
         Menu {
-            ForEach(Category.allCases, id: \.self) { category in
+            ForEach(categories, id: \.self) { category in
                 Button(action: {
                     selectedCategory = category
                 }) {
-                    Label(category.rawValue.capitalized, systemImage: category.iconName)
+                    Label(category.name.capitalized, systemImage: category.iconName)
                         .tint(category.color)
                 }
             }
@@ -323,7 +311,7 @@ struct MenuCategory: View {
                         .foregroundStyle(selectedCategory.color)
                 }
                 
-                Text(selectedCategory?.rawValue.capitalized ?? "Select Category")
+                Text(selectedCategory?.name ?? "Select Category")
                     .foregroundStyle(selectedCategory != nil ? .black : .gray)
                 
                 Image(systemName: "chevron.right")

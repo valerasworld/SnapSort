@@ -17,9 +17,7 @@ class InfoObjectCardViewModel {
     
     // View Properties
     var previewLoading: Bool = false
-    var previewMode: LinkPreviewMode = .dashboard
     var cornerRadius: CGFloat = 10
-    var padding: CGFloat = 16
     
     init(
         infoObject: InfoObject,

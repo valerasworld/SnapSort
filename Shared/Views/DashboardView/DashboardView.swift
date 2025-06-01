@@ -14,7 +14,7 @@ struct DashboardView: View {
     @State var userData = UserDataManager()
     @State var searchText: String = ""
     @State var showModal: Bool = false
-    let infoObject: InfoObject
+//    let infoObject: InfoObject
     @State var selectedType: String = types.first!
     
     @State var selectedCategories: [Category] = []
@@ -40,7 +40,7 @@ struct DashboardView: View {
                         Divider()
                     }
             } content: {
-                    InfoObjectListViewMainScreenView(userData: userData)
+                    InfoObjectsGridView(userData: userData)
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("SnapSort")
@@ -71,7 +71,7 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $showModal) {
-                AddItemView(infoObject: infoObject, category: Category.allCases, userData: $userData, titleNewItem: "", descriptionNewItem: "", tagNewItem: "", showModal: $showModal)
+                AddItemView(userData: $userData, titleNewItem: "", tagNewItem: "", showModal: $showModal)
             }
             
         }
@@ -81,7 +81,7 @@ struct DashboardView: View {
 }
 
 #Preview {
-    DashboardView(infoObject: .init(category: Category.books, dateAdded: Date()))
+    DashboardView()
 }
 
 
