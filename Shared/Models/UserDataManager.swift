@@ -16,22 +16,7 @@ class UserDataManager {
         return useMockData ? mockData : liveObjects
     }
     
-    var uniqueCategories: [Category] {
-        var categories: [Category] = []
-        categories = Array(Set(objects.map { $0.category }))
-        return categories.sorted { $0.name < $1.name }
-    }
-    
     let initialCategory: Category = Category(name: "No Category", colorName: "gray", iconName: "questionmark")
-    
-    var groupedObjects: [(date: Date, infoObjects: [InfoObject])] {
-        let groupedDictionary = Dictionary(grouping: objects) { infoObject in
-            (infoObject.dateAdded).startOfDay()
-        }
-        return groupedDictionary
-            .map { ($0.key, $0.value) }
-            .sorted { $0.0 > $1.0 }
-    }
 }
 
 extension Date {

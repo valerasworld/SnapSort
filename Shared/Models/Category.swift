@@ -21,7 +21,6 @@ class Category: Identifiable {
 
     // Computed property to use the SwiftUI Color
     
-    @Transient
     var color: Color {
         Color.named(colorName)
     }

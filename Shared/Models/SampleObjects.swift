@@ -57,6 +57,7 @@ struct SampleObjects {
         ),
         InfoObject(
             title: "Antonio Cibus",
+            stringURL: "https://httpbin.org/html",
             category: Category(name: "Restaurants", colorName: "orange", iconName: "fork.knife"),
             dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 7))!
         ),

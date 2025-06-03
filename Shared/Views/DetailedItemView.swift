@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DetailedItemView: View {
     let infoObject: InfoObject
-    @Environment(Favorites.self) var favorites
+//    @Environment(Favorites.self) var favorites
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -22,8 +22,11 @@ struct DetailedItemView: View {
             .padding([.leading, .trailing, .top])
             ScrollView {
                 if let image = infoObject.image {
+//                if let imageData = infoObject.image,
+//                    let uiImage = UIImage(data: imageData) {
                     ZStack {
                         Image(uiImage: image)
+//                        Image(uiImage: uiImage)
                             .resizable()
                             .scaledToFit()
                             .frame(maxWidth: .infinity)
@@ -50,25 +53,27 @@ struct DetailedItemView: View {
                     
                 }
                
-                Button(favorites.contains(infoObject: infoObject) ? "Remove from Favorites" : "Add to Favorites") {
-                    if favorites.contains(infoObject: infoObject) {
-                                    favorites.remove(infoObject)
-                                } else {
-                                    favorites.add(infoObject: infoObject)
-                                }
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .padding()
+//                Button(favorites.contains(infoObject: infoObject) ? "Remove from Favorites" : "Add to Favorites") {
+//                    if favorites.contains(infoObject: infoObject) {
+//                                    favorites.remove(infoObject)
+//                                } else {
+//                                    favorites.add(infoObject: infoObject)
+//                                }
+//                            }
+//                            .buttonStyle(.borderedProminent)
+//                            .padding()
                 
             }
             .navigationBarBackButtonHidden(true)
-        }
+            .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
+
         }
     }
+}
 
 
 #Preview {
-   DetailedItemView(infoObject: SampleObjects.contents.first!)
+    DetailedItemView(infoObject: SampleObjects.contents.first!)
 }
 
 struct BackButtonView: View {

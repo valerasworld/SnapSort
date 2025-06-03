@@ -6,13 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct SaveInfoApp: App {
 
     var body: some Scene {
         WindowGroup {
-            DashboardView()
+            DashboardView(selectedCategories: [])
         }
+        .modelContainer(for: InfoObject.self)
     }
 }

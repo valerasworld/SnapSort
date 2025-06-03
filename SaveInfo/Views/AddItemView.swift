@@ -19,6 +19,8 @@ import PhotosUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
+import SwiftData
+
 struct AddItemView: View {
     //MARK: grab items from the Models: infoObject, category
 //    let infoObject: InfoObject
@@ -41,6 +43,8 @@ struct AddItemView: View {
     @State private var filterIntensity = 0.5
     @State var currentFilter = CIFilter.sepiaTone()
     let context = CIContext()
+    
+    @Query var infoObjects: [InfoObject]
     
     var body: some View {
         NavigationView {
@@ -164,7 +168,7 @@ struct AddItemView: View {
                 }
                 //MARK: Category field with Menu
                 Section("Category") {
-                    MenuCategory(categories: userData.uniqueCategories, selectedCategory: $selectedCategory, isPresented: $isPresented)
+                    MenuCategory(categories: infoObjects.findUniqueCategories(), selectedCategory: $selectedCategory, isPresented: $isPresented)
                     // CategoryPicker(category: Category.allCases, selectedCategory: $selectedCategory)
                     Button {
                         isPresented.toggle()
@@ -177,43 +181,32 @@ struct AddItemView: View {
                     }
                 }
             }
-            
+            .navigationTitle("Add an Item")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                
                 ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
+                    Button("Cancel") {
                         showModal = false
-                    }) {
-                        Text("Cancel")
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Add") {
                         let newObject = InfoObject(
-                                id: UUID().uuidString,
-                                title: titleNewItem,
-                                image: nil,
-                                stringURL: nil,
-                                tags: [],
-                                category: selectedCategory ?? userData.initialCategory,
-                                dateAdded: Date.now,
-                                previewLoading: false,
-                                linkMetaData: nil,
-                                linkURL: nil
-                            )
-
-                            if userData.useMockData {
-                                userData.mockData.append(newObject)
-                            } else {
-                                userData.liveObjects.append(newObject)
-                            }
-
+                            title: titleNewItem,
+                            category: selectedCategory ?? userData.initialCategory,
+                            dateAdded: .now
+                        )
+                        
+                        if userData.useMockData {
+                            userData.mockData.append(newObject)
+                        } else {
+                            userData.liveObjects.append(newObject)
+                        }
+                        
                     }
                 }
             }
-            .navigationTitle("Add an Item")
-            .navigationBarTitleDisplayMode(.inline)
         
             
         }

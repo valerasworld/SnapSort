@@ -66,10 +66,16 @@ private struct InfoCardImageLayerView: View {
     var body: some View {
         ZStack {
             if let image = infoObject.image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .clipped()
+//            if let imageData = infoObject.image,
+//                let uiImage = UIImage(data: imageData) {
+                ZStack {
+                    Image(uiImage: image)
+//                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                    Color.black.opacity(0.02)
+                }
                 
             } else {
                 Rectangle()
@@ -78,12 +84,12 @@ private struct InfoCardImageLayerView: View {
                         ZStack {
                             Rectangle()
                                 .fill(infoObject.category.color)
-                            Rectangle()
-                                .fill(.ultraThinMaterial)
+//                            Rectangle()
+//                                .fill(.ultraThinMaterial)
                         }
                     )
             }
-            Color.black.opacity(0.02)
+            
         }
         .aspectRatio(16/9, contentMode: .fill)
         .frame(
@@ -144,8 +150,8 @@ private struct InfoCardBookmarkView: View {
                         Rectangle()
                             .fill(category.color)
                         
-                        Rectangle()
-                            .fill(.ultraThinMaterial)
+//                        Rectangle()
+//                            .fill(.ultraThinMaterial)
                     })
             VStack {
                 Spacer()

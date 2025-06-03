@@ -7,13 +7,24 @@
 import SwiftUI
 import LinkPresentation
 import UniformTypeIdentifiers
+import SwiftData
 
-@Observable
+@Model
 class InfoObject: Hashable, Identifiable {
     var id = UUID().uuidString
     var title: String?
-    var image: UIImage?
+    
+//    @Transient
+    @Attribute(.externalStorage)
+    var imageData: Data?
+    
+    var image: UIImage? {
+            get { imageData.flatMap { UIImage(data: $0) } }
+            set { imageData = newValue?.jpegData(compressionQuality: 0.9) }
+        }
+    
     var stringURL: String?
+    
     var tags: [String] = []
     var category: Category
     var dateAdded: Date
@@ -21,13 +32,17 @@ class InfoObject: Hashable, Identifiable {
     
     // Link Preview Data
     var previewLoading: Bool = false
+    
+    @Transient
     var linkMetaData: LPLinkMetadata?
+    
+    @Transient
     var linkURL: URL?
     
     init(
         id: String = UUID().uuidString,
         title: String? = nil,
-        image: UIImage? = nil,
+        imageData: Data? = nil,
         stringURL: String? = nil,
         tags: [String] = [],
         category: Category,
@@ -39,7 +54,7 @@ class InfoObject: Hashable, Identifiable {
     ) {
         self.id = id
         self.title = title
-        self.image = image
+        self.imageData = imageData
         self.stringURL = stringURL
         self.tags = tags
         self.category = category
@@ -56,5 +71,36 @@ class InfoObject: Hashable, Identifiable {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+}
+
+extension Array where Element == InfoObject {
+    func groupByDate() -> [(date: Date, infoObjects: [InfoObject])] {
+        let groupedDictionary = Dictionary(grouping: self) { $0.dateAdded.startOfDay() }
+        return groupedDictionary
+            .map { ($0.key, $0.value) }
+            .sorted { $0.0 > $1.0 }
+    }
+}
+
+extension Array where Element == InfoObject {
+    func findUniqueCategories() -> [Category] {
+        let categories = self.map { $0.category }
+        let uniqueCategories = Dictionary(grouping: categories, by: { $0.id }).compactMap { $0.value.first }
+        return Set(uniqueCategories).sorted { $0.name < $1.name }
+    }
+}
+
+extension Array where Element == InfoObject {
+    func findInfoTypes() -> [InfoType] {
+        let hasLink = contains { $0.linkURL != nil }
+        let hasImage = contains { $0.image != nil }
+        
+        switch (hasLink, hasImage) {
+        case (true, true): return [.all, .links, .images]
+        case (true, false): return [.all, .links]
+        case (false, true): return [.all, .images]
+        default: return []
+        }
     }
 }

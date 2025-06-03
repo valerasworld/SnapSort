@@ -6,33 +6,32 @@
 //
 
 import SwiftUI
-
-let types: [String] = ["All", "Links", "Images"]
+import SwiftData
 
 struct DashboardView: View {
     
     @State var userData = UserDataManager()
     @State var searchText: String = ""
     @State var showModal: Bool = false
-//    let infoObject: InfoObject
-    @State var selectedType: String = types.first!
     
     @State var selectedCategories: [Category] = []
-    @State private var favorites = Favorites()
+    @State var selectedType: InfoType = InfoType.all
+    @State private var favorites = Favorites() // ?
+    
+    // SwiftData -------------
+    @State private var navigationPath: [InfoObject] = []
+    @Environment(\.modelContext) private var modelContext
+    @Query private var infoObjects: [InfoObject]
     
     var body: some View {
-        
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ResizableHeaderScrollView {
                 
             } stickyHeader: {
-                ObjectTypeSegmentedControlView(
-                    selectedType: $selectedType,
-                    userData: userData,
-                    uniqueCategories: userData.uniqueCategories
-                )
+                ObjectTypeSegmentedControlView(infoObjects: infoObjects, selectedCategories: $selectedCategories, selectedType: $selectedType)
             } categoryFilter: {
-                CtegoriesFilterView(uniqueCategories: userData.uniqueCategories)
+                CategoriesFilterView(infoObjects: infoObjects, selectedCategories: $selectedCategories)
+                    .frame(maxWidth: .infinity)
             } background: {
                 Rectangle()
                     .fill(.ultraThinMaterial)
@@ -40,14 +39,16 @@ struct DashboardView: View {
                         Divider()
                     }
             } content: {
-                    InfoObjectsGridView(userData: userData)
+                InfoObjectsGridView(selectedCategories: selectedCategories, selectedType: selectedType)
             }
+            
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("SnapSort")
             .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
             .searchable(text: $searchText, placement: .navigationBarDrawer)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+            .toolbar(content: {
+                
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         //
                     } label: {
@@ -56,23 +57,30 @@ struct DashboardView: View {
                             .bold()
                     }
                 }
-                ToolbarItem(placement: .topBarLeading) {
-                    Toggle("", isOn: $userData.useMockData)
-                        .toggleStyle(.switch)
-                }
-                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        let infoObject = InfoObject(category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"))
+                        modelContext.insert(infoObject)
+//                        navigationPath = [infoObject]
+                        
                         showModal = true
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(Color("black"))
                     }
                 }
-            }
+            })
             .sheet(isPresented: $showModal) {
                 AddItemView(userData: $userData, titleNewItem: "", tagNewItem: "", showModal: $showModal)
             }
+//            
+//            .onAppear {
+//                let demoObjects = SampleObjects.contents
+//                for demoObject in demoObjects {
+//                    modelContext.insert(demoObject)
+//                }
+//                
+//            }
             
         }
         .environment(userData)
@@ -81,139 +89,14 @@ struct DashboardView: View {
 }
 
 #Preview {
-    DashboardView()
+    DashboardView(selectedCategories: [])
+        .modelContainer(previewContainer)
 }
 
 
 
-struct CategoryButtonView: View {
-    var category: Category
-    @State var isCategorySelected: Bool = false
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .foregroundColor(isCategorySelected ? .clear : .white)
-                .padding(isCategorySelected ? 0 : 2)
-                .background(coloredCircled)
-            if isCategorySelected {
-                Image(systemName: category.iconName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                    .foregroundStyle(.white)
-                    .fontWeight(.semibold)
-                    .bold()
-            } else {
-                Circle()
-                    .foregroundStyle(.clear)
-                    .background(coloredCircled)
-                    .mask {
-                        Image(systemName: category.iconName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-        //                    .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .bold()
-                    }
-            }
-        }
-        .frame(width: 36)
-//        .frame(width: 50)
-        .onTapGesture {
-            withAnimation(.spring(duration: 0.25)) {
-                isCategorySelected.toggle()
-            }
-        }
-    }
-    
-    var coloredCircled: some View {
-        ZStack {
-            Circle()
-                .fill(category.color)
-            
-            Circle()
-                .fill(.ultraThinMaterial)
-        }
-    }
-}
 
-struct SegmentedControlCapsuleView: View {
-    var userData: UserDataManager
-    var uniqueCategories: [Category]
-    
-    var body: some View {
-        Capsule()
-            .fill(.ultraThinMaterial)
-            
-            .background(
-                
-                Capsule()
-                    .fill(
-                        LinearGradient(
-                            colors: uniqueCategories.map{ $0.color },
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing)
-                    )
-            )
-    }
-}
 
-struct ObjectTypeSegmentedControlView: View {
-    
-    @Binding var selectedType: String
-    var userData: UserDataManager
-    @Namespace private var animation
-    var uniqueCategories: [Category]
-    
-    var body: some View {
-        HStack(spacing: 10) {
-            ForEach(types, id: \.self) { type in
-                Text(type)
-                    .foregroundStyle((selectedType == type) ? .white : .black)
-                    .cornerRadius(10)
-                    .fontWeight(.semibold) // ??
-                    .padding(.horizontal, 20)
-                    .frame(height: 30)
-                    .frame(maxWidth: .infinity)
-                    .background {
-                        if selectedType == type {
-                            SegmentedControlCapsuleView(userData: userData, uniqueCategories: uniqueCategories)
-                                .matchedGeometryEffect(id: "ACTIVETAB", in: animation)
-                                .padding(.horizontal, 3)
-                                .shadow(color: .black.opacity(0.17), radius: 1)
-                        }
-                    }
-                    .contentShape(.rect)
-                    .onTapGesture {
-                        withAnimation(.snappy/*(duration: 0.3)*/) {
-                            selectedType = type
-                        }
-                    }
-            }
-        }
-        .foregroundStyle(.primary)
-        .padding(.vertical, 3)
-        .background {
-            Capsule()
-                .fill(.white)
-        }
-        .padding(.top, -10)
-        .padding(.horizontal, 16)
-    }
-}
 
-struct CtegoriesFilterView: View {
-    var uniqueCategories: [Category]
-    
-    var body: some View {
-        HStack {
-            ForEach(uniqueCategories, id: \.self) { category in
-                CategoryButtonView(category: category)
-            }
-        }
-        .padding(.bottom, 12)
-        .padding(.horizontal, 16)
-    }
-}
+
+
