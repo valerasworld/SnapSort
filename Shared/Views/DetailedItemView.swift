@@ -11,6 +11,7 @@ struct DetailedItemView: View {
     let infoObject: InfoObject
     @Environment(Favorites.self) var favorites
     @Environment(\.dismiss) var dismiss
+    @State var isFavorite: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -23,18 +24,18 @@ struct DetailedItemView: View {
                 //                        .font(.title3)
                 //                        .bold()
                 //                        .frame(maxWidth: .infinity)
-                ////                        .overlay(alignment: .leading) {
-                ////                            HStack {
-                ////                                Button ("Cancel") {
-                ////
-                ////                                }
-                ////                                .tint(.red)
-                ////                                Spacer()
-                ////                                Button ("Edit") {
-                ////
-                ////                                }
-                ////                            }
-                ////                        }
+//                                        .overlay(alignment: .leading) {
+//                                            HStack {
+//                                                Button ("Cancel") {
+//                
+//                                                }
+//                                                .tint(.red)
+//                                                Spacer()
+//                                                Button ("Edit") {
+//                
+//                                                }
+//                                            }
+//                                        }
                 //
                 //                    Spacer (minLength: 0)
             }
@@ -53,12 +54,23 @@ struct DetailedItemView: View {
                 }
                 VStack(alignment: .leading) {
                     Group {
-                        Text(infoObject.title ?? "")
-                        //                            .foregroundStyle(infoObject.category.color)
-                            .foregroundStyle(Color.black)
-                            .font(.title3)
-                            .bold()
-                        
+                        HStack(alignment: .top) {
+                                Text(infoObject.title ?? "CIAO")
+                                                   //                     .foregroundStyle(infoObject.category.color)
+                                .foregroundStyle(Color.black)
+                                .font(.title3)
+                                .bold()
+                                Spacer()
+                                Button {
+                                isFavorite.toggle()
+                                        } label: {
+                                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(maxWidth: 25)
+                                    .foregroundStyle(infoObject.category.color)
+                                                   }
+                                               }
                         
                         Text(infoObject.description ?? "")
                             .foregroundStyle(.black)
@@ -71,16 +83,6 @@ struct DetailedItemView: View {
                     
                 }
                
-                Button(favorites.contains(infoObject: infoObject) ? "Remove from Favorites" : "Add to Favorites") {
-                    if favorites.contains(infoObject: infoObject) {
-                                    favorites.remove(infoObject)
-                                } else {
-                                    favorites.add(infoObject: infoObject)
-                                }
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .padding()
-                
             }
             .navigationBarBackButtonHidden(true)
         }

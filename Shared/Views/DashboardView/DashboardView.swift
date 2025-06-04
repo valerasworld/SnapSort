@@ -55,9 +55,12 @@ struct DashboardView: View {
                     Button {
                         //
                     } label: {
-                        Image(systemName: "line.horizontal.3")
-                            .foregroundStyle(.black)
-                            .bold()
+//                        Image(systemName: "line.horizontal.3")
+//                            .foregroundStyle(.black)
+//                            .bold()
+                        
+                        Image(systemName: "heart.fill")
+                                                   .foregroundStyle(.red)
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
