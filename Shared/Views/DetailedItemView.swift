@@ -41,7 +41,7 @@ struct DetailedItemView: View {
                                 .background(.ultraThinMaterial)
                         }
                     }
-                    if infoObject.stringURL != nil {
+                    if infoObject.stringURL != nil && infoObject.stringURL != "" {
                         LinkButtonOnDetailView(infoObject: infoObject)
                     }
                 }
