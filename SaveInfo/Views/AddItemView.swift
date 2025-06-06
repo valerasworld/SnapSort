@@ -22,30 +22,17 @@ import CoreImage.CIFilterBuiltins
 import SwiftData
 
 struct AddItemView: View {
-    //MARK: grab items from the Models: infoObject, category
-//    let infoObject: InfoObject
-    @Binding var userData: UserDataManager
-    
-//    MARK: Set the items to add
-    @State var titleNewItem: String
-    @State var imageNewItem: Image?
-    @State var selectedCategory: Category?
-    @State var selectedItem: PhotosPickerItem?
-    @State var tagNewItem: String
-
-    //MARK: Wrappers for Modals: showModal (for adding a new category) and isPresented, isPhotoPickerPresented for the Photo Picker modal.
-    @Binding var showModal: Bool
-    @State var isPresented: Bool = false
+    @Bindable var infoObject: InfoObject
     @State var isPhotoPickerPresented: Bool = false
-    @State var isTagsPickerPresented: Bool = false
+    @State var selectedPhotoItem: PhotosPickerItem?
+    @State var isCreateCategorySheetPresented: Bool = false
+    @State var isEditing: Bool
+    var infoObjects: [InfoObject]
+
     
-//MARK: For the PhotoPicker
-    @State private var filterIntensity = 0.5
-    @State var currentFilter = CIFilter.sepiaTone()
-    let context = CIContext()
-    
-    @Query var infoObjects: [InfoObject]
-    
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
+
     var body: some View {
         NavigationView {
             Form {
@@ -53,8 +40,8 @@ struct AddItemView: View {
                 //MARK: Image section
                 Section("Image") {
                     VStack {
-                        if let image = imageNewItem {
-                            image
+                        if let uiImage = infoObject.image {
+                            Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxHeight: 200)
@@ -82,11 +69,9 @@ struct AddItemView: View {
 //                                }
 //
 //                            }
-//                        }
-//
 //
                     .sheet(isPresented: $isPhotoPickerPresented) {
-                        PhotosPicker(selection: $selectedItem, matching: .images) { }
+                        PhotosPicker(selection: $selectedPhotoItem, matching: .images) { }
                             .photosPickerStyle(.inline)
                             .photosPickerDisabledCapabilities([.collectionNavigation, .search])
                             .presentationDetents([.medium, .large])
@@ -95,113 +80,105 @@ struct AddItemView: View {
                         
 
                     }
-                    .onChange(of: selectedItem) { _, _ in
+                    .onChange(of: selectedPhotoItem) { _, _ in
                         loadImage()
                     }
 
-//                    .onChange(of: selectedItem, loadImage)
-
-//                    ZStack {
-//                        Image(systemName: "photo")
-//                            .resizable()
-//                            .scaledToFit()
-//                            .foregroundStyle(.gray)
-//                            .frame(maxWidth: .infinity)
-//
-//
-//                        Button("+") {
-//                        }
-//
-//                        //                    Image(systemName: "plus")
-//                        // Rectangle(cornerRadius: 5)
-//                    }
-                }
+                 }
                 //MARK: Title field
                 Section("Title") {
-                    TextField("", text: $titleNewItem)
-                        .bold()
-                        .font(.title)
-                }
-                
-                //MARK: Detail section
-                Section("Details") {
-                }
-                
-                //MARK: Description field
-//                Section("Description") {
-//                    TextEditor(text: $descriptionNewItem)
-//                        .font(.title3)
-//                }
-                
-                //MARK: Tags field
-                Section("Tags") {
-                    Button {
-                        isTagsPickerPresented.toggle()
-                    } label: {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                            Text("Add a tag")
-                            // Label(systemImage: "plus.circle.fill")
-                        }
+                    if let title = Binding($infoObject.title) {
+                        TextField("", text: title)
+                            .bold()
+                            .font(.title3)
+
                     }
-                    .sheet(isPresented: $isTagsPickerPresented) {
-                        NavigationStack {
-                            VStack {
-                                Text("Add a tag")
-                                    .font(.title)
-                                    .bold()
-                                
-                                TextField("Tag", text: $tagNewItem)
-                                    .padding(.horizontal, 180)
-                            }
-//                            .toolbar {
-//                                ToolbarItem(placement: .topBarTrailing) {
-//                                    Button("Add") {
-//                                        // logic to add tags
-//                                    }
-//                                }
-//                            }
-                        }
-                        .presentationDetents([.medium])
-                        .presentationDragIndicator(.visible)
-                    }
-                }
+}
+                
                 //MARK: Category field with Menu
                 Section("Category") {
-                    MenuCategory(categories: infoObjects.findUniqueCategories(), selectedCategory: $selectedCategory, isPresented: $isPresented)
-                    // CategoryPicker(category: Category.allCases, selectedCategory: $selectedCategory)
+                    MenuCategory(categories: infoObjects.findUniqueCategories(), isPresented: $isCreateCategorySheetPresented, infoObject: infoObject)
                     Button {
-                        isPresented.toggle()
+                        isCreateCategorySheetPresented.toggle()
                     } label: {
                         HStack {
                             Image(systemName: "plus.circle")
                             Text("Add New")
-                            
                         }
                     }
+                    .sheet(isPresented: $isCreateCategorySheetPresented) {
+                        CreateCategorySheetView(infoObject: infoObject, category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"))
+                    }
                 }
+                
+                //MARK: Link section
+                Section("Link") {
+                    if let stringURL = Binding($infoObject.stringURL) {
+                        
+                        TextField("", text: stringURL)
+                    }
+                }
+                
+                //MARK: Comment field
+                Section("Comment") {
+                    if let comment = Binding($infoObject.comment) {
+                        
+                        TextField("", text: comment)
+                    }
+                }
+                
+                //MARK: Tags field
+//                Section("Tags") {
+//                    Button {
+//                        isTagsPickerPresented.toggle()
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "plus.circle")
+//                            Text("Add a tag")
+//                            // Label(systemImage: "plus.circle.fill")
+//                        }
+//                    }
+//                    .sheet(isPresented: $isTagsPickerPresented) {
+//                        NavigationStack {
+//                            VStack {
+//                                Text("Add a tag")
+//                                    .font(.title)
+//                                    .bold()
+//                                
+//                                TextField("Tag", text: $tagNewItem)
+//                                    .padding(.horizontal, 180)
+//                            }
+////                            .toolbar {
+////                                ToolbarItem(placement: .topBarTrailing) {
+////                                    Button("Add") {
+////                                        // logic to add tags
+////                                    }
+////                                }
+////                            }
+//                        }
+//                        .presentationDetents([.medium])
+//                        .presentationDragIndicator(.visible)
+//                    }
+//                }
+
+                
             }
-            .navigationTitle("Add an Item")
+            .navigationTitle(isEditing ? "Edit Item" : "Add Item")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
-                        showModal = false
+                        dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add") {
-                        let newObject = InfoObject(
-                            title: titleNewItem,
-                            category: selectedCategory ?? userData.initialCategory,
-                            dateAdded: .now
-                        )
-                        
-                        if userData.useMockData {
-                            userData.mockData.append(newObject)
+                    Button(isEditing ? "Save" : "Add") {
+                        if isEditing {
+                            dismiss()
                         } else {
-                            userData.liveObjects.append(newObject)
+                            modelContext.insert(infoObject)
+                            dismiss()
                         }
                         
                     }
@@ -214,22 +191,32 @@ struct AddItemView: View {
     }
     func loadImage() {
         Task {
-            guard let selectedItem,
-                  let data = try? await selectedItem.loadTransferable(type: Data.self),
+            guard let selectedPhotoItem,
+                  let data = try? await selectedPhotoItem.loadTransferable(type: Data.self),
                   let uiImage = UIImage(data: data) else {
                 return
             }
-            imageNewItem = Image(uiImage: uiImage)
+            infoObject.image = uiImage
         }
     }
 }
 
 #Preview {
     AddItemView(
-        userData: .constant(UserDataManager()),
-        titleNewItem: "",
-        tagNewItem: "",
-        showModal: .constant(true)
+        infoObject: InfoObject(
+            title: "",
+            stringURL: "",
+            tags: [],
+            category: Category(
+                name: "No Category",
+                colorName: "gray",
+                iconName: "questionMark"
+            ),
+            dateAdded: .now,
+            comment: "",
+        ),
+        isEditing: false,
+        infoObjects: []
     )
 }
 
@@ -280,17 +267,13 @@ struct CategoryPicker: View {
 
 struct MenuCategory: View {
     let categories: [Category]
-    @Binding var selectedCategory: Category?
     @Binding var isPresented: Bool
-    @State var newCategory: String = ""
-    @State private var bgColor =
-           Color(.sRGB, red: 0.98, green: 0.9, blue: 0.2)
-    
+    var infoObject: InfoObject
     var body: some View {
         Menu {
             ForEach(categories, id: \.self) { category in
                 Button(action: {
-                    selectedCategory = category
+                    infoObject.category = category
                 }) {
                     Label(category.name.capitalized, systemImage: category.iconName)
                         .tint(category.color)
@@ -299,33 +282,16 @@ struct MenuCategory: View {
             
         } label: {
             HStack {
-                if let selectedCategory = selectedCategory {
-                    Image(systemName: selectedCategory.iconName)
-                        .foregroundStyle(selectedCategory.color)
-                }
+                Image(systemName: infoObject.category.iconName)
+                    .foregroundStyle(infoObject.category.color)
                 
-                Text(selectedCategory?.name ?? "Select Category")
-                    .foregroundStyle(selectedCategory != nil ? .black : .gray)
                 
-                Image(systemName: "chevron.right")
-                    .foregroundStyle(.gray)
-            }
-        }
-        .sheet(isPresented: $isPresented) {
-            VStack(alignment: .leading) {
-                Text("Add New Category")
-                    .font(.title3)
-                    .bold()
-                TextField("New Category Name", text: $newCategory)
-                    .presentationDetents([.medium])
-                    .presentationDragIndicator(.visible)
-                
-                ColorPicker("Choose a color :)", selection: $bgColor)
+                Text(infoObject.category.name)
+                    .foregroundStyle(infoObject.category.color)
                 
             }
-            .padding()
-            
         }
+        
         
     }
 }
