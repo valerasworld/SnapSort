@@ -59,9 +59,7 @@ struct DashboardView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        let infoObject = InfoObject(category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"))
-                        modelContext.insert(infoObject)
-//                        navigationPath = [infoObject]
+                 
                         
                         showModal = true
                     } label: {
@@ -71,7 +69,16 @@ struct DashboardView: View {
                 }
             })
             .sheet(isPresented: $showModal) {
-                AddItemView(userData: $userData, titleNewItem: "", tagNewItem: "", showModal: $showModal)
+                AddItemView(
+                    infoObject: InfoObject(
+                        title: "",
+                        stringURL: "",
+                        tags: [],
+                        category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"),
+                        dateAdded: Date.now,
+                        comment: ""
+                    ),
+                )
             }
 //            
 //            .onAppear {

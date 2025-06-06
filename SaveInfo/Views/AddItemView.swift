@@ -24,27 +24,31 @@ import SwiftData
 struct AddItemView: View {
     //MARK: grab items from the Models: infoObject, category
 //    let infoObject: InfoObject
-    @Binding var userData: UserDataManager
+//    @Binding var userData: UserDataManager
     
 //    MARK: Set the items to add
-    @State var titleNewItem: String
-    @State var imageNewItem: Image?
-    @State var selectedCategory: Category?
+//    @State var titleNewItem: String
+//    @State var imageNewItem: Image?
+//    @State var selectedCategory: Category?
     @State var selectedItem: PhotosPickerItem?
-    @State var tagNewItem: String
+//    @State var tagNewItem: String
+//    @State var linkNewItem: String
+//    @State var commentNewItem: String
 
     //MARK: Wrappers for Modals: showModal (for adding a new category) and isPresented, isPhotoPickerPresented for the Photo Picker modal.
-    @Binding var showModal: Bool
-    @State var isPresented: Bool = false
+//    @Binding var showModal: Bool
+//    @State var isPresented: Bool = false
     @State var isPhotoPickerPresented: Bool = false
     @State var isTagsPickerPresented: Bool = false
     
 //MARK: For the PhotoPicker
-    @State private var filterIntensity = 0.5
-    @State var currentFilter = CIFilter.sepiaTone()
-    let context = CIContext()
+//    @State private var filterIntensity = 0.5
+//    @State var currentFilter = CIFilter.sepiaTone()
+//    let context = CIContext()
     
-    @Query var infoObjects: [InfoObject]
+//    @Query var infoObjects: [InfoObject]
+    @Bindable var infoObject: InfoObject
+    @Environment(\.modelContext) var modelContext
     
     var body: some View {
         NavigationView {
@@ -53,8 +57,8 @@ struct AddItemView: View {
                 //MARK: Image section
                 Section("Image") {
                     VStack {
-                        if let image = imageNewItem {
-                            image
+                        if let uiImage = infoObject.image {
+                            Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxHeight: 200)
@@ -82,8 +86,6 @@ struct AddItemView: View {
 //                                }
 //
 //                            }
-//                        }
-//
 //
                     .sheet(isPresented: $isPhotoPickerPresented) {
                         PhotosPicker(selection: $selectedItem, matching: .images) { }
@@ -99,111 +101,97 @@ struct AddItemView: View {
                         loadImage()
                     }
 
-//                    .onChange(of: selectedItem, loadImage)
-
-//                    ZStack {
-//                        Image(systemName: "photo")
-//                            .resizable()
-//                            .scaledToFit()
-//                            .foregroundStyle(.gray)
-//                            .frame(maxWidth: .infinity)
-//
-//
-//                        Button("+") {
-//                        }
-//
-//                        //                    Image(systemName: "plus")
-//                        // Rectangle(cornerRadius: 5)
-//                    }
-                }
+                 }
                 //MARK: Title field
                 Section("Title") {
-                    TextField("", text: $titleNewItem)
-                        .bold()
-                        .font(.title)
-                }
-                
-                //MARK: Detail section
-                Section("Details") {
-                }
-                
-                //MARK: Description field
-//                Section("Description") {
-//                    TextEditor(text: $descriptionNewItem)
-//                        .font(.title3)
-//                }
-                
-                //MARK: Tags field
-                Section("Tags") {
-                    Button {
-                        isTagsPickerPresented.toggle()
-                    } label: {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                            Text("Add a tag")
-                            // Label(systemImage: "plus.circle.fill")
-                        }
+                    if let title = Binding($infoObject.title) {
+                        TextField("", text: title)
+                            .bold()
+                            .font(.title)
+
                     }
-                    .sheet(isPresented: $isTagsPickerPresented) {
-                        NavigationStack {
-                            VStack {
-                                Text("Add a tag")
-                                    .font(.title)
-                                    .bold()
-                                
-                                TextField("Tag", text: $tagNewItem)
-                                    .padding(.horizontal, 180)
-                            }
-//                            .toolbar {
-//                                ToolbarItem(placement: .topBarTrailing) {
-//                                    Button("Add") {
-//                                        // logic to add tags
-//                                    }
-//                                }
-//                            }
-                        }
-                        .presentationDetents([.medium])
-                        .presentationDragIndicator(.visible)
-                    }
-                }
+}
+                
                 //MARK: Category field with Menu
                 Section("Category") {
-                    MenuCategory(categories: infoObjects.findUniqueCategories(), selectedCategory: $selectedCategory, isPresented: $isPresented)
+//                    MenuCategory(categories: infoObjects.findUniqueCategories(), selectedCategory: $selectedCategory, isPresented: $isPresented)
                     // CategoryPicker(category: Category.allCases, selectedCategory: $selectedCategory)
-                    Button {
-                        isPresented.toggle()
-                    } label: {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                            Text("Add New")
-                            
-                        }
+//                    Button {
+//                        isPresented.toggle()
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "plus.circle")
+//                            Text("Add New")
+//                        }
+//                        }
+                    }
+                
+                //MARK: Link section
+                Section("Link") {
+                    if let stringURL = Binding($infoObject.stringURL) {
+                        
+                        TextField("", text: stringURL)
                     }
                 }
+                
+                //MARK: Comment field
+                Section("Comment") {
+                    if let comment = Binding($infoObject.comment) {
+                        
+                        TextField("", text: comment)
+                    }
+                }
+                
+                //MARK: Tags field
+//                Section("Tags") {
+//                    Button {
+//                        isTagsPickerPresented.toggle()
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "plus.circle")
+//                            Text("Add a tag")
+//                            // Label(systemImage: "plus.circle.fill")
+//                        }
+//                    }
+//                    .sheet(isPresented: $isTagsPickerPresented) {
+//                        NavigationStack {
+//                            VStack {
+//                                Text("Add a tag")
+//                                    .font(.title)
+//                                    .bold()
+//                                
+//                                TextField("Tag", text: $tagNewItem)
+//                                    .padding(.horizontal, 180)
+//                            }
+////                            .toolbar {
+////                                ToolbarItem(placement: .topBarTrailing) {
+////                                    Button("Add") {
+////                                        // logic to add tags
+////                                    }
+////                                }
+////                            }
+//                        }
+//                        .presentationDetents([.medium])
+//                        .presentationDragIndicator(.visible)
+//                    }
+//                }
+
+                
             }
             .navigationTitle("Add an Item")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
-                        showModal = false
+//                        showModal = false
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Add") {
-                        let newObject = InfoObject(
-                            title: titleNewItem,
-                            category: selectedCategory ?? userData.initialCategory,
-                            dateAdded: .now
-                        )
-                        
-                        if userData.useMockData {
-                            userData.mockData.append(newObject)
-                        } else {
-                            userData.liveObjects.append(newObject)
-                        }
-                        
+//                        showModal = false
+
+                        modelContext.insert(infoObject)
                     }
                 }
             }
@@ -219,17 +207,24 @@ struct AddItemView: View {
                   let uiImage = UIImage(data: data) else {
                 return
             }
-            imageNewItem = Image(uiImage: uiImage)
+            infoObject.image = uiImage
         }
     }
 }
 
 #Preview {
     AddItemView(
-        userData: .constant(UserDataManager()),
-        titleNewItem: "",
-        tagNewItem: "",
-        showModal: .constant(true)
+        infoObject: InfoObject(
+            title: "",
+            stringURL: "",
+            tags: [],
+            category: Category(
+                name: "No Category",
+                colorName: "gray",
+                iconName: "questionMark"
+            ),
+            comment: "",
+        )
     )
 }
 
