@@ -22,34 +22,17 @@ import CoreImage.CIFilterBuiltins
 import SwiftData
 
 struct AddItemView: View {
-    //MARK: grab items from the Models: infoObject, category
-//    let infoObject: InfoObject
-//    @Binding var userData: UserDataManager
-    
-//    MARK: Set the items to add
-//    @State var titleNewItem: String
-//    @State var imageNewItem: Image?
-//    @State var selectedCategory: Category?
-    @State var selectedItem: PhotosPickerItem?
-//    @State var tagNewItem: String
-//    @State var linkNewItem: String
-//    @State var commentNewItem: String
-
-    //MARK: Wrappers for Modals: showModal (for adding a new category) and isPresented, isPhotoPickerPresented for the Photo Picker modal.
-//    @Binding var showModal: Bool
-//    @State var isPresented: Bool = false
-    @State var isPhotoPickerPresented: Bool = false
-    @State var isTagsPickerPresented: Bool = false
-    
-//MARK: For the PhotoPicker
-//    @State private var filterIntensity = 0.5
-//    @State var currentFilter = CIFilter.sepiaTone()
-//    let context = CIContext()
-    
-//    @Query var infoObjects: [InfoObject]
     @Bindable var infoObject: InfoObject
-    @Environment(\.modelContext) var modelContext
+    @State var isPhotoPickerPresented: Bool = false
+    @State var selectedPhotoItem: PhotosPickerItem?
+    @State var isCreateCategorySheetPresented: Bool = false
+    @State var isEditing: Bool
+    var infoObjects: [InfoObject]
+
     
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
+
     var body: some View {
         NavigationView {
             Form {
@@ -88,7 +71,7 @@ struct AddItemView: View {
 //                            }
 //
                     .sheet(isPresented: $isPhotoPickerPresented) {
-                        PhotosPicker(selection: $selectedItem, matching: .images) { }
+                        PhotosPicker(selection: $selectedPhotoItem, matching: .images) { }
                             .photosPickerStyle(.inline)
                             .photosPickerDisabledCapabilities([.collectionNavigation, .search])
                             .presentationDetents([.medium, .large])
@@ -97,7 +80,7 @@ struct AddItemView: View {
                         
 
                     }
-                    .onChange(of: selectedItem) { _, _ in
+                    .onChange(of: selectedPhotoItem) { _, _ in
                         loadImage()
                     }
 
@@ -107,24 +90,26 @@ struct AddItemView: View {
                     if let title = Binding($infoObject.title) {
                         TextField("", text: title)
                             .bold()
-                            .font(.title)
+                            .font(.title3)
 
                     }
 }
                 
                 //MARK: Category field with Menu
                 Section("Category") {
-//                    MenuCategory(categories: infoObjects.findUniqueCategories(), selectedCategory: $selectedCategory, isPresented: $isPresented)
-                    // CategoryPicker(category: Category.allCases, selectedCategory: $selectedCategory)
-//                    Button {
-//                        isPresented.toggle()
-//                    } label: {
-//                        HStack {
-//                            Image(systemName: "plus.circle")
-//                            Text("Add New")
-//                        }
-//                        }
+                    MenuCategory(categories: infoObjects.findUniqueCategories(), isPresented: $isCreateCategorySheetPresented, infoObject: infoObject)
+                    Button {
+                        isCreateCategorySheetPresented.toggle()
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                            Text("Add New")
+                        }
                     }
+                    .sheet(isPresented: $isCreateCategorySheetPresented) {
+                        CreateCategorySheetView(infoObject: infoObject, category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"))
+                    }
+                }
                 
                 //MARK: Link section
                 Section("Link") {
@@ -178,20 +163,24 @@ struct AddItemView: View {
 
                 
             }
-            .navigationTitle("Add an Item")
+            .navigationTitle(isEditing ? "Edit Item" : "Add Item")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
-//                        showModal = false
+                        dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add") {
-//                        showModal = false
-
-                        modelContext.insert(infoObject)
+                    Button(isEditing ? "Save" : "Add") {
+                        if isEditing {
+                            dismiss()
+                        } else {
+                            modelContext.insert(infoObject)
+                            dismiss()
+                        }
+                        
                     }
                 }
             }
@@ -202,8 +191,8 @@ struct AddItemView: View {
     }
     func loadImage() {
         Task {
-            guard let selectedItem,
-                  let data = try? await selectedItem.loadTransferable(type: Data.self),
+            guard let selectedPhotoItem,
+                  let data = try? await selectedPhotoItem.loadTransferable(type: Data.self),
                   let uiImage = UIImage(data: data) else {
                 return
             }
@@ -223,8 +212,11 @@ struct AddItemView: View {
                 colorName: "gray",
                 iconName: "questionMark"
             ),
+            dateAdded: .now,
             comment: "",
-        )
+        ),
+        isEditing: false,
+        infoObjects: []
     )
 }
 
@@ -275,17 +267,13 @@ struct CategoryPicker: View {
 
 struct MenuCategory: View {
     let categories: [Category]
-    @Binding var selectedCategory: Category?
     @Binding var isPresented: Bool
-    @State var newCategory: String = ""
-    @State private var bgColor =
-           Color(.sRGB, red: 0.98, green: 0.9, blue: 0.2)
-    
+    var infoObject: InfoObject
     var body: some View {
         Menu {
             ForEach(categories, id: \.self) { category in
                 Button(action: {
-                    selectedCategory = category
+                    infoObject.category = category
                 }) {
                     Label(category.name.capitalized, systemImage: category.iconName)
                         .tint(category.color)
@@ -294,33 +282,16 @@ struct MenuCategory: View {
             
         } label: {
             HStack {
-                if let selectedCategory = selectedCategory {
-                    Image(systemName: selectedCategory.iconName)
-                        .foregroundStyle(selectedCategory.color)
-                }
+                Image(systemName: infoObject.category.iconName)
+                    .foregroundStyle(infoObject.category.color)
                 
-                Text(selectedCategory?.name ?? "Select Category")
-                    .foregroundStyle(selectedCategory != nil ? .black : .gray)
                 
-                Image(systemName: "chevron.right")
-                    .foregroundStyle(.gray)
-            }
-        }
-        .sheet(isPresented: $isPresented) {
-            VStack(alignment: .leading) {
-                Text("Add New Category")
-                    .font(.title3)
-                    .bold()
-                TextField("New Category Name", text: $newCategory)
-                    .presentationDetents([.medium])
-                    .presentationDragIndicator(.visible)
-                
-                ColorPicker("Choose a color :)", selection: $bgColor)
+                Text(infoObject.category.name)
+                    .foregroundStyle(infoObject.category.color)
                 
             }
-            .padding()
-            
         }
+        
         
     }
 }

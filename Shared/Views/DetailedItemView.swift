@@ -89,7 +89,7 @@ struct DetailedItemView: View {
                 }
             }
             .sheet(isPresented: $isEditing) {
-                AddOrEditView(infoObject: infoObject, isEditing: true, infoObjects: infoObjects)
+                AddItemView(infoObject: infoObject, isEditing: true, infoObjects: infoObjects)
             }
             
         }

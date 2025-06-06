@@ -239,6 +239,7 @@ struct CreateCategorySheetView: View {
             
             Button {
                 infoObject.category = category
+                dismiss()
             } label: {
                 Text("Create New Category")
                     .fontWeight(.semibold)
@@ -323,9 +324,9 @@ struct CreateCategorySheetView: View {
                     .font(.title3)
                 
                 Spacer(minLength: 0)
-                
+                    
                 CategoryButtonImageLayerView(category: category, isSelected: true)
-                
+                    .frame(width: 40)
                 InfoCardBookmarkView(category: category)
                     .offset(y: 3)
                 
@@ -345,7 +346,6 @@ struct IconPickerView: View {
         // Movies / Shows
         "film.fill",
         "tv.fill",
-        "clapperboard.fill",
         
         // Books / Reading / Learning
         "books.vertical.fill",

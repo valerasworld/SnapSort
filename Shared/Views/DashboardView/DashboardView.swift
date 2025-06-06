@@ -109,7 +109,7 @@ struct DashboardView: View {
                 }
             })
             .sheet(isPresented: $showModal) {
-                AddOrEditView(
+                AddItemView(
                     infoObject: InfoObject(
                         title: "",
                         stringURL: "",
