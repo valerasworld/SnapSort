@@ -30,6 +30,8 @@ class InfoObject: Hashable, Identifiable {
     var dateAdded: Date
     var comment: String?
     
+    var isFavorite: Bool = false
+    
     // Link Preview Data
     var previewLoading: Bool = false
     
@@ -50,7 +52,8 @@ class InfoObject: Hashable, Identifiable {
         comment: String? = nil,
         previewLoading: Bool = false,
         linkMetaData: LPLinkMetadata? = nil,
-        linkURL: URL? = nil
+        linkURL: URL? = nil,
+        isFavorite: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -63,6 +66,7 @@ class InfoObject: Hashable, Identifiable {
         self.previewLoading = previewLoading
         self.linkMetaData = linkMetaData
         self.linkURL = linkURL
+        self.isFavorite = isFavorite
     }
     
     static func == (lhs: InfoObject, rhs: InfoObject) -> Bool {
@@ -74,20 +78,51 @@ class InfoObject: Hashable, Identifiable {
     }
 }
 
-extension Array where Element == InfoObject {
-    func groupByDate() -> [(date: Date, infoObjects: [InfoObject])] {
-        let groupedDictionary = Dictionary(grouping: self) { $0.dateAdded.startOfDay() }
-        return groupedDictionary
-            .map { ($0.key, $0.value) }
-            .sorted { $0.0 > $1.0 }
-    }
+struct InfoObjectGroup: Identifiable {
+    var id: String { formattedDate }
+    let formattedDate: String
+    let infoObjects: [InfoObject]
 }
+
+///extension Array where Element == InfoObject {
+///    func groupByDate() -> [InfoObjectGroup] {
+///        let formatter = DateFormatter()
+///        formatter.dateStyle = .medium
+///
+///        let groupedDict = Dictionary(grouping: self) { infoObject -> String in
+///            formatter.string(from: infoObject.dateAdded)
+///        }
+///
+///        let result = groupedDict.map { (formattedDate, objects) in
+///            InfoObjectGroup(formattedDate: formattedDate, infoObjects: objects)
+///        }
+///
+///        return result.sorted { $0.formattedDate > $1.formattedDate }
+///    }
+///}
+
+//extension Array where Element == InfoObject {
+//    func groupByDate() -> [(date: Date, infoObjects: [InfoObject])] {
+//        let groupedDictionary = Dictionary(grouping: self) { $0.dateAdded.startOfDay() }
+//        return groupedDictionary
+//            .map { ($0.key, $0.value) }
+//            .sorted { $0.0 > $1.0 }
+//    }
+//}
+
+//extension Array where Element == InfoObject {
+//    func findUniqueCategories() -> [Category] {
+//        let categories = self.map { $0.category }
+//        let uniqueCategories = Dictionary(grouping: categories, by: { $0.id }).compactMap { $0.value.first }
+//        return Set(uniqueCategories).sorted { $0.name < $1.name }
+//    }
+//}
 
 extension Array where Element == InfoObject {
     func findUniqueCategories() -> [Category] {
-        let categories = self.map { $0.category }
-        let uniqueCategories = Dictionary(grouping: categories, by: { $0.id }).compactMap { $0.value.first }
-        return Set(uniqueCategories).sorted { $0.name < $1.name }
+        let categories = self.map(\.category)
+        let uniqueCategories = Set(categories)
+        return Array<Category>(uniqueCategories).sorted { $0.name < $1.name }
     }
 }
 

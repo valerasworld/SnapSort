@@ -14,17 +14,52 @@ struct DashboardView: View {
     @State var searchText: String = ""
     @State var showModal: Bool = false
     
+    @State var showFavorite: Bool = false
     @State var selectedCategories: [Category] = []
     @State var selectedType: InfoType = InfoType.all
-    @State private var favorites = Favorites() // ?
+//    @State private var favorites = Favorites() // ?
     
     // SwiftData -------------
-    @State private var navigationPath: [InfoObject] = []
+//    @State private var navigationPath: [InfoObject] = []
     @Environment(\.modelContext) private var modelContext
-    @Query private var infoObjects: [InfoObject]
+    @Query(sort: \InfoObject.dateAdded) private var infoObjects: [InfoObject]
+    
+    var filteredObjects: [InfoObject] {
+        
+        let selectedCtegoriesNames = selectedCategories.map(\.name)
+        
+        return infoObjects.reversed().filter { infoObject in
+            let matchesCategory = selectedCtegoriesNames.isEmpty || selectedCtegoriesNames.contains(infoObject.category.name)
+            
+            let matchesSearchText: Bool
+            
+            if searchText.isEmpty {
+                matchesSearchText = true
+            } else {
+                let lowercasedSearch = searchText.lowercased()
+                matchesSearchText =
+                (infoObject.title?.lowercased().contains(lowercasedSearch) ?? false) ||
+                (infoObject.stringURL?.lowercased().contains(lowercasedSearch) ?? false) ||
+                (infoObject.comment?.lowercased().contains(lowercasedSearch) ?? false) ||
+                infoObject.tags.contains(where: { $0.lowercased().contains(lowercasedSearch) })
+            }
+            
+            let matchesFavorite = !showFavorite || infoObject.isFavorite
+            
+            switch selectedType {
+                case .all:
+                    return matchesCategory && matchesFavorite && matchesSearchText
+                case .images:
+                    return matchesCategory && infoObject.imageData != nil && matchesFavorite && matchesSearchText
+                case .links:
+                    return matchesCategory && infoObject.stringURL != nil && !infoObject.stringURL!.isEmpty && matchesFavorite && matchesSearchText
+                }
+        }
+    }
+    
     
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack/*(path: $navigationPath)*/ {
             ResizableHeaderScrollView {
                 
             } stickyHeader: {
@@ -39,28 +74,33 @@ struct DashboardView: View {
                         Divider()
                     }
             } content: {
-                InfoObjectsGridView(selectedCategories: selectedCategories, selectedType: selectedType)
+                InfoObjectsGridView(filteredObjects: filteredObjects)
+                    .animation(.snappy, value: searchText)
             }
             
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("SnapSort")
             .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
+            .onChange(of: searchText) { _, newValue in
+                withAnimation(.snappy) {
+                    self.searchText = newValue
+                }
+            }
             .searchable(text: $searchText, placement: .navigationBarDrawer)
             .toolbar(content: {
-                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        //
+                        withAnimation(.snappy) {
+                            showFavorite.toggle()
+                        }
+                        
                     } label: {
-                        Image(systemName: "heart.fill")
-                            .foregroundStyle(.red)
-                            .bold()
+                        Image(systemName: showFavorite ? "heart.fill" : "heart")
+                            .foregroundStyle(.black)
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                 
-                        
                         showModal = true
                     } label: {
                         Image(systemName: "plus")
@@ -69,35 +109,37 @@ struct DashboardView: View {
                 }
             })
             .sheet(isPresented: $showModal) {
-                AddItemView(
+                AddOrEditView(
                     infoObject: InfoObject(
                         title: "",
                         stringURL: "",
                         tags: [],
-                        category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"),
-                        dateAdded: Date.now,
-                        comment: ""
-                    ),
+                        category: Category(
+                            name: "No Category",
+                            colorName: "gray",
+                            iconName: "questionmark"
+                        ), dateAdded: Date.now
+                    ), isEditing: false, infoObjects: infoObjects
                 )
             }
-//            
-//            .onAppear {
-//                let demoObjects = SampleObjects.contents
-//                for demoObject in demoObjects {
-//                    modelContext.insert(demoObject)
-//                }
-//                
-//            }
+            //
+            //            .onAppear {
+            //                let demoObjects = SampleObjects.contents
+            //                for demoObject in demoObjects {
+            //                    modelContext.insert(demoObject)
+            //                }
+            //
+            //            }
             
         }
         .environment(userData)
-        .environment(favorites)
     }
 }
 
 #Preview {
     DashboardView(selectedCategories: [])
-        .modelContainer(previewContainer)
+//        .modelContainer(previewContainer)
+        .modelContainer(previewBigContainer)
 }
 
 

@@ -49,7 +49,7 @@ class InfoObjectCardViewModel {
 //        previewLoading = false
 //    }
     
-    func loadPreview() async {
+    func loadPreview() async throws {
             previewLoading = true
             do {
                 try await previewService.loadPreview(for: infoObject)
@@ -121,18 +121,13 @@ final class LinkPreviewService: PreviewLoadingService {
             print("Metadata error: \(error)")
         }
         
-//        if let imageProvider = infoObject.linkMetaData?.imageProvider {
-//            do {
-//                infoObject.image = try await imageLoader.loadImage(from: imageProvider)
-//            } catch {
-//                print("Image load error: \(error)")
-//            }
-//        }
         if let imageProvider = infoObject.linkMetaData?.imageProvider {
             do {
                 if let data = try await imageLoader.loadImageData(from: imageProvider),
                    let uiImage = UIImage(data: data) {
-                    infoObject.image = uiImage
+                    await MainActor.run {
+                        infoObject.image = uiImage
+                    }
                 }
             } catch {
                 print("Image load error: \(error)")

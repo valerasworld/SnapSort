@@ -64,7 +64,7 @@ private struct InfoCardImageLayerView: View {
     var padding: CGFloat
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topTrailing) {
             if let image = infoObject.image {
 //            if let imageData = infoObject.image,
 //                let uiImage = UIImage(data: imageData) {
@@ -84,12 +84,26 @@ private struct InfoCardImageLayerView: View {
                         ZStack {
                             Rectangle()
                                 .fill(infoObject.category.color)
-//                            Rectangle()
-//                                .fill(.ultraThinMaterial)
+                            Rectangle()
+                                .fill(.ultraThinMaterial)
                         }
                     )
             }
             
+            if infoObject.isFavorite {
+                Color.clear
+                    .background(.ultraThinMaterial)
+                    .mask {
+                        Image(systemName: "heart.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 18, height: 18)
+                    }
+                    .frame(width: 18, height: 18)
+                    .padding()
+                    .padding(.horizontal, 6)
+                    .shadow(color: .black.opacity(0.17), radius: 5)
+            }
         }
         .aspectRatio(16/9, contentMode: .fill)
         .frame(
@@ -137,7 +151,7 @@ private struct InfoCardTextLayerView: View {
     }
 }
 
-private struct InfoCardBookmarkView: View {
+struct InfoCardBookmarkView: View {
     
     var category: Category
     
@@ -150,8 +164,8 @@ private struct InfoCardBookmarkView: View {
                         Rectangle()
                             .fill(category.color)
                         
-//                        Rectangle()
-//                            .fill(.ultraThinMaterial)
+                        Rectangle()
+                            .fill(.ultraThinMaterial)
                     })
             VStack {
                 Spacer()
@@ -166,7 +180,7 @@ private struct InfoCardBookmarkView: View {
             }
             
         }
-        .frame(width: 30)
+        .frame(width: 30, height: 44)
         .roundedCorners(10, corners: [.bottomLeft, .bottomRight])
         .padding(.bottom, 8)
     }
