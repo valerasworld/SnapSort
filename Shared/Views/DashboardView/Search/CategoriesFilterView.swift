@@ -27,6 +27,28 @@ struct CategoryButtonView: View {
     @State var isSelected: Bool = false
     
     var body: some View {
+        CategoryButtonImageLayerView(category: category, isSelected: isSelected)
+        .onTapGesture {
+            
+//            withAnimation(.spring(duration: 0.25)) {
+            withAnimation(.snappy) {
+                isSelected.toggle()
+                if isSelected {
+                    selectedCategories.append(category)
+                } else {
+                    selectedCategories.removeAll { $0 == category }
+                }
+            }
+            print(selectedCategories.first?.name ?? "")
+        }
+    }
+}
+
+struct CategoryButtonImageLayerView: View {
+    var category: Category
+    var isSelected: Bool
+    
+    var body: some View {
         ZStack {
             Circle()
                 .foregroundColor(isSelected ? .clear : .white)
@@ -55,18 +77,6 @@ struct CategoryButtonView: View {
             }
         }
         .frame(width: 36)
-        .onTapGesture {
-            
-            withAnimation(.spring(duration: 0.25)) {
-                isSelected.toggle()
-                if isSelected {
-                    selectedCategories.append(category)
-                } else {
-                    selectedCategories.removeAll { $0 == category }
-                }
-            }
-            print(selectedCategories.first?.name ?? "")
-        }
     }
     
     var coloredCircled: some View {

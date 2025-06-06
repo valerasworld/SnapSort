@@ -6,34 +6,47 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DetailedItemView: View {
     let infoObject: InfoObject
 //    @Environment(Favorites.self) var favorites
     @Environment(\.dismiss) var dismiss
     
+    @State var isEditing: Bool = false
+    
+    @Query var infoObjects: [InfoObject]
+    @Environment(\.modelContext) var modelContext
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                BackButtonView()
-
-            }
-            
-            .padding([.leading, .trailing, .top])
             ScrollView {
-                if let image = infoObject.image {
-//                if let imageData = infoObject.image,
-//                    let uiImage = UIImage(data: imageData) {
-                    ZStack {
-                        Image(uiImage: image)
-//                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: .infinity)
-                        Color.black
-                            .opacity(0.03)
+                ZStack(alignment: .bottomLeading) {
+                    if let image = infoObject.image {
+                        ZStack {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: .infinity)
+                            Color.black
+                                .opacity(0.03)
+                        }
+                        
+                    } else {
+                        ZStack {
+                            LinearGradient(colors: [.white, infoObject.category.color], startPoint: .bottom, endPoint: .top)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 200)
+                            Color.clear
+                                .background(.ultraThinMaterial)
+                        }
+                    }
+                    if infoObject.stringURL != nil {
+                        LinkButtonOnDetailView(infoObject: infoObject)
                     }
                 }
+                .frame(maxWidth: .infinity)
+                
                 VStack(alignment: .leading) {
                     Group {
                         Text(infoObject.title ?? "")
@@ -52,21 +65,33 @@ struct DetailedItemView: View {
                         .padding(.horizontal)
                     
                 }
-               
-//                Button(favorites.contains(infoObject: infoObject) ? "Remove from Favorites" : "Add to Favorites") {
-//                    if favorites.contains(infoObject: infoObject) {
-//                                    favorites.remove(infoObject)
-//                                } else {
-//                                    favorites.add(infoObject: infoObject)
-//                                }
-//                            }
-//                            .buttonStyle(.borderedProminent)
-//                            .padding()
+                
                 
             }
             .navigationBarBackButtonHidden(true)
-            .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
-
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    BackButtonView()
+                }
+                ToolbarItem {
+                    Button {
+                        infoObject.isFavorite.toggle()
+                    } label: {
+                        Image(systemName: infoObject.isFavorite ? "heart.fill" : "heart")
+                    }
+                }
+                ToolbarItem {
+                    Button {
+                        isEditing.toggle()
+                    } label: {
+                        Text("Edit")
+                    }
+                }
+            }
+            .sheet(isPresented: $isEditing) {
+                AddOrEditView(infoObject: infoObject, isEditing: true, infoObjects: infoObjects)
+            }
+            
         }
     }
 }
@@ -93,7 +118,34 @@ struct BackButtonView: View {
             Spacer()
         }
         .padding([.top, .horizontal], 2)
-        .background(Color(.systemBackground))
+//        .background(Color(.systemBackground))
         .zIndex(1)
+    }
+}
+
+struct LinkButtonOnDetailView: View {
+    var infoObject: InfoObject
+    
+    var body: some View {
+        Button {
+            
+        } label: {
+            HStack {
+                Image(systemName: "link")
+                Text(URL(string: infoObject.stringURL ?? " ")?.host?.replacingOccurrences(of: "www.", with: "") ?? "")
+                
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .font(.body)
+            .bold()
+            .foregroundStyle(.white)
+            .background {
+                RoundedRectangle(cornerRadius: 20)
+                    .foregroundStyle(infoObject.category.color)
+            }
+            .padding()
+        }
+        
     }
 }

@@ -94,7 +94,9 @@
 		9F619C4F2DD5497800D068BD /* Exceptions for "Views" folder in "Share" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				DashboardView/InfoObjectsGridView/InfoObjectCardView/InfoObjectCardView.swift,
 				DashboardView/InfoObjectsGridView/InfoObjectCardView/TagsView.swift,
+				DashboardView/Search/CategoriesFilterView.swift,
 				DetailedItemView.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
@@ -116,6 +118,8 @@
 		9FF1A5DF2DE9E312005A6C3A /* Exceptions for "SaveInfo" folder in "Share" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Helpers/RoundedSpecificCorners.swift,
+				Helpers/SheetHelper.swift,
 				Views/AddItemView.swift,
 				Views/AddOrEditView.swift,
 			);

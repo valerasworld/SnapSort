@@ -65,29 +65,4 @@ struct DetailedPhotoItemView: View {
     DetailedPhotoItemView(viewModel: InfoObjectCardViewModel(infoObject: SampleObjects.contents.first!))
 }
 
-struct LinkButtonOnDetailView: View {
-    var infoObject: InfoObject
-    
-    var body: some View {
-        Button {
-            
-        } label: {
-            HStack {
-                Image(systemName: "link")
-                Text(URL(string: infoObject.stringURL ?? " ")?.host?.replacingOccurrences(of: "www.", with: "") ?? "")
-                
-            }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 12)
-            .font(.body)
-            .bold()
-            .foregroundStyle(.white)
-            .background {
-                RoundedRectangle(cornerRadius: 20)
-                    .foregroundStyle(infoObject.category.color)
-            }
-            .padding()
-        }
-        
-    }
-}
+

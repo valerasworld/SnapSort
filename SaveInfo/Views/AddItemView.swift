@@ -95,7 +95,7 @@ struct AddItemView: View {
                         
 
                     }
-                    .onChange(of: selectedItem) { _ in
+                    .onChange(of: selectedItem) { _, _ in
                         loadImage()
                     }
 
