@@ -122,6 +122,7 @@
 				Helpers/SheetHelper.swift,
 				Views/AddItemView.swift,
 				Views/AddOrEditView.swift,
+				Views/ColorCheckView.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
 		};
