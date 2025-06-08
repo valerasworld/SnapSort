@@ -22,7 +22,9 @@ struct AddOrEditView: View {
     @State var isEditing: Bool
     
     var infoObjects: [InfoObject]
-        
+    
+    @State var count: Int = 1
+    
     var body: some View {
         NavigationStack {
             let width = UIScreen.main.bounds.width
@@ -508,10 +510,6 @@ struct CustomColorPickerView: View {
                                     selectedColorName == colorName ? 0.17 : 0
                                 ), radius: 2, y: 2
                             )
-                        Circle()
-                            .frame(width: 45, height: 45)
-                            .foregroundStyle(Color.clear)
-                            .background(.ultraThinMaterial)
                         Image(systemName: "checkmark")
                             .bold()
                             .foregroundStyle(.white)

@@ -213,7 +213,7 @@ struct AddItemView: View {
                 iconName: "questionMark"
             ),
             dateAdded: .now,
-            comment: ""
+            comment: "",
         ),
         isEditing: false,
         infoObjects: []
