@@ -70,6 +70,7 @@
 				DashboardView/Search/ObjectTypeSegmentedControlView.swift,
 				DetailedItemView.swift,
 				Favorites.swift,
+				Onboarding/OnboardingView.swift,
 			);
 			target = 9F63BE082DC2785800A09138 /* SaveInfo */;
 		};
