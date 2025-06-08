@@ -53,6 +53,11 @@ struct DetailedItemView: View {
                             .foregroundStyle(Color.black)
                             .font(.title3)
                             .bold()
+                        
+                        
+                        Text(infoObject.comment ?? "")
+                            .foregroundStyle(.black)
+                            .font(.title3)
                     }
                     .padding(.horizontal)
                     
@@ -125,10 +130,16 @@ struct BackButtonView: View {
 
 struct LinkButtonOnDetailView: View {
     var infoObject: InfoObject
-    
+    @Environment(\.openURL) var openURL
     var body: some View {
         Button {
-            
+            if let urlString = infoObject.stringURL,
+               let url = URL(
+                string: urlString
+               )
+            {
+                openURL(url)
+            }
         } label: {
             HStack {
                 Image(systemName: "link")
