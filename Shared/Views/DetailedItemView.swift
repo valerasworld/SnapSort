@@ -41,7 +41,7 @@ struct DetailedItemView: View {
                                 .background(.ultraThinMaterial)
                         }
                     }
-                    if infoObject.stringURL != nil {
+                    if infoObject.stringURL != nil && infoObject.stringURL != "" {
                         LinkButtonOnDetailView(infoObject: infoObject)
                     }
                 }
@@ -51,7 +51,7 @@ struct DetailedItemView: View {
                     Group {
                         Text(infoObject.title ?? "")
                             .foregroundStyle(Color.black)
-                            .font(.title2)
+                            .font(.title3)
                             .bold()
                         
                         
@@ -78,13 +78,18 @@ struct DetailedItemView: View {
                         infoObject.isFavorite.toggle()
                     } label: {
                         Image(systemName: infoObject.isFavorite ? "heart.fill" : "heart")
+                            .foregroundStyle(infoObject.category.color)
+                            .font(.title3)
                     }
                 }
                 ToolbarItem {
                     Button {
                         isEditing.toggle()
                     } label: {
-                        Text("Edit")
+//                        Text("Edit")
+                        Image(systemName: "pencil")
+                            .font(.title3)
+                            .foregroundStyle(.black)
                     }
                 }
             }
@@ -113,7 +118,7 @@ struct BackButtonView: View {
                     Text("Back")
                 }
                 .font(.body)
-                .foregroundColor(.blue)
+                .foregroundColor(.black)
             }
             Spacer()
         }

@@ -65,7 +65,7 @@ struct CategoryButtonImageLayerView: View {
             } else {
                 Circle()
                     .foregroundStyle(.clear)
-                    .background(coloredCircled)
+                    .background(coloredCircled.opacity(0.7))
                     .mask {
                         Image(systemName: category.iconName)
                             .resizable()
@@ -84,8 +84,8 @@ struct CategoryButtonImageLayerView: View {
             Circle()
                 .fill(category.color)
             
-            Circle()
-                .fill(.ultraThinMaterial)
+//            Circle()
+//                .fill(.ultraThinMaterial)
         }
     }
 }

@@ -12,7 +12,7 @@ import SwiftData
 @Model
 class InfoObject: Hashable, Identifiable {
     var id = UUID().uuidString
-    var title: String?
+    var title: String? = ""
     
 //    @Transient
     @Attribute(.externalStorage)
@@ -23,12 +23,12 @@ class InfoObject: Hashable, Identifiable {
             set { imageData = newValue?.jpegData(compressionQuality: 0.9) }
         }
     
-    var stringURL: String?
+    var stringURL: String? = ""
     
     var tags: [String] = []
     var category: Category
     var dateAdded: Date
-    var comment: String?
+    var comment: String? = ""
     
     var isFavorite: Bool = false
     
@@ -43,13 +43,13 @@ class InfoObject: Hashable, Identifiable {
     
     init(
         id: String = UUID().uuidString,
-        title: String? = nil,
+        title: String? = "",
         imageData: Data? = nil,
-        stringURL: String? = nil,
+        stringURL: String? = "",
         tags: [String] = [],
         category: Category,
         dateAdded: Date = .now,
-        comment: String? = nil,
+        comment: String? = "",
         previewLoading: Bool = false,
         linkMetaData: LPLinkMetadata? = nil,
         linkURL: URL? = nil,

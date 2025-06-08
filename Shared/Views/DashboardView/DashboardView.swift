@@ -97,6 +97,7 @@ struct DashboardView: View {
                     } label: {
                         Image(systemName: showFavorite ? "heart.fill" : "heart")
                             .foregroundStyle(.black)
+                            .font(.title3)
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -105,25 +106,14 @@ struct DashboardView: View {
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(Color("black"))
+//                            .fontWeight(.semibold)
+                            .font(.title3)
                     }
                 }
             })
             .sheet(isPresented: $showModal) {
-                AddItemView(
-                    infoObject: InfoObject(
-                        title: "",
-                        stringURL: "",
-                        tags: [],
-                        category: Category(
-                            name: "No Category",
-                            colorName: "gray",
-                            iconName: "questionmark"
-                        ), dateAdded: Date.now,
-                        comment: ""
-                    ),
-                    isEditing: false,
-                    infoObjects: infoObjects
-                )
+//                AddItemView(isEditing: false, infoObjects: infoObjects)
+                AddItemView(infoObject: nil, isEditing: false, infoObjects: infoObjects)
             }
             //
             //            .onAppear {
