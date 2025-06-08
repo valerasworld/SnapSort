@@ -118,8 +118,11 @@ struct DashboardView: View {
                             name: "No Category",
                             colorName: "gray",
                             iconName: "questionmark"
-                        ), dateAdded: Date.now
-                    ), isEditing: false, infoObjects: infoObjects
+                        ), dateAdded: Date.now,
+                        comment: ""
+                    ),
+                    isEditing: false,
+                    infoObjects: infoObjects
                 )
             }
             //
