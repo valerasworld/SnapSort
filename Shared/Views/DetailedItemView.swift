@@ -53,11 +53,6 @@ struct DetailedItemView: View {
                             .foregroundStyle(Color.black)
                             .font(.title3)
                             .bold()
-                        
-                        
-//                        Text(infoObject.description ?? "")
-//                            .foregroundStyle(.black)
-//                            .font(.body)
                     }
                     .padding(.horizontal)
                     
@@ -78,13 +73,18 @@ struct DetailedItemView: View {
                         infoObject.isFavorite.toggle()
                     } label: {
                         Image(systemName: infoObject.isFavorite ? "heart.fill" : "heart")
+                            .foregroundStyle(infoObject.category.color)
+                            .font(.title3)
                     }
                 }
                 ToolbarItem {
                     Button {
                         isEditing.toggle()
                     } label: {
-                        Text("Edit")
+//                        Text("Edit")
+                        Image(systemName: "pencil")
+                            .font(.title3)
+                            .foregroundStyle(.black)
                     }
                 }
             }
@@ -113,7 +113,7 @@ struct BackButtonView: View {
                     Text("Back")
                 }
                 .font(.body)
-                .foregroundColor(.blue)
+                .foregroundColor(.black)
             }
             Spacer()
         }

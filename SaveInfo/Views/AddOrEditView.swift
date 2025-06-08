@@ -1,199 +1,199 @@
+////
+////  AddOrEditView.swift
+////  SaveInfo
+////
+////  Created by Valery Zazulin on 03/06/25.
+////
 //
-//  AddOrEditView.swift
-//  SaveInfo
-//
-//  Created by Valery Zazulin on 03/06/25.
-//
-
 import SwiftUI
 import SwiftData
 import _PhotosUI_SwiftUI
-
-struct AddOrEditView: View {
-    @Bindable var infoObject: InfoObject
-    
-    @State var isPhotoPickerPresented: Bool = false
-    @State var selectedPhotoItem: PhotosPickerItem?
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private  var dismiss
-    
-    @State var showCreateCategroySheet: Bool = false
-    
-    @State var isEditing: Bool
-    
-    var infoObjects: [InfoObject]
-        
-    var body: some View {
-        NavigationStack {
-            let width = UIScreen.main.bounds.width
-            ScrollView {
-                ZStack {
-                    if let uiimage = infoObject.image {
-                        Image(uiImage: uiimage)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: width, maxHeight: width)
-                            .aspectRatio(1/1, contentMode: .fill)
-                        LinearGradient(colors: [.white, . clear], startPoint: .bottom, endPoint: .top)
-                        
-                        Color.clear
-                            .background(.ultraThinMaterial)
-                    } else {
-                        Color.clear
-                            .background(.ultraThinMaterial)
-                    }
-                    
-                    
-                    VStack {
-                        if let uiimage = infoObject.image {
-                            Image(uiImage: uiimage)
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                                .frame(maxWidth: width * 0.8, maxHeight: width * 0.65)
-                            
-                                .onTapGesture {
-                                    isPhotoPickerPresented.toggle()
-                                }
-                                .shadow(color: .black.opacity(0.17), radius: 10, x: 0, y: 10)
-                        } else {
-                            ZStack {
-                                LinearGradient(colors: [.green, .white], startPoint: .top, endPoint: .bottom)
-                                Color.clear
-                                    .background(.ultraThinMaterial)
-                                ContentUnavailableView(
-                                    "Image",
-                                    systemImage: "photo.fill",
-                                    description: Text("No image selected"))
-                                .onTapGesture {
-                                    isPhotoPickerPresented.toggle()
-                                }
-                            }
-                            
-                            
-                        }
-                    }
-                }
-                
-                .frame(width: width, height: width)
-                .ignoresSafeArea()
-                
-                .sheet(isPresented: $isPhotoPickerPresented) {
-                    PhotosPicker(selection: $selectedPhotoItem, matching: .images) { }
-                        .photosPickerStyle(.inline)
-                        .photosPickerDisabledCapabilities([.collectionNavigation, .search])
-                        .presentationDetents([.medium, .large])
-                        .presentationBackgroundInteraction(.enabled(upThrough: .large))
-                    
-                    
-                }
-                .onChange(of: selectedPhotoItem) {
-                    Task {
-                        guard let selectedPhotoItem,
-                              let data = try? await selectedPhotoItem.loadTransferable(type: Data.self),
-                              let uiImage = UIImage(data: data) else {
-                            return
-                        }
-                        infoObject.image = uiImage
-                    }
-                }
-                Form {
-                    Section("Title") {
-                        if let title = Binding($infoObject.title) {
-                            TextField("Add Title", text: title, prompt: Text("Add Title"))
-                                .textFieldStyle(.roundedBorder)
-                        }
-                    }
-                    .font(.title3)
-                    .bold()
-                    .padding(.horizontal)
-                    
-                    
-                }
-                .formStyle(.columns)
-                
-                Menu {
-                    ForEach(infoObjects.findUniqueCategories(), id: \.self) { category in
-                        Button(action: {
-                            infoObject.category = category
-                        }) {
-                            Label(category.name.capitalized, systemImage: category.iconName)
-                                .tint(category.color)
-                        }
-                    }
-                    
-                } label: {
-                    HStack {
-                        Image(systemName: infoObject.category.iconName)
-                            .foregroundStyle(infoObject.category.color)
-                        
-                        Text(infoObject.category.name)
-                            .foregroundStyle(infoObject.category.color)
-                        
-//                        Image(systemName: "chevron.right")
-//                            .foregroundStyle(.gray)
-                    }
-                }
-                Button {
-                    showCreateCategroySheet.toggle()
-                } label: {
-                    HStack {
-                        Image(systemName: "plus.circle")
-                        Text("Add New")
-                        
-                    }
-                }
-                .sheet(isPresented: $showCreateCategroySheet) {
-                    CreateCategorySheetView(infoObject: infoObject,
-                        category: Category(
-                            name: "No Category",
-                            colorName: "gray",
-                            iconName: "questionmark"
-                        )
-                    )
-                }
-                
-            }
-            .ignoresSafeArea()
-//            .navigationTitle("Add New")
-            .toolbarTitleDisplayMode(.inline)
-//            .toolbarVisibility(.hidden, for: .navigationBar)
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        infoObject.isFavorite.toggle()
-                    } label: {
-                        Image(systemName: infoObject.isFavorite ? "heart.fill" : "heart")
-                    }
-                }
-                ToolbarItem {
-                    Button(isEditing ? "Save" : "Add") {
-                        if isEditing {
-                            dismiss()
-                        } else {
-                            modelContext.insert(infoObject)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#Preview {
-    
-    AddOrEditView(
-        infoObject: InfoObject(
-            title: "",
-            category: Category(
-                name: "No Category",
-                colorName: "gray",
-                iconName: "questionMark"
-            ), dateAdded: Date.now
-        ), isEditing: false, infoObjects: []
-    )
-}
-
+//
+//struct AddOrEditView: View {
+//    @Bindable var infoObject: InfoObject
+//    
+//    @State var isPhotoPickerPresented: Bool = false
+//    @State var selectedPhotoItem: PhotosPickerItem?
+//    @Environment(\.modelContext) private var modelContext
+//    @Environment(\.dismiss) private  var dismiss
+//    
+//    @State var showCreateCategroySheet: Bool = false
+//    
+//    @State var isEditing: Bool
+//    
+//    var infoObjects: [InfoObject]
+//        
+//    var body: some View {
+//        NavigationStack {
+//            let width = UIScreen.main.bounds.width
+//            ScrollView {
+//                ZStack {
+//                    if let uiimage = infoObject.image {
+//                        Image(uiImage: uiimage)
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(maxWidth: width, maxHeight: width)
+//                            .aspectRatio(1/1, contentMode: .fill)
+//                        LinearGradient(colors: [.white, . clear], startPoint: .bottom, endPoint: .top)
+//                        
+//                        Color.clear
+//                            .background(.ultraThinMaterial)
+//                    } else {
+//                        Color.clear
+//                            .background(.ultraThinMaterial)
+//                    }
+//                    
+//                    
+//                    VStack {
+//                        if let uiimage = infoObject.image {
+//                            Image(uiImage: uiimage)
+//                                .resizable()
+//                                .scaledToFit()
+//                                .clipShape(RoundedRectangle(cornerRadius: 20))
+//                                .frame(maxWidth: width * 0.8, maxHeight: width * 0.65)
+//                            
+//                                .onTapGesture {
+//                                    isPhotoPickerPresented.toggle()
+//                                }
+//                                .shadow(color: .black.opacity(0.17), radius: 10, x: 0, y: 10)
+//                        } else {
+//                            ZStack {
+//                                LinearGradient(colors: [.green, .white], startPoint: .top, endPoint: .bottom)
+//                                Color.clear
+//                                    .background(.ultraThinMaterial)
+//                                ContentUnavailableView(
+//                                    "Image",
+//                                    systemImage: "photo.fill",
+//                                    description: Text("No image selected"))
+//                                .onTapGesture {
+//                                    isPhotoPickerPresented.toggle()
+//                                }
+//                            }
+//                            
+//                            
+//                        }
+//                    }
+//                }
+//                
+//                .frame(width: width, height: width)
+//                .ignoresSafeArea()
+//                
+//                .sheet(isPresented: $isPhotoPickerPresented) {
+//                    PhotosPicker(selection: $selectedPhotoItem, matching: .images) { }
+//                        .photosPickerStyle(.inline)
+//                        .photosPickerDisabledCapabilities([.collectionNavigation, .search])
+//                        .presentationDetents([.medium, .large])
+//                        .presentationBackgroundInteraction(.enabled(upThrough: .large))
+//                    
+//                    
+//                }
+//                .onChange(of: selectedPhotoItem) {
+//                    Task {
+//                        guard let selectedPhotoItem,
+//                              let data = try? await selectedPhotoItem.loadTransferable(type: Data.self),
+//                              let uiImage = UIImage(data: data) else {
+//                            return
+//                        }
+//                        infoObject.image = uiImage
+//                    }
+//                }
+//                Form {
+//                    Section("Title") {
+//                        if let title = Binding($infoObject.title) {
+//                            TextField("Add Title", text: title, prompt: Text("Add Title"))
+//                                .textFieldStyle(.roundedBorder)
+//                        }
+//                    }
+//                    .font(.title3)
+//                    .bold()
+//                    .padding(.horizontal)
+//                    
+//                    
+//                }
+//                .formStyle(.columns)
+//                
+//                Menu {
+//                    ForEach(infoObjects.findUniqueCategories(), id: \.self) { category in
+//                        Button(action: {
+//                            infoObject.category = category
+//                        }) {
+//                            Label(category.name.capitalized, systemImage: category.iconName)
+//                                .tint(category.color)
+//                        }
+//                    }
+//                    
+//                } label: {
+//                    HStack {
+//                        Image(systemName: infoObject.category.iconName)
+//                            .foregroundStyle(infoObject.category.color)
+//                        
+//                        Text(infoObject.category.name)
+//                            .foregroundStyle(infoObject.category.color)
+//                        
+////                        Image(systemName: "chevron.right")
+////                            .foregroundStyle(.gray)
+//                    }
+//                }
+//                Button {
+//                    showCreateCategroySheet.toggle()
+//                } label: {
+//                    HStack {
+//                        Image(systemName: "plus.circle")
+//                        Text("Add New")
+//                        
+//                    }
+//                }
+//                .sheet(isPresented: $showCreateCategroySheet) {
+//                    CreateCategorySheetView(infoObject: infoObject,
+//                        category: Category(
+//                            name: "No Category",
+//                            colorName: "gray",
+//                            iconName: "questionmark"
+//                        )
+//                    )
+//                }
+//                
+//            }
+//            .ignoresSafeArea()
+////            .navigationTitle("Add New")
+//            .toolbarTitleDisplayMode(.inline)
+////            .toolbarVisibility(.hidden, for: .navigationBar)
+//            .toolbar {
+//                ToolbarItem {
+//                    Button {
+//                        infoObject.isFavorite.toggle()
+//                    } label: {
+//                        Image(systemName: infoObject.isFavorite ? "heart.fill" : "heart")
+//                    }
+//                }
+//                ToolbarItem {
+//                    Button(isEditing ? "Save" : "Add") {
+//                        if isEditing {
+//                            dismiss()
+//                        } else {
+//                            modelContext.insert(infoObject)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//#Preview {
+//    
+//    AddOrEditView(
+//        infoObject: InfoObject(
+//            title: "",
+//            category: Category(
+//                name: "No Category",
+//                colorName: "gray",
+//                iconName: "questionMark"
+//            ), dateAdded: Date.now
+//        ), isEditing: false, infoObjects: []
+//    )
+//}
+//
 
 
 struct GetHeightModifier: ViewModifier {
@@ -219,12 +219,14 @@ enum CurrentCreateCategorySheetView {
 
 struct CreateCategorySheetView: View {
     
-    @Bindable var infoObject: InfoObject
+    @Binding var selectedCategory: Category?
+    
     @State private var sheetHeight: CGFloat = .zero
     @State private var currentView: CurrentCreateCategorySheetView = .name
-    //    @State private var newCategoryName: String = ""
-    //    @State var selectedColorName: String = "gray"
-    @Bindable var category: Category
+    
+    @State private var newCategoryName: String = ""
+    @State var selectedColorName: String = "gray"
+    @State var selectedIconName: String = "questionmark"
         
     @Environment(\.dismiss) var dismiss
     
@@ -236,7 +238,11 @@ struct CreateCategorySheetView: View {
             .compositingGroup()
             
             Button {
-                infoObject.category = category
+                selectedCategory = Category(
+                    name: newCategoryName,
+                    colorName: selectedColorName,
+                    iconName: selectedIconName
+                )
                 dismiss()
             } label: {
                 Text("Create New Category")
@@ -277,7 +283,7 @@ struct CreateCategorySheetView: View {
                 Text("Name")
                     .font(.title3)
                 
-                TextField("Name", text: $category.name)
+                TextField("Name", text: $newCategoryName)
                     .textFieldStyle(.roundedBorder)
                     .font(.title3)
             }
@@ -292,11 +298,11 @@ struct CreateCategorySheetView: View {
                 Spacer(minLength: 0)
                 
                 Circle()
-                    .foregroundStyle(Color.named(category.colorName))
+                    .foregroundStyle(Color.named(selectedColorName))
                     .frame(width: 45, height: 45)
             }
             
-            CustomColorPickerView(selectedColorName: $category.colorName)
+            CustomColorPickerView(selectedColorName: $selectedColorName)
             
             Divider()
                 .padding(.vertical, 4)
@@ -307,12 +313,12 @@ struct CreateCategorySheetView: View {
                 
                 Spacer(minLength: 0)
                 
-                Image(systemName: category.iconName)
+                Image(systemName: selectedIconName)
                     .font(.title2)
                     .frame(width: 45, height: 45)
             }
             
-            IconPickerView(selectedIconName: $category.iconName, selectedCategoryColorName: category.colorName)
+            IconPickerView(selectedIconName: $selectedIconName, selectedCategoryColorName: $selectedColorName)
             
             Divider()
                 .padding(.vertical, 4)
@@ -323,10 +329,21 @@ struct CreateCategorySheetView: View {
                 
                 Spacer(minLength: 0)
                     
-                CategoryButtonImageLayerView(category: category, isSelected: true)
-                    .frame(width: 40)
-                InfoCardBookmarkView(category: category)
-                    .offset(y: 3)
+                CategoryButtonImageLayerView(
+                    category: Category(
+                        name: newCategoryName,
+                        colorName: selectedColorName,
+                        iconName: selectedIconName
+                    ),
+                    isSelected: true
+                )
+                .frame(width: 40)
+                InfoCardBookmarkView(category: Category(
+                    name: newCategoryName,
+                    colorName: selectedColorName,
+                    iconName: selectedIconName
+                ))
+                .offset(y: 3)
                 
                 
             }
@@ -339,7 +356,7 @@ struct CreateCategorySheetView: View {
 
 struct IconPickerView: View {
     @Binding var selectedIconName: String
-    var selectedCategoryColorName: String
+    @Binding var selectedCategoryColorName: String
     private let iconNames: [String] = [
         // Movies / Shows
         "film.fill",
@@ -492,7 +509,7 @@ struct IconPickerView: View {
 
 struct CustomColorPickerView: View {
     @Binding var selectedColorName: String
-    private let colorNames: [String] = ["purple", "pink", "red", "orange", "yellow", "green", "mint", "teal", "cyan", "blue", "brown", "gray"]
+    private let colorNames: [String] = ["green", "mint", "teal", "cyan", "blue", "indigo", "purple", "pink", "red", "orange", "yellow", "brown", "gray"]
     
     var body: some View {
         ScrollView(.horizontal) {
@@ -508,10 +525,6 @@ struct CustomColorPickerView: View {
                                     selectedColorName == colorName ? 0.17 : 0
                                 ), radius: 2, y: 2
                             )
-                        Circle()
-                            .frame(width: 45, height: 45)
-                            .foregroundStyle(Color.clear)
-                            .background(.ultraThinMaterial)
                         Image(systemName: "checkmark")
                             .bold()
                             .foregroundStyle(.white)

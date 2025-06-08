@@ -73,7 +73,8 @@ struct SegmentedControlCapsuleView: View {
     
     var body: some View {
         Capsule()
-            .fill(.ultraThinMaterial)
+//            .fill(.ultraThinMaterial)
+            .fill(.white.opacity(0.3))
             .background(
                 Capsule()
                     .fill(

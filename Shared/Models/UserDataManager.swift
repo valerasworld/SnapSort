@@ -8,15 +8,7 @@ import SwiftUI
 
 @Observable
 class UserDataManager {
-    var useMockData: Bool = true
     
-    var mockData: [InfoObject] = SampleObjects.contents
-    var liveObjects: [InfoObject] = []
-    var objects: [InfoObject] {
-        return useMockData ? mockData : liveObjects
-    }
-    
-    let initialCategory: Category = Category(name: "No Category", colorName: "gray", iconName: "questionmark")
 }
 
 extension Date {
