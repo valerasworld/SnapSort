@@ -20,7 +20,19 @@ struct ObjectTypeSegmentedControlView: View {
         
     var body: some View {
         if infoTypes.isEmpty {
-            EmptyView()
+            Color.clear
+                .background {
+                    Capsule()
+                        .fill(.white)
+                }
+                .frame(height: 30)
+                .padding(.vertical, 3)
+                .background {
+                    Capsule()
+                        .fill(.white)
+                }
+                .padding(.top, -10)
+                .padding(.horizontal, 16)
         } else {
             HStack(spacing: 10) {
                 ForEach(infoTypes, id: \.self) { type in

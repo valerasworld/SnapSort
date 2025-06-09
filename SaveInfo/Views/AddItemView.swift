@@ -379,34 +379,33 @@ struct AddItemView: View {
         let width = UIScreen.main.bounds.width
         
         ZStack {
+            // BG IMAGE
             if let uiimage = uiImage {
                 Image(uiImage: uiimage)
                     .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: width, maxHeight: width)
+                    .scaledToFill()
                     .aspectRatio(1/1, contentMode: .fill)
-                LinearGradient(colors: [.white, . clear], startPoint: .bottom, endPoint: .top)
-                
-                Color.clear
-                    .background(.ultraThinMaterial)
-            } else {
-                Color.clear
-                    .background(.ultraThinMaterial)
+                    .frame(maxWidth: width, maxHeight: width)
+                    .clipped()
+                    
+                LinearGradient(colors: [.white, .clear, . clear], startPoint: .bottom, endPoint: .top)
             }
             
+            Color.clear
+                .background(.ultraThinMaterial)
             
-            VStack {
+            
+            ZStack {
                 if let uiimage = uiImage {
                     Image(uiImage: uiimage)
                         .resizable()
                         .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                         .frame(maxWidth: width * 0.8, maxHeight: width * 0.65)
-                    
+                        .shadow(color: .black.opacity(0.27), radius: 10, x: 0, y: 5)
                         .onTapGesture {
                             isPhotoPickerPresented.toggle()
                         }
-                        .shadow(color: .black.opacity(0.17), radius: 10, x: 0, y: 10)
                 } else {
                     ZStack {
                         LinearGradient(colors: [selectedCategory?.color ?? .gray, .white], startPoint: .top, endPoint: .bottom)
