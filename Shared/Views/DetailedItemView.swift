@@ -14,6 +14,7 @@ struct DetailedItemView: View {
     @Environment(\.dismiss) var dismiss
     
     @State var isEditing: Bool = false
+    @State var imageIsClicked: Bool = false
     
     @Query var infoObjects: [InfoObject]
     @Environment(\.modelContext) var modelContext
@@ -21,52 +22,114 @@ struct DetailedItemView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                ZStack(alignment: .bottomLeading) {
-                    if let image = infoObject.image {
-                        ZStack {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity)
-                            Color.black
-                                .opacity(0.03)
-                        }
+                if !imageIsClicked {
+                    ZStack(alignment: .bottomLeading) {
+//                    if let image = infoObject.image {
+//                        ZStack {
+//                            Image(uiImage: image)
+//                                .resizable()
+//                                .scaledToFit()
+//                                .frame(maxWidth: .infinity)
+//                            Color.black
+//                                .opacity(0.03)
+//                        }
+//
+//                    } else {
+//                        ZStack {
+//                            LinearGradient(colors: [.white, infoObject.category.color], startPoint: .bottom, endPoint: .top)
+//                                .frame(maxWidth: .infinity)
+//                                .frame(height: 200)
+//                            Color.clear
+//                                .background(.ultraThinMaterial)
+//                        }
+//                    }
+                        let width = UIScreen.main.bounds.width
                         
-                    } else {
                         ZStack {
-                            LinearGradient(colors: [.white, infoObject.category.color], startPoint: .bottom, endPoint: .top)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 200)
+                            // BG IMAGE
+                            if let uiimage = infoObject.image {
+                                Image(uiImage: uiimage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .aspectRatio(1/1, contentMode: .fill)
+                                    .frame(maxWidth: width, maxHeight: width)
+                                    .clipped()
+                                    
+                                LinearGradient(colors: [.white, .clear, . clear], startPoint: .bottom, endPoint: .top)
+                            }
+                            
                             Color.clear
                                 .background(.ultraThinMaterial)
+                            
+                            
+                            ZStack {
+                                if let uiimage = infoObject.image {
+                                    Image(uiImage: uiimage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                                        .frame(maxWidth: width * 0.8, maxHeight: width * 0.65)
+                                        .shadow(color: .black.opacity(0.27), radius: 10, x: 0, y: 5)
+                                        .onTapGesture {
+                                            imageIsClicked.toggle()
+                                        }
+                                } else {
+                                    ZStack {
+                                        LinearGradient(colors: [infoObject.category.color, .white], startPoint: .top, endPoint: .bottom)
+                                        Color.clear
+                                            .background(.ultraThinMaterial)
+                                        ContentUnavailableView(
+                                            "Image",
+                                            systemImage: "photo.fill",
+                                            description: Text("No image selected"))
+                                        .onTapGesture {
+                                            //                                        isPhotoPickerPresented.toggle()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        .frame(width: width, height: width)
+                        .ignoresSafeArea()
+                        if infoObject.stringURL != nil && infoObject.stringURL != "" {
+                            LinkButtonOnDetailView(infoObject: infoObject)
                         }
                     }
-                    if infoObject.stringURL != nil && infoObject.stringURL != "" {
-                        LinkButtonOnDetailView(infoObject: infoObject)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                
-                VStack(alignment: .leading) {
-                    Group {
-                        Text(infoObject.title ?? "")
-                            .foregroundStyle(Color.black)
-                            .font(.title3)
-                            .bold()
-                        
-                        
-                        Text(infoObject.comment ?? "")
-                            .foregroundStyle(.black)
-                            .font(.title3)
-                    }
-                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity)
                     
-                    TagsView(tags: infoObject.tags)
+                    VStack(alignment: .leading) {
+                        Group {
+                            Text(infoObject.title ?? "")
+                                .foregroundStyle(Color.black)
+                                .font(.title3)
+                                .bold()
+                            
+                            
+                            Text(infoObject.comment ?? "")
+                                .foregroundStyle(.black)
+                                .font(.title3)
+                        }
                         .padding(.horizontal)
+                        
+                        TagsView(tags: infoObject.tags)
+                            .padding(.horizontal)
+                        
+                    }
                     
+                } else {
+                    if let uiimage = infoObject.image {
+                        Image(uiImage: uiimage)
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 0))
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .shadow(color: .black.opacity(0.27), radius: 10, x: 0, y: 5)
+                            .onTapGesture {
+                                imageIsClicked.toggle()
+                            }
+                    }
                 }
-                
-                
             }
             .navigationBarBackButtonHidden(true)
             .toolbar {

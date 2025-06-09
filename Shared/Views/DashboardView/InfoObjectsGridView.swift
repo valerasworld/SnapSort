@@ -20,7 +20,8 @@ struct InfoObjectsGridView: View {
     private var groupedObjects: [InfoObjectGroup] {
            groupByDate(filteredObjects)
        }
-
+    
+    @Environment(\.modelContext) var modelContext
     
     var body: some View {
         ScrollView {
@@ -31,19 +32,38 @@ struct InfoObjectsGridView: View {
                     LazyVGrid(columns: columns, spacing: 12) {
                         ForEach(/*group.infoObjects*/filteredObjects, id: \.id) { object in
                             InfoObjectCardView(viewModel: InfoObjectCardViewModel(infoObject: object))
+                               
+                                .contextMenu {
+                                    Button {
+                                        withAnimation(.snappy) {
+                                            object.isFavorite.toggle()
+                                        }
+                                    } label: {
+                                        Label(object.isFavorite ? "Remove from Favorites" : "Add to Favorites", systemImage: "heart")
+                                    }
+                                    Button(role: .destructive) {
+                                        withAnimation(.snappy) {
+                                            modelContext.delete(object)
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                .transition(.opacity)
                             
                         }
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal)
                     .padding(.bottom, 6)
+                    .animation(.snappy, value: filteredObjects)
 //                }
 //            }
         }
         .overlay {
             if filteredObjects.isEmpty {
                 ContentUnavailableView {
-                    Label("Nothing saved yet", systemImage: "pawprint")
+                    Label("You haven't added any objects yet", systemImage: "plus")
                 }
             }
         }

@@ -13,34 +13,65 @@ struct InfoObjectCardView: View {
     @State var gridPadding: CGFloat = 12
     @State var padding: CGFloat = 16
     
+    var hasImage: Bool {
+        if viewModel.infoObject.image != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     var body: some View {
         NavigationLink(destination: DetailedItemView(infoObject: viewModel.infoObject)) {
             
             let width = UIScreen.main.bounds.width / 2
-            
-            VStack(spacing: 0) {
-                // Image Block
-                InfoCardImageLayerView(
-                    infoObject: viewModel.infoObject,
-                    width: width,
-                    gridPadding: gridPadding,
-                    padding: padding
-                )
-                
-                // Lower Block
-                ZStack {
-                    Color.white
-                    HStack(alignment: .top, spacing: 6) {
-                        InfoCardTextLayerView(infoObject: viewModel.infoObject)
-                        InfoCardBookmarkView(category: viewModel.infoObject.category)
+            ZStack(alignment: .topTrailing) {
+                VStack(spacing: 0) {
+                    // Image Block
+                    InfoCardImageLayerView(
+                        infoObject: viewModel.infoObject,
+                        width: width,
+                        gridPadding: gridPadding,
+                        padding: padding,
+                        hasImage: hasImage
+                    )
+                    
+                    // Lower Block
+                    ZStack {
+                        Color.white
+                        HStack(alignment: .top, spacing: 6) {
+                            InfoCardTextLayerView(infoObject: viewModel.infoObject)
+                            InfoCardBookmarkView(category: viewModel.infoObject.category)
+                        }
+                        .padding(.horizontal, padding)
                     }
-                    .padding(.horizontal, padding)
+                    
+                    
                 }
+                .roundedCorners(10, corners: .allCorners)
+                .frame(maxWidth: width - gridPadding * 1.5 - padding / 2)
+                .shadow(color: .black.opacity(0.17), radius: 5, x: 0, y: 0)
                 
+                if viewModel.infoObject.isFavorite {
+                    ZStack {
+                        Image(systemName: "heart.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(viewModel.infoObject.category.color)
+                            .shadow(color: (hasImage ? Color.black.opacity(0.17) : Color.clear), radius: 5)
+                            .font(.title3)
+                            
+                        Image(systemName: "heart")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.white)
+                    }
+                    .frame(width: 20, height: 20)
+                    .padding()
+                    .padding(.horizontal, 0)
+                    
+                }
             }
-            .roundedCorners(10, corners: .allCorners)
-            .frame(maxWidth: width - gridPadding * 1.5 - padding / 2)
-            .shadow(color: .black.opacity(0.17), radius: 5, x: 0, y: 0)
             .onAppear {
                 Task {
                     try? await viewModel.loadPreview()
@@ -77,36 +108,36 @@ private struct InfoCardImageLayerView: View {
     var gridPadding: CGFloat
     var padding: CGFloat
     
-    var hasImage: Bool {
-        if infoObject.image != nil {
-            return true
-        } else {
-            return false
-        }
-    }
+    var hasImage: Bool
     
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            if let image = infoObject.image {
-                //            if let imageData = infoObject.image,
-                //                let uiImage = UIImage(data: imageData) {
-                ZStack {
-                    Image(uiImage: image)
-                    //                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFill()
-                        .clipped()
-                    Color.black.opacity(0.02)
+        ZStack {
+            Rectangle()
+                .foregroundColor(.clear)
+                .background(
+                    Rectangle()
+                        .fill(infoObject.category.color)
+                )
+            
+            if infoObject.stringURL != nil {
+                if let image = infoObject.image {
+                    ZStack {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                        Color.black.opacity(0.02)
+                    }
+                } else {
+                    if infoObject.previewLoading {
+                        ProgressView()
+                            .tint(.white)
+                    }
                 }
                 
-            } else {
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .background(
-                        Rectangle()
-                            .fill(infoObject.category.color)
-                    )
             }
+            
+            
             
             
         }
@@ -115,33 +146,7 @@ private struct InfoCardImageLayerView: View {
             maxWidth: width - gridPadding * 1.5 - padding / 2,
             maxHeight: (width - gridPadding * 1.5 - padding / 2) / 16 * 9
         )
-        .overlay {
-            HStack {
-                Spacer()
-                VStack {
-                    if infoObject.isFavorite {
-                        ZStack {
-                            Color(infoObject.category.color)
-                            if !hasImage {
-                                Color.clear
-                                    .background(.ultraThinMaterial)
-                            }
-                        }
-                        .mask {
-                            Image(systemName: "heart.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 18, height: 18)
-                        }
-                        .frame(width: 18, height: 18)
-                        .padding()
-                        .padding(.horizontal, 0)
-                        .shadow(color: (hasImage ? Color.white.opacity(0.17) : Color.black.opacity(0.17)), radius: 5)
-                    }
-                    Spacer()
-                }
-            }
-        }
+        
     }
 }
 
