@@ -450,7 +450,8 @@ struct AddItemView: View {
 //                            }
                     }
                     .bold()
-                    .foregroundStyle(Color.named("green", colorTheme: userData.colorTheme, colorScheme: colorScheme))
+//                    .foregroundStyle(Color.named(selectedCategory?.color(for: userData.colorTheme, colorScheme: colorScheme))
+                    .foregroundStyle((selectedCategory?.color(for: userData.colorTheme, colorScheme: colorScheme) ?? infoObject?.category.color(for: userData.colorTheme, colorScheme: colorScheme)) ?? Category.noCategory.color(for: userData.colorTheme, colorScheme: colorScheme))
                 }
                 .padding(.bottom, 20)
                 
