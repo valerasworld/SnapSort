@@ -7,6 +7,9 @@
 import SwiftUI
 
 struct CategoriesFilterView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    
     var infoObjects: [InfoObject]
     @Binding var selectedCategories: [Category]
     
@@ -22,6 +25,7 @@ struct CategoriesFilterView: View {
 }
 
 struct CategoryButtonView: View {
+        
     var category: Category
     @Binding var selectedCategories: [Category]
     @State var isSelected: Bool = false
@@ -29,8 +33,6 @@ struct CategoryButtonView: View {
     var body: some View {
         CategoryButtonImageLayerView(category: category, isSelected: isSelected)
         .onTapGesture {
-            
-//            withAnimation(.spring(duration: 0.25)) {
             withAnimation(.snappy) {
                 isSelected.toggle()
                 if isSelected {
@@ -45,13 +47,17 @@ struct CategoryButtonView: View {
 }
 
 struct CategoryButtonImageLayerView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     var category: Category
     var isSelected: Bool
     
     var body: some View {
         ZStack {
             Circle()
-                .foregroundColor(isSelected ? .clear : .white)
+                .foregroundColor(isSelected ? .clear : (colorScheme == .light ? .white : Color(#colorLiteral(red: 0.113725476, green: 0.113725476, blue: 0.113725476, alpha: 1))))
                 .padding(isSelected ? 0 : 2)
                 .background(coloredCircled)
             if isSelected {
@@ -59,13 +65,13 @@ struct CategoryButtonImageLayerView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(colorScheme == .light ? .white : .black)
                     .fontWeight(.semibold)
                     .bold()
             } else {
                 Circle()
                     .foregroundStyle(.clear)
-                    .background(coloredCircled.opacity(0.7))
+                    .background(coloredCircled/*.opacity(0.7)*/)
                     .mask {
                         Image(systemName: category.iconName)
                             .resizable()
@@ -76,16 +82,13 @@ struct CategoryButtonImageLayerView: View {
                     }
             }
         }
-        .frame(width: 36)
+        .frame(width: 40)
     }
     
     var coloredCircled: some View {
         ZStack {
             Circle()
-                .fill(category.color)
-            
-//            Circle()
-//                .fill(.ultraThinMaterial)
+                .fill(category.color(for: userData.colorTheme, colorScheme: colorScheme))
         }
     }
 }

@@ -54,7 +54,7 @@
 				InfoObject.swift,
 				InfoType.swift,
 				SampleObjects.swift,
-				UserDataManager.swift,
+				UserSettings.swift,
 			);
 			target = 9F63BE082DC2785800A09138 /* SaveInfo */;
 		};
@@ -81,7 +81,7 @@
 				InfoObject.swift,
 				InfoType.swift,
 				SampleObjects.swift,
-				UserDataManager.swift,
+				UserSettings.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
 		};
@@ -119,6 +119,7 @@
 		9FF1A5DF2DE9E312005A6C3A /* Exceptions for "SaveInfo" folder in "Share" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Helpers/PreviewSampleData.swift,
 				Helpers/RoundedSpecificCorners.swift,
 				Helpers/SheetHelper.swift,
 				Views/AddItemView.swift,

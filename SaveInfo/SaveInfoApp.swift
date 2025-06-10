@@ -10,13 +10,17 @@ import SwiftData
 
 @main
 struct SaveInfoApp: App {
-
-    @State var colorMode: ColorMode = .pastel
+    
+    let container = try! ModelContainer(for: InfoObject.self, UserSettings.self)
     
     var body: some Scene {
         WindowGroup {
+            let context = ModelContext(container)
+            let userDataManager = UserDataManager.load(from: context)
+            
             DashboardView(selectedCategories: [])
+                .environment(userDataManager)
+                .modelContainer(container)
         }
-        .modelContainer(for: InfoObject.self)
     }
 }

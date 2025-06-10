@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct InfoObjectsGridView: View {
-        
+            
     let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -114,5 +114,5 @@ struct DateSectionHeaderView: View {
 #Preview {
 //    InfoObjectsGridView(selectedCategories: [], selectedType: .all)
     InfoObjectsGridView(filteredObjects: [])
-        .modelContainer(previewContainer)
+//        .modelContainer(previewContainer)
 }

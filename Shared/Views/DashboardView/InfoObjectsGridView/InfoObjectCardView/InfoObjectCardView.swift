@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct InfoObjectCardView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
     
     @State var viewModel: InfoObjectCardViewModel
     @State var gridPadding: CGFloat = 12
@@ -38,7 +42,7 @@ struct InfoObjectCardView: View {
                     
                     // Lower Block
                     ZStack {
-                        Color.white
+                        colorScheme == .light ? Color.white : Color(#colorLiteral(red: 0.1137254902, green: 0.1137254902, blue: 0.1137254902, alpha: 1))
                         HStack(alignment: .top, spacing: 6) {
                             InfoCardTextLayerView(infoObject: viewModel.infoObject)
                             InfoCardBookmarkView(category: viewModel.infoObject.category)
@@ -57,14 +61,14 @@ struct InfoObjectCardView: View {
                         Image(systemName: "heart.fill")
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(viewModel.infoObject.category.color)
-                            .shadow(color: (hasImage ? Color.black.opacity(0.17) : Color.clear), radius: 5)
+                            .foregroundStyle(viewModel.infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
+                            .shadow(color: (hasImage ? (colorScheme == .light ? Color.black.opacity(0.17) : Color.white.opacity(0.17)) : Color.clear), radius: 5)
                             .font(.title3)
-                            
+                        
                         Image(systemName: "heart")
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(.white)
+                            .foregroundStyle(colorScheme == .light ? .white : .black)
                     }
                     .frame(width: 20, height: 20)
                     .padding()
@@ -102,6 +106,9 @@ struct InfoObjectCardView: View {
 
 private struct InfoCardImageLayerView: View {
     
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     var infoObject: InfoObject
     
     var width: CGFloat
@@ -116,7 +123,7 @@ private struct InfoCardImageLayerView: View {
                 .foregroundColor(.clear)
                 .background(
                     Rectangle()
-                        .fill(infoObject.category.color)
+                        .fill(infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
                 )
             
             if infoObject.stringURL != nil {
@@ -131,26 +138,25 @@ private struct InfoCardImageLayerView: View {
                 } else {
                     if infoObject.previewLoading {
                         ProgressView()
-                            .tint(.white)
+                            .tint(colorScheme == .light ? .white : .black)
                     }
                 }
                 
             }
-            
-            
-            
-            
         }
         .aspectRatio(16/9, contentMode: .fill)
         .frame(
             maxWidth: width - gridPadding * 1.5 - padding / 2,
             maxHeight: (width - gridPadding * 1.5 - padding / 2) / 16 * 9
         )
+        .clipped()
         
     }
 }
 
 private struct InfoCardTextLayerView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
     
     var infoObject: InfoObject
     
@@ -179,14 +185,14 @@ private struct InfoCardTextLayerView: View {
             .lineLimit(hasLink ? 1 : 2)
             .multilineTextAlignment(.leading)
             .lineSpacing(hasLink ? 0 : -2)
-            .foregroundStyle(.black)
+            .foregroundStyle(colorScheme == .light ? .black : .white)
             
             if hasLink {
                 Group {
                     if let stringURL = infoObject.stringURL {
                         Text(URL(string: stringURL)?.host?.replacingOccurrences(of: "www.",with: "") ?? "")
                         
-                            .foregroundStyle(.black.opacity(0.6))
+                            .foregroundStyle(colorScheme == .light ? .black.opacity(0.6) : .white.opacity(0.6))
                     }
                 }
                 .font(.footnote)
@@ -202,13 +208,16 @@ private struct InfoCardTextLayerView: View {
 
 struct InfoCardBookmarkView: View {
     
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     var category: Category
     
     var body: some View {
         ZStack(alignment: .bottom) {
             Rectangle()
                 .foregroundColor(.clear)
-                .background(Rectangle().fill(category.color))
+                .background(Rectangle().fill(category.color(for: userData.colorTheme, colorScheme: colorScheme)))
             
             VStack {
                 Spacer()
@@ -216,7 +225,7 @@ struct InfoCardBookmarkView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 18, height: 18)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(colorScheme == .light ? .white : .black)
                     .bold()
                 Spacer()
                 

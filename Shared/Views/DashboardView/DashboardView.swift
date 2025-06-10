@@ -10,17 +10,16 @@ import SwiftData
 
 struct DashboardView: View {
     
-    @State var userData = UserDataManager()
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+        
     @State var searchText: String = ""
     @State var showModal: Bool = false
     
     @State var showFavorite: Bool = false
     @State var selectedCategories: [Category] = []
     @State var selectedType: InfoType = InfoType.all
-//    @State private var favorites = Favorites() // ?
-    
-    // SwiftData -------------
-//    @State private var navigationPath: [InfoObject] = []
+
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \InfoObject.dateAdded) private var infoObjects: [InfoObject]
     
@@ -60,6 +59,7 @@ struct DashboardView: View {
     
     var body: some View {
         NavigationStack/*(path: $navigationPath)*/ {
+            
             ResizableHeaderScrollView {
                 
             } stickyHeader: {
@@ -88,6 +88,27 @@ struct DashboardView: View {
             }
             .searchable(text: $searchText, placement: .navigationBarDrawer)
             .toolbar(content: {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Menu("Color Theme") {
+                            Picker("Color Theme", selection: Binding(
+                                get: { userData.colorTheme },
+                                set: { userData.colorTheme = $0 }
+                            )) {
+                                ForEach(ColorTheme.allCases, id: \.self) { theme in
+                                    Text(theme.rawValue.capitalized).tag(theme)
+                                }
+                            }
+                        }
+                        .pickerStyle(.inline)
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                            .font(.title3)
+                    }
+                    
+                    
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         withAnimation(.snappy) {
@@ -96,7 +117,7 @@ struct DashboardView: View {
                         
                     } label: {
                         Image(systemName: showFavorite ? "heart.fill" : "heart")
-                            .foregroundStyle(.black)
+                            .foregroundStyle(colorScheme == .light ? .black : .white)
                             .font(.title3)
                     }
                 }
@@ -105,14 +126,12 @@ struct DashboardView: View {
                         showModal = true
                     } label: {
                         Image(systemName: "plus")
-                            .foregroundStyle(Color("black"))
-//                            .fontWeight(.semibold)
+                            .foregroundStyle(colorScheme == .light ? .black : .white)
                             .font(.title3)
                     }
                 }
             })
             .sheet(isPresented: $showModal) {
-//                AddItemView(isEditing: false, infoObjects: infoObjects)
                 AddItemView(infoObject: nil, isEditing: false, infoObjects: infoObjects)
             }
             //
@@ -125,14 +144,18 @@ struct DashboardView: View {
             //            }
             
         }
-        .environment(userData)
+//        .environment(userData)
     }
 }
 
 #Preview {
+    let (container, userDataManager) = /*previewBigContainer()*/previewContainer()
     DashboardView(selectedCategories: [])
 //        .modelContainer(previewContainer)
-        .modelContainer(previewBigContainer)
+        .modelContainer(container)
+        .environment(userDataManager)
+//        .environment(userData)
+                             
 }
 
 

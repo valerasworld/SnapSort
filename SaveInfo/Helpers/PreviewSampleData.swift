@@ -9,35 +9,68 @@ import Foundation
 import SwiftData
 
 @MainActor
-let previewContainer: ModelContainer = {
+func previewContainer() -> (container: ModelContainer, userDataManager: UserDataManager) {
     do {
         let container = try ModelContainer(
-            for: InfoObject.self,
+            for: InfoObject.self, UserSettings.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
-        let modelContext = container.mainContext
-        if try modelContext.fetch(FetchDescriptor<InfoObject>()).isEmpty {
-            SampleObjects.contents.forEach { container.mainContext.insert($0) }
+        let context = container.mainContext
+
+        // Add InfoObjects if empty
+        if try context.fetch(FetchDescriptor<InfoObject>()).isEmpty {
+            SampleObjects.contents.forEach { context.insert($0) }
         }
-        return container
+
+        // Load or create UserSettings
+        let userDataManager = UserDataManager.load(from: context)
+
+        return (container, userDataManager)
+
     } catch {
-        fatalError("Failed to create container")
+        fatalError("Failed to create preview container: \(error)")
     }
-}()
+}
 
 @MainActor
-let previewBigContainer: ModelContainer = {
+func previewBigContainer() -> (container: ModelContainer, userDataManager: UserDataManager) {
     do {
         let container = try ModelContainer(
-            for: InfoObject.self,
+            for: InfoObject.self, UserSettings.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
-        let modelContext = container.mainContext
-        if try modelContext.fetch(FetchDescriptor<InfoObject>()).isEmpty {
-            SampleObjects.longContents.forEach { container.mainContext.insert($0) }
+        let context = container.mainContext
+
+        // Add InfoObjects if empty
+        if try context.fetch(FetchDescriptor<InfoObject>()).isEmpty {
+            SampleObjects.longContents.forEach { context.insert($0) }
         }
-        return container
+
+        // Load or create UserSettings
+        let userDataManager = UserDataManager.load(from: context)
+
+        return (container, userDataManager)
+
     } catch {
-        fatalError("Failed to create container")
+        fatalError("Failed to create preview container: \(error)")
     }
-}()
+}
+
+//@MainActor
+//let previewBigContainer: ModelContainer = {
+//    do {
+//        let container = try ModelContainer(
+//            for: InfoObject.self,
+//            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+//        )
+//        let modelContext = container.mainContext
+//        if try modelContext.fetch(FetchDescriptor<InfoObject>()).isEmpty {
+//            SampleObjects.longContents.forEach { container.mainContext.insert($0) }
+//        }
+//        return container
+//    } catch {
+//        fatalError("Failed to create container")
+//    }
+//}()
+
+

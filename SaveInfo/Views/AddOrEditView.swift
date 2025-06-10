@@ -222,18 +222,121 @@ struct CreateCategorySheetView: View {
     @Binding var selectedCategory: Category?
     
     @State private var sheetHeight: CGFloat = .zero
-    @State private var currentView: CurrentCreateCategorySheetView = .name
     
     @State private var newCategoryName: String = ""
     @State var selectedColorName: String = "gray"
     @State var selectedIconName: String = "questionmark"
-        
+    
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+            
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             ZStack {
-                View1()
+                VStack(spacing: 16) {
+                    HStack {
+                        Text("Add New Category")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        Spacer(minLength: 0)
+                        
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.title)
+                                .foregroundStyle(Color.gray, Color.primary.opacity(0.1))
+                        }
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        Text("Name")
+                            .font(.title3)
+                        
+                        TextField("Name", text: $newCategoryName)
+                            .padding(12)
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(colorScheme == .light ? Color(#colorLiteral(red: 0.9019606709, green: 0.9019609094, blue: 0.9062663913, alpha: 1)) : Color(#colorLiteral(red: 0.1725490196, green: 0.1725490196, blue: 0.1803921569, alpha: 1)))
+                            }
+                    }
+                    
+                    Divider()
+                        .padding(.vertical, 4)
+                    
+                    HStack {
+                        Text("Color")
+                            .font(.title3)
+                        
+                        Spacer(minLength: 0)
+                        
+                        Circle()
+                            .foregroundStyle(Color(Category(name: "", colorName: selectedColorName, iconName: "").color(for: userData.colorTheme, colorScheme: colorScheme)))
+                            .frame(width: 45, height: 45)
+                    }
+                    
+                    CustomColorPickerView(selectedColorName: $selectedColorName)
+                    
+                    Divider()
+                        .padding(.vertical, 4)
+                    
+                    HStack {
+                        Text("Icon")
+                            .font(.title3)
+                        
+                        Spacer(minLength: 0)
+                        
+                        Image(systemName: selectedIconName)
+                            .font(.title2)
+                            .frame(width: 45, height: 45)
+                    }
+                    
+                    IconPickerView(selectedIconName: $selectedIconName, selectedCategoryColorName: $selectedColorName)
+                    
+                    Divider()
+                        .padding(.vertical, 4)
+                    
+                    HStack {
+                        Text("Preview")
+                            .font(.title3)
+                        
+                        Spacer(minLength: 0)
+                            
+                        Text(newCategoryName)
+                        
+                        ZStack {
+                            Circle()
+                                .foregroundColor(Color.named(selectedColorName, colorTheme: userData.colorTheme, colorScheme: colorScheme))
+                                .padding(0)
+                            
+                            Image(systemName: selectedIconName)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundStyle(colorScheme == .light ? .white : .black)
+                                .fontWeight(.semibold)
+                                .bold()
+                        }
+                        .frame(width: 40)
+                        
+                        InfoCardBookmarkView(
+                            category: Category(
+                                name: newCategoryName,
+                                colorName: selectedColorName,
+                                iconName: selectedIconName
+                            )
+                        )
+                        .offset(y: 3)
+                        
+                        
+                    }
+                    .frame(height: 40)
+                    
+                }
+                .padding(.vertical, 6)
             }
             .compositingGroup()
             
@@ -249,8 +352,8 @@ struct CreateCategorySheetView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 15)
-                    .foregroundStyle(.white)
-                    .background(.black, in: .capsule)
+                    .foregroundStyle(colorScheme == .light ? .white : .black)
+                    .background(colorScheme == .light ? .black : .white, in: .capsule)
             }
             .padding(.top, 15)
         }
@@ -284,8 +387,11 @@ struct CreateCategorySheetView: View {
                     .font(.title3)
                 
                 TextField("Name", text: $newCategoryName)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.title3)
+                    .padding(12)
+                    .background {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(colorScheme == .light ? .white : Color(#colorLiteral(red: 0.1725490196, green: 0.1725490196, blue: 0.1803921569, alpha: 1)))
+                    }
             }
             
             Divider()
@@ -298,7 +404,7 @@ struct CreateCategorySheetView: View {
                 Spacer(minLength: 0)
                 
                 Circle()
-                    .foregroundStyle(Color.named(selectedColorName))
+                    .foregroundStyle(Color(Category(name: "", colorName: selectedColorName, iconName: "").color(for: userData.colorTheme, colorScheme: colorScheme)))
                     .frame(width: 45, height: 45)
             }
             
@@ -329,6 +435,8 @@ struct CreateCategorySheetView: View {
                 
                 Spacer(minLength: 0)
                     
+                Text(newCategoryName)
+                
                 CategoryButtonImageLayerView(
                     category: Category(
                         name: newCategoryName,
@@ -338,11 +446,13 @@ struct CreateCategorySheetView: View {
                     isSelected: true
                 )
                 .frame(width: 40)
-                InfoCardBookmarkView(category: Category(
-                    name: newCategoryName,
-                    colorName: selectedColorName,
-                    iconName: selectedIconName
-                ))
+                InfoCardBookmarkView(
+                    category: Category(
+                        name: newCategoryName,
+                        colorName: selectedColorName,
+                        iconName: selectedIconName
+                    )
+                )
                 .offset(y: 3)
                 
                 
@@ -357,6 +467,10 @@ struct CreateCategorySheetView: View {
 struct IconPickerView: View {
     @Binding var selectedIconName: String
     @Binding var selectedCategoryColorName: String
+    
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     private let iconNames: [String] = [
         // Movies / Shows
         "film.fill",
@@ -479,18 +593,28 @@ struct IconPickerView: View {
                     ZStack {
                         Circle()
                             .frame(width: 50, height: 50)
-                            .foregroundStyle(Color.named(selectedCategoryColorName))
+                            .foregroundStyle(Category(name: "", colorName: selectedCategoryColorName, iconName: "").color(for: userData.colorTheme, colorScheme: colorScheme))
                             .scaleEffect(selectedIconName == iconName ? 1.15 : 1)
                             .shadow(
-                                color: .black.opacity(
-                                    selectedIconName == iconName ? 0.17 : 0
-                                ), radius: 2, y: 2
+                                color: (
+                                    colorScheme == .light ? (
+                                        Color.black.opacity(
+                                            selectedIconName == iconName ? 0.17 : 0
+                                        )
+                                    ) : (
+                                        Color.white.opacity(
+                                            selectedIconName == iconName ? 0.17 : 0
+                                        )
+                                    )
+                                ),
+                                radius: 2,
+                                y: 2
                             )
                         
                         Image(systemName: iconName)
                             .font(.title3)
                             .frame(width: 45, height: 45)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(colorScheme == .light ? .white : .black)
                             .scaleEffect(selectedIconName == iconName ? 1.15 : 1)
                     }
                     .onTapGesture {
@@ -511,6 +635,9 @@ struct CustomColorPickerView: View {
     @Binding var selectedColorName: String
     private let colorNames: [String] = ["green", "mint", "teal", "cyan", "blue", "indigo", "purple", "pink", "red", "orange", "yellow", "brown", "gray"]
     
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
@@ -518,7 +645,7 @@ struct CustomColorPickerView: View {
                     ZStack {
                         Circle()
                             .frame(width: 45, height: 45)
-                            .foregroundStyle(Color.named(colorName))
+                            .foregroundStyle(Category(name: "", colorName: colorName, iconName: "").color(for: userData.colorTheme, colorScheme: colorScheme))
                             .scaleEffect(selectedColorName == colorName ? 1.15 : 1)
                             .shadow(
                                 color: .black.opacity(
@@ -527,7 +654,7 @@ struct CustomColorPickerView: View {
                             )
                         Image(systemName: "checkmark")
                             .bold()
-                            .foregroundStyle(.white)
+                            .foregroundStyle(colorScheme == .light ? .white : .black)
                             .opacity(selectedColorName == colorName ? 1 : 0)
                     }
                     .onTapGesture {

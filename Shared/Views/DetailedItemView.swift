@@ -19,34 +19,18 @@ struct DetailedItemView: View {
     @Query var infoObjects: [InfoObject]
     @Environment(\.modelContext) var modelContext
     
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 if !imageIsClicked {
                     ZStack(alignment: .bottomLeading) {
-//                    if let image = infoObject.image {
-//                        ZStack {
-//                            Image(uiImage: image)
-//                                .resizable()
-//                                .scaledToFit()
-//                                .frame(maxWidth: .infinity)
-//                            Color.black
-//                                .opacity(0.03)
-//                        }
-//
-//                    } else {
-//                        ZStack {
-//                            LinearGradient(colors: [.white, infoObject.category.color], startPoint: .bottom, endPoint: .top)
-//                                .frame(maxWidth: .infinity)
-//                                .frame(height: 200)
-//                            Color.clear
-//                                .background(.ultraThinMaterial)
-//                        }
-//                    }
                         let width = UIScreen.main.bounds.width
                         
                         ZStack {
-                            // BG IMAGE
+                            // BG BLURRED IMAGE
                             if let uiimage = infoObject.image {
                                 Image(uiImage: uiimage)
                                     .resizable()
@@ -55,13 +39,12 @@ struct DetailedItemView: View {
                                     .frame(maxWidth: width, maxHeight: width)
                                     .clipped()
                                     
-                                LinearGradient(colors: [.white, .clear, . clear], startPoint: .bottom, endPoint: .top)
+                                LinearGradient(colors: [(colorScheme == .light ? .white : .black), .clear, .clear], startPoint: .bottom, endPoint: .top)
+                                Color.clear
+                                    .background(.ultraThinMaterial)
                             }
                             
-                            Color.clear
-                                .background(.ultraThinMaterial)
-                            
-                            
+                            // ACTUAL IMAGE
                             ZStack {
                                 if let uiimage = infoObject.image {
                                     Image(uiImage: uiimage)
@@ -74,23 +57,18 @@ struct DetailedItemView: View {
                                             imageIsClicked.toggle()
                                         }
                                 } else {
+                                    // CATEGORY COLOR PLACEHOLDER
                                     ZStack {
-                                        LinearGradient(colors: [infoObject.category.color, .white], startPoint: .top, endPoint: .bottom)
+                                        LinearGradient(colors: [infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme), colorScheme == .light ? .white : .black], startPoint: .top, endPoint: .bottom)
                                         Color.clear
                                             .background(.ultraThinMaterial)
-                                        ContentUnavailableView(
-                                            "Image",
-                                            systemImage: "photo.fill",
-                                            description: Text("No image selected"))
-                                        .onTapGesture {
-                                            //                                        isPhotoPickerPresented.toggle()
-                                        }
                                     }
+                                    .frame(width: width, height: width / 2)
                                 }
                             }
                         }
                         
-                        .frame(width: width, height: width)
+                        .frame(maxWidth: width, maxHeight: width)
                         .ignoresSafeArea()
                         if infoObject.stringURL != nil && infoObject.stringURL != "" {
                             LinkButtonOnDetailView(infoObject: infoObject)
@@ -98,24 +76,28 @@ struct DetailedItemView: View {
                     }
                     .frame(maxWidth: .infinity)
                     
-                    VStack(alignment: .leading) {
-                        Group {
-                            Text(infoObject.title ?? "")
-                                .foregroundStyle(Color.black)
-                                .font(.title3)
-                                .bold()
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(infoObject.title ?? "")
+                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                            .font(.title3)
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            
-                            Text(infoObject.comment ?? "")
-                                .foregroundStyle(.black)
-                                .font(.title3)
-                        }
-                        .padding(.horizontal)
                         
-                        TagsView(tags: infoObject.tags)
-                            .padding(.horizontal)
+                        
+                        Text(infoObject.comment ?? "")
+                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                            .font(.title3)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+//                        TagsView(tags: infoObject.tags)
+//                            .padding(.horizontal)
                         
                     }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    .frame(maxWidth: .infinity)
                     
                 } else {
                     if let uiimage = infoObject.image {
@@ -141,7 +123,7 @@ struct DetailedItemView: View {
                         infoObject.isFavorite.toggle()
                     } label: {
                         Image(systemName: infoObject.isFavorite ? "heart.fill" : "heart")
-                            .foregroundStyle(infoObject.category.color)
+                            .foregroundStyle(infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
                             .font(.title3)
                     }
                 }
@@ -152,7 +134,7 @@ struct DetailedItemView: View {
 //                        Text("Edit")
                         Image(systemName: "pencil")
                             .font(.title3)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(colorScheme == .light ? .black : .white)
                     }
                 }
             }
@@ -166,11 +148,16 @@ struct DetailedItemView: View {
 
 
 #Preview {
+    let (container, userDataManager) = previewBigContainer()
+
     DetailedItemView(infoObject: SampleObjects.contents.first!)
+        .modelContainer(container)
+        .environment(userDataManager)
 }
 
 struct BackButtonView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         HStack {
             Button(action: {
@@ -181,7 +168,7 @@ struct BackButtonView: View {
                     Text("Back")
                 }
                 .font(.body)
-                .foregroundColor(.black)
+                .foregroundColor(colorScheme == .light ? .black : .white)
             }
             Spacer()
         }
@@ -194,6 +181,10 @@ struct BackButtonView: View {
 struct LinkButtonOnDetailView: View {
     var infoObject: InfoObject
     @Environment(\.openURL) var openURL
+    
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     var body: some View {
         Button {
             if let urlString = infoObject.stringURL,
@@ -213,10 +204,10 @@ struct LinkButtonOnDetailView: View {
             .padding(.horizontal, 12)
             .font(.body)
             .bold()
-            .foregroundStyle(.white)
+            .foregroundStyle(colorScheme == .light ? .white : .black)
             .background {
                 RoundedRectangle(cornerRadius: 20)
-                    .foregroundStyle(infoObject.category.color)
+                    .foregroundStyle(infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
             }
             .padding()
         }

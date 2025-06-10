@@ -8,6 +8,8 @@ import SwiftUI
 
 struct TagsView: View {
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var tags: [String]
     var spacing: CGFloat = 10
     var typedTagName: String = "+"
@@ -16,11 +18,12 @@ struct TagsView: View {
         CustomTagsLayout(spacing: spacing) {
             ForEach(tags, id: \.self) { tag in
                 Text(tag.capitalized)
+                    .foregroundStyle((colorScheme == .light ? .black : .white))
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background {
                         RoundedRectangle(cornerRadius: 10)
-                            .fill(.white)
+                            .fill(colorScheme == .light ? .white : .black)
                             .shadow(color: .black.opacity(0.12), radius: 5)
                     }
             }
@@ -29,7 +32,7 @@ struct TagsView: View {
                 .padding(.vertical, 6)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(.white)
+                        .fill(colorScheme == .light ? .black : .white)
                         .shadow(color: .black.opacity(0.12), radius: 5)
                 }
                 .onTapGesture {

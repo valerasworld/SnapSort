@@ -19,7 +19,7 @@ class ShareViewController: UIViewController {
         isModalInPresentation = true
         
         if let itemProviders = (extensionContext?.inputItems.first as? NSExtensionItem)?.attachments {
-            let hostingView = UIHostingController(rootView: ShareView(itemProviders: itemProviders , extensionContext: extensionContext))
+            let hostingView = UIHostingController(rootView: ShareView(itemProviders: itemProviders , extensionContext: extensionContext, colorTheme: .pastel))
             addChild(hostingView)
             hostingView.view.frame = view.bounds
             view.addSubview(hostingView.view)
@@ -34,6 +34,8 @@ fileprivate struct ShareView: View {
     
     var itemProviders: [NSItemProvider] = []
     var extensionContext: NSExtensionContext?
+    
+    var colorTheme: ColorTheme
     
     // View Properties
     @State private var infoObject: InfoObject?

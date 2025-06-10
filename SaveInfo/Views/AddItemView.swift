@@ -22,6 +22,10 @@ import CoreImage.CIFilterBuiltins
 import SwiftData
 
 struct AddItemView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     let infoObject: InfoObject?
     
     @State private var uiImage: UIImage? = nil
@@ -66,7 +70,14 @@ struct AddItemView: View {
                 
             }
             .background {
-                Color.black.opacity(0.05).ignoresSafeArea()
+                if colorScheme == .light {
+                    Color.black.opacity(0.05)
+                        .ignoresSafeArea()
+                } else {
+                    Color(#colorLiteral(red: 0.1098036841, green: 0.1098041013, blue: 0.1183909252, alpha: 1))
+                        .ignoresSafeArea()
+                }
+                    
             }
             .navigationTitle(isEditing ? "Edit Item" : "Add Item")
             .navigationBarTitleDisplayMode(.inline)
@@ -76,6 +87,7 @@ struct AddItemView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .foregroundStyle(colorScheme == .light ? .black : .white)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -85,6 +97,7 @@ struct AddItemView: View {
                             dismiss()
                         }
                     }
+                    .foregroundStyle(colorScheme == .light ? .black : .white)
                 }
             }
         }
@@ -107,17 +120,16 @@ struct AddItemView: View {
         VStack(alignment: .leading) {
             Text("TITLE")
                 .font(.footnote)
-                .foregroundStyle(.black.opacity(0.5))
+                .foregroundStyle(colorScheme == .light ? .black.opacity(0.5) : .white.opacity(0.5))
                 .padding(.top, 8)
                 .padding(.horizontal, 12)
             TextField("Add Title", text: $title)
-            //                                .textFieldStyle(.roundedBorder)
                 .font(.title3)
                 .padding(8)
                 .padding(.horizontal, 4)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(.white)
+                        .fill(colorScheme == .light ? .white : Color(#colorLiteral(red: 0.1725490196, green: 0.1725490196, blue: 0.1803921569, alpha: 1)))
                 }
         }
         .padding(.horizontal, 16)
@@ -127,7 +139,7 @@ struct AddItemView: View {
         VStack(alignment: .leading) {
             Text("CATEGORY")
                 .font(.footnote)
-                .foregroundStyle(.black.opacity(0.5))
+                .foregroundStyle(colorScheme == .light ? .black.opacity(0.5) : .white.opacity(0.5))
                 .padding(.top, 16)
                 .padding(.horizontal, 12)
             
@@ -153,19 +165,19 @@ struct AddItemView: View {
                         Text("Add New")
                         
                     }
-                    .foregroundStyle(.black)
+                    .foregroundStyle(colorScheme == .light ? .black : .white)
                 }
                 .padding(.horizontal, 12)
                 .padding(.top, !userCategories.isEmpty ? 6 : 12)
                 .padding(.bottom, 12)
                 .sheet(isPresented: $isCreateCategorySheetPresented) {
-                        CreateCategorySheetView(selectedCategory: $selectedCategory)
+                    CreateCategorySheetView(selectedCategory: $selectedCategory)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(.white)
+                    .fill(colorScheme == .light ? .white : Color(#colorLiteral(red: 0.1725490196, green: 0.1725490196, blue: 0.1803921569, alpha: 1)))
             }
         }
         .padding(.horizontal, 16)
@@ -175,7 +187,7 @@ struct AddItemView: View {
         VStack(alignment: .leading) {
             Text("LINK")
                 .font(.footnote)
-                .foregroundStyle(.black.opacity(0.5))
+                .foregroundStyle(colorScheme == .light ? .black.opacity(0.5) : .white.opacity(0.5))
                 .padding(.top, 16)
                 .padding(.horizontal, 12)
             
@@ -183,7 +195,7 @@ struct AddItemView: View {
                 .padding(12)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(.white)
+                        .fill(colorScheme == .light ? .white : Color(#colorLiteral(red: 0.1725490196, green: 0.1725490196, blue: 0.1803921569, alpha: 1)))
                 }
         }
         .padding(.horizontal, 16)
@@ -193,7 +205,7 @@ struct AddItemView: View {
         VStack(alignment: .leading) {
             Text("COMMENT")
                 .font(.footnote)
-                .foregroundStyle(.black.opacity(0.5))
+                .foregroundStyle(colorScheme == .light ? .black.opacity(0.5) : .white.opacity(0.5))
                 .padding(.top, 16)
                 .padding(.horizontal, 12)
             TextField("Add Comment", text: $comment, axis: .vertical)
@@ -202,7 +214,7 @@ struct AddItemView: View {
                 .multilineTextAlignment(.leading)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(.white)
+                        .fill(colorScheme == .light ? .white : Color(#colorLiteral(red: 0.1725490196, green: 0.1725490196, blue: 0.1803921569, alpha: 1)))
                 }
             
         }
@@ -377,50 +389,73 @@ struct AddItemView: View {
     @ViewBuilder
     func ImagePickerView() -> some View {
         let width = UIScreen.main.bounds.width
-        
-        ZStack {
-            // BG IMAGE
-            if let uiimage = uiImage {
-                Image(uiImage: uiimage)
-                    .resizable()
-                    .scaledToFill()
-                    .aspectRatio(1/1, contentMode: .fill)
-                    .frame(maxWidth: width, maxHeight: width)
-                    .clipped()
-                    
-                LinearGradient(colors: [.white, .clear, . clear], startPoint: .bottom, endPoint: .top)
-            }
-            
-            Color.clear
-                .background(.ultraThinMaterial)
-            
-            
+        ZStack(alignment: .bottom) {
             ZStack {
+                // BG IMAGE
                 if let uiimage = uiImage {
                     Image(uiImage: uiimage)
                         .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .frame(maxWidth: width * 0.8, maxHeight: width * 0.65)
-                        .shadow(color: .black.opacity(0.27), radius: 10, x: 0, y: 5)
-                        .onTapGesture {
-                            isPhotoPickerPresented.toggle()
-                        }
-                } else {
-                    ZStack {
-                        LinearGradient(colors: [selectedCategory?.color ?? .gray, .white], startPoint: .top, endPoint: .bottom)
-                        Color.clear
-                            .background(.ultraThinMaterial)
-                        ContentUnavailableView(
-                            "Image",
-                            systemImage: "photo.fill",
-                            description: Text("No image selected"))
-                        .onTapGesture {
-                            isPhotoPickerPresented.toggle()
+                        .scaledToFill()
+                        .aspectRatio(1/1, contentMode: .fill)
+                        .frame(maxWidth: width, maxHeight: width)
+                        .clipped()
+                    
+                    LinearGradient(colors: [(colorScheme == .light ? .white : .black), .clear, . clear], startPoint: .bottom, endPoint: .top)
+                }
+                
+                Color.clear
+                    .background(.ultraThinMaterial)
+                
+                ZStack {
+                    if let uiimage = uiImage {
+                        Image(uiImage: uiimage)
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .frame(maxWidth: width * 0.8, maxHeight: width * 0.65)
+                            .shadow(color: .black.opacity(0.27), radius: 10, x: 0, y: 5)
+                            .onTapGesture {
+                                isPhotoPickerPresented.toggle()
+                            }
+                    } else {
+                        ZStack {
+                            LinearGradient(colors: [selectedCategory?.color(for: userData.colorTheme, colorScheme: colorScheme) ?? .gray, (colorScheme == .light ? .white : .black)], startPoint: .top, endPoint: .bottom)
+                            Color.clear
+                                .background(.ultraThinMaterial)
+                            ContentUnavailableView(
+                                "Add Image",
+                                systemImage: "plus",
+                                description: Text("No Image here yet"))
+                            .onTapGesture {
+                                isPhotoPickerPresented.toggle()
+                            }
                         }
                     }
                 }
             }
+            if let _ = uiImage {
+                Button {
+                    isPhotoPickerPresented.toggle()
+                } label : {
+                    Label {
+                        Text("Add New Image")
+                            .font(.title3)
+                    } icon: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+//                            .background {
+//                                Circle()
+//                                    .fill(colorScheme == .light ? .white : .black)
+//                                    .padding(2)
+//                            }
+                    }
+                    .bold()
+                    .foregroundStyle(Color.named("green", colorTheme: userData.colorTheme, colorScheme: colorScheme))
+                }
+                .padding(.bottom, 20)
+                
+            }
+            
         }
         
         .frame(width: width, height: width)
@@ -459,15 +494,25 @@ struct AddItemView: View {
 }
 
 #Preview {
+    
+    let (container, userDataManager) = previewBigContainer()
+    
     AddItemView(
-        infoObject: nil,
-        isEditing: false,
-        infoObjects: []
-    )
+            infoObject: nil,
+            isEditing: false,
+            infoObjects: []
+        )
+        .modelContainer(container)
+        .environment(userDataManager)
+    
 }
 
 
 struct MenuCategory: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    
     let categories: [Category]
     @Binding var selectedCategory: Category?
     var body: some View {
@@ -477,18 +522,18 @@ struct MenuCategory: View {
                     selectedCategory = category
                 }) {
                     Label(category.name.capitalized, systemImage: category.iconName)
-                        .tint(category.color)
+                        .tint(category.color(for: userData.colorTheme, colorScheme: colorScheme))
                 }
             }
             
         } label: {
             HStack {
                 Image(systemName: selectedCategory?.iconName ?? Category.noCategory.iconName)
-                    .foregroundStyle(selectedCategory?.color ?? Category.noCategory.color)
+                    .foregroundStyle(selectedCategory?.color(for: userData.colorTheme, colorScheme: colorScheme) ?? Category.noCategory.color(for: userData.colorTheme, colorScheme: colorScheme))
                 
                 
                 Text(selectedCategory?.name ?? Category.noCategory.name)
-                    .foregroundStyle(.black)
+                    .foregroundStyle((colorScheme == .light ? .black : .white))
                 
                 Image(systemName: "chevron.right")
                     .foregroundStyle(Color.gray)
