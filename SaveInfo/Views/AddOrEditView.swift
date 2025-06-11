@@ -476,6 +476,37 @@ struct IconPickerView: View {
         "film.fill",
         "tv.fill",
         
+        // Music / Audio
+        "music.note.list",
+        "music.mic",
+        "headphones",
+        "guitars.fill",
+        
+        // Wellness / Fitness / Health
+        "figure.mind.and.body",
+        "heart.fill",
+        "bolt.heart.fill",
+        "cross.case.fill",
+        
+        // Work / Productivity
+        "briefcase.fill",
+        "calendar",
+        "clock.badge.checkmark",
+        "chart.bar.xaxis",
+        
+        // Electronics / Tech / Gadgets
+        "ipad.and.iphone",
+        "desktopcomputer",
+        "macbook.and.iphone",
+        "gamecontroller.fill",
+        
+        // Restaurants / Food / Cooking
+        "fork.knife",
+        "takeoutbag.and.cup.and.straw.fill",
+        "cup.and.saucer.fill",
+        "birthday.cake.fill",
+        "wineglass.fill",
+        
         // Books / Reading / Learning
         "books.vertical.fill",
         "text.book.closed.fill",
@@ -489,39 +520,33 @@ struct IconPickerView: View {
         "camera.fill",
         "photo.fill",
         
-        // Electronics / Tech / Gadgets
-        "ipad.and.iphone",
-        "desktopcomputer",
-        "macbook.and.iphone",
-        "cpu.fill",
-        "gamecontroller.fill",
-        
-        // Music / Audio
-        "music.note.list",
-        "music.mic",
-        "headphones",
-        "guitars.fill",
-        
-        // Restaurants / Food / Cooking
-        "takeoutbag.and.cup.and.straw.fill",
-        "cup.and.saucer.fill",
-        "birthday.cake.fill",
-        "wineglass.fill",
+        // Sports
+        "volleyball.fill",
+        "tennisball.fill",
+        "soccerball.circle.fill.inverse",
+        "basketball.fill",
         
         // Memes / Fun / Entertainment
-        "face.dashed.fill",
+        "gift.fill",
+        "face.smiling.inverse",
         "theatermasks.fill",
         "sparkles",
         "figure.stand.line.dotted.figure.stand",
         
         // Travel / Places / Outdoors
+        "house.fill",
         "airplane",
         "car.fill",
+        "bicycle",
+        "map.fill",
+        "location.fill",
         "mappin.and.ellipse",
+        "binoculars.fill",
         "globe.americas.fill",
         "tent.fill",
         
         // Goods / Shopping / Products
+        "tshirt.fill",
         "bag.fill",
         "cart.fill",
         "shippingbox.fill",
@@ -538,48 +563,26 @@ struct IconPickerView: View {
         "note.text",
         "list.bullet.rectangle.fill",
         
-        // Wellness / Fitness / Health
-        "figure.mind.and.body",
-        "heart.fill",
-        "bolt.heart.fill",
-        "cross.case.fill",
-        
-        // Work / Productivity
-        "briefcase.fill",
-        "calendar",
-        "clock.badge.checkmark",
-        "chart.bar.xaxis",
-        
         // Misc / Catch-All / Custom
         "square.grid.2x2.fill",
         "ellipsis.circle.fill",
         "questionmark.folder.fill",
         
-        // Finanace
-        "dollarsign.circle.fill",
-        "banknote.fill",
-        "creditcard.fill",
-        "wallet.pass.fill",
-        "chart.line.uptrend.xyaxis",
-        "chart.bar.fill",
-        "chart.pie.fill",
-        "percent",
-        "bitcoinsign.circle.fill",
-        "eurosign.circle.fill",
-        "sterlingsign.circle.fill",
-        "yensign.circle.fill",
-        "francsign.circle.fill",
-        "indianrupeesign.circle.fill",
-        "coloncurrencysign.circle.fill",
-        "cedisign.circle.fill",
-        
+
         // Classic symbol for pets
         "pawprint.fill",
         "tortoise.fill",
         "hare.fill",
         "ant.fill",
         "ladybug.fill",
+        "camera.macro",
+        "rainbow",
+        "tree.fill",
         "leaf.fill",
+        "sun.max.fill",
+        "moon.fill",
+        "cloud.fill",
+        "snowflake",
         "bird.fill",
         "fish.fill",
         "pawprint.fill",
