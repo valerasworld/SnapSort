@@ -116,21 +116,23 @@ final class LinkPreviewService: PreviewLoadingService {
         do {
             let metadata = try await metadataLoader.loadMetadata(for: url)
             infoObject.linkMetaData = metadata
-            infoObject.title = metadata.title ?? infoObject.title
+            let currentObjectTitle = infoObject.title
+            infoObject.title = currentObjectTitle != "" && currentObjectTitle != metadata.title ? infoObject.title : metadata.title
         } catch {
             print("Metadata error: \(error)")
         }
-        
-        if let imageProvider = infoObject.linkMetaData?.imageProvider {
-            do {
-                if let data = try await imageLoader.loadImageData(from: imageProvider),
-                   let uiImage = UIImage(data: data) {
-                    await MainActor.run {
-                        infoObject.image = uiImage
+        if !infoObject.hasImageFromLibrary {
+            if let imageProvider = infoObject.linkMetaData?.imageProvider {
+                do {
+                    if let data = try await imageLoader.loadImageData(from: imageProvider),
+                       let uiImage = UIImage(data: data) {
+                        await MainActor.run {
+                            infoObject.image = uiImage
+                        }
                     }
+                } catch {
+                    print("Image load error: \(error)")
                 }
-            } catch {
-                print("Image load error: \(error)")
             }
         }
     }

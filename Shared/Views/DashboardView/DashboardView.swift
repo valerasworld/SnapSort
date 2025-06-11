@@ -49,7 +49,7 @@ struct DashboardView: View {
                 case .all:
                     return matchesCategory && matchesFavorite && matchesSearchText
                 case .images:
-                    return matchesCategory && infoObject.imageData != nil && matchesFavorite && matchesSearchText
+                return matchesCategory && infoObject.hasImageFromLibrary && matchesFavorite && matchesSearchText
                 case .links:
                     return matchesCategory && infoObject.stringURL != nil && !infoObject.stringURL!.isEmpty && matchesFavorite && matchesSearchText
                 }
