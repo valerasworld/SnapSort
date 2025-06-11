@@ -131,6 +131,11 @@ struct AddItemView: View {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(colorScheme == .light ? .white : Color(#colorLiteral(red: 0.1725490196, green: 0.1725490196, blue: 0.1803921569, alpha: 1)))
                 }
+                .onChange(of: title) { _, newValue in
+                        if newValue != infoObject?.title {
+                            infoObject?.hasUsersTitle = true
+                        }
+                    }
         }
         .padding(.horizontal, 16)
     }
@@ -240,7 +245,8 @@ struct AddItemView: View {
                 tags: [], // CHANGE CHANGE IN THE FUTURE
                 category: selectedCategory ?? .noCategory,
                 dateAdded: .now,
-                comment: comment
+                comment: comment,
+                hasUsersTitle: title != "" ? true : false
             )
             
             if let uiImage {
@@ -489,6 +495,7 @@ struct AddItemView: View {
             await MainActor.run {
                 uiImage = loadedImage
                 infoObject?.image = loadedImage
+                infoObject?.hasImageFromLibrary = true
             }
     }
     

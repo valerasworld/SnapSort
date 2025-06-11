@@ -32,6 +32,9 @@ class InfoObject: Hashable, Identifiable {
     
     var isFavorite: Bool = false
     
+    var hasImageFromLibrary: Bool = false
+    var hasUsersTitle: Bool = false
+    
     // Link Preview Data
     var previewLoading: Bool = false
     
@@ -53,7 +56,9 @@ class InfoObject: Hashable, Identifiable {
         previewLoading: Bool = false,
         linkMetaData: LPLinkMetadata? = nil,
         linkURL: URL? = nil,
-        isFavorite: Bool = false
+        isFavorite: Bool = false,
+        hasImageFromLibrary: Bool = false,
+        hasUsersTitle: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -67,6 +72,8 @@ class InfoObject: Hashable, Identifiable {
         self.linkMetaData = linkMetaData
         self.linkURL = linkURL
         self.isFavorite = isFavorite
+        self.hasImageFromLibrary = hasImageFromLibrary
+        self.hasUsersTitle = hasUsersTitle
     }
     
     static func == (lhs: InfoObject, rhs: InfoObject) -> Bool {
