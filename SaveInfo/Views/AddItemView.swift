@@ -372,6 +372,7 @@ struct AddItemView: View {
             await MainActor.run {
                 uiImage = loadedImage
                 infoObject?.image = loadedImage
+                infoObject?.hasImageFromLibrary = true
             }
     }
     
