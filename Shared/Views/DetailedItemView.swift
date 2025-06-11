@@ -76,17 +76,16 @@ struct DetailedItemView: View {
                             }
                             Spacer(minLength: 0)
                             // Category Label
-                            HStack {
-                                Image(systemName: infoObject.category.iconName)
-//                                Text(infoObject.category.name)
-                            }
+                            
+                            Image(systemName: infoObject.category.iconName)
+                                .foregroundStyle(colorScheme == .light ? .white : .black)
+                            
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
                             .font(.body)
                             .bold()
-                            .foregroundStyle(colorScheme == .light ? .white : .black)
                             .background {
-                                RoundedRectangle(cornerRadius: 20)
+                                Circle()
                                     .foregroundStyle(infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
                             }
                             .padding()
