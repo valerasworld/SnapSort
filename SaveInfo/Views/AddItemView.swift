@@ -33,7 +33,8 @@ struct AddItemView: View {
     @State private var stringURL: String = ""
     @State private var selectedCategory: Category? = Category(name: "No Category", colorName: "gray", iconName: "questionmark")
     @State private var comment: String = ""
-    
+    @State private var hasImageFromLibrary: Bool = false
+    @State private var hasUsersTitle: Bool = false
     
     @State var isPhotoPickerPresented: Bool = false
     @State var selectedPhotoItem: PhotosPickerItem?
@@ -109,6 +110,8 @@ struct AddItemView: View {
                 stringURL = infoObject.stringURL ?? ""
                 comment = infoObject.comment ?? ""
                 uiImage = infoObject.image
+                hasImageFromLibrary = infoObject.hasImageFromLibrary
+                hasUsersTitle = infoObject.hasUsersTitle
             }
         }
         
@@ -233,6 +236,8 @@ struct AddItemView: View {
             infoObject.category = selectedCategory ?? .noCategory
             infoObject.stringURL = stringURL
             infoObject.comment = comment
+            infoObject.hasImageFromLibrary = hasImageFromLibrary
+            infoObject.hasUsersTitle = hasUsersTitle
             
             if let uiImage {
                 infoObject.image = uiImage
@@ -246,6 +251,7 @@ struct AddItemView: View {
                 category: selectedCategory ?? .noCategory,
                 dateAdded: .now,
                 comment: comment,
+                hasImageFromLibrary: hasImageFromLibrary,
                 hasUsersTitle: title != "" ? true : false
             )
             
@@ -263,135 +269,6 @@ struct AddItemView: View {
         }
     }
     
-    /*
-    //    @ViewBuilder
-    //    func formView(infoObject: InfoObject) -> some View {
-    //        Form {
-    //            if let uiImage = infoObject.image {
-    //                Image(uiImage: uiImage)
-    //                    .resizable()
-    //                    .scaledToFit()
-    //                    .frame(maxHeight: 200)
-    //                    .clipShape(RoundedRectangle(cornerRadius: 10))
-    //                    .onTapGesture {
-    //                        isPhotoPickerPresented.toggle()
-    //                    }
-    //
-    //            }
-    //
-    //            //MARK: Image section
-    //            Section("Image") {
-    //                VStack {
-    //                    if let uiImage = infoObject.image {
-    //                        Image(uiImage: uiImage)
-    //                            .resizable()
-    //                            .scaledToFit()
-    //                            .frame(maxHeight: 200)
-    //                            .clipShape(RoundedRectangle(cornerRadius: 10))
-    //                            .onTapGesture {
-    //                                isPhotoPickerPresented.toggle()
-    //                            }
-    //                    } else {
-    //                        ContentUnavailableView(
-    //                            "No picture",
-    //                            systemImage: "photo.fill",
-    //                            description: Text("No image selected"))
-    //                        .onTapGesture {
-    //                            isPhotoPickerPresented.toggle()
-    //                        }
-    //                    }
-    //                }
-    //                .sheet(isPresented: $isPhotoPickerPresented) {
-    //                    PhotosPicker(selection: $selectedPhotoItem, matching: .images) { }
-    //                        .photosPickerStyle(.inline)
-    //                        .photosPickerDisabledCapabilities([.collectionNavigation, .search])
-    //                        .presentationDetents([.medium, .large])
-    //                        .presentationBackground(.clear)
-    //                        .presentationBackgroundInteraction(.enabled(upThrough: .large))
-    //
-    //
-    //                }
-    //                .onChange(of: selectedPhotoItem) { _, _ in
-    //                    loadImage()
-    //                }
-    //
-    //            }
-    //            //MARK: Title field
-    //            Section("Title") {
-    //                if let title = Binding($infoObject.title) {
-    //                    TextField("", text: title)
-    //                        .bold()
-    //                        .font(.title3)
-    //
-    //                }
-    //            }
-    //
-    //            //MARK: Category field with Menu
-    //            Section("Category") {
-    //                MenuCategory(categories: infoObjects.findUniqueCategories(), infoObject: infoObject)
-    //
-    //                Button {
-    //                    isCreateCategorySheetPresented.toggle()
-    //                } label: {
-    //                    HStack {
-    //                        Image(systemName: "plus.circle")
-    //                        Text("Add New")
-    //
-    //                    }
-    //                }
-    //                .sheet(isPresented: $isCreateCategorySheetPresented) {
-    //                    CreateCategorySheetView(infoObject: infoObject, category: Category(name: "No Category", colorName: "gray", iconName: "questionmark"))
-    //                }
-    //            }
-    //
-    //            //MARK: Link section
-    //            Section("Link") {
-    //                if let stringURL = Binding($infoObject.stringURL) {
-    //
-    //                    TextField("", text: stringURL)
-    //                }
-    //            }
-    //
-    //            //MARK: Comment field
-    //            Section("Comment") {
-    //                if let comment = Binding($infoObject.comment) {
-    //
-    //                    TextField("", text: comment)
-    //                }
-    //            }
-    //
-    //            //MARK: Tags field
-    //            //                Section("Tags") {
-    //            //                    Button {
-    //            //                        isTagsPickerPresented.toggle()
-    //            //                    } label: {
-    //            //                        HStack {
-    //            //                            Image(systemName: "plus.circle")
-    //            //                            Text("Add a tag")
-    //            //                            // Label(systemImage: "plus.circle.fill")
-    //            //                        }
-    //            //                    }
-    //            //                    .sheet(isPresented: $isTagsPickerPresented) {
-    //            //                        NavigationStack {
-    //            //                            VStack {
-    //            //                                Text("Add a tag")
-    //            //                                    .font(.title)
-    //            //                                    .bold()
-    //            //
-    //            //                                TextField("Tag", text: $tagNewItem)
-    //            //                                    .padding(.horizontal, 180)
-    //            //                            }
-    //            //                        }
-    //            //                        .presentationDetents([.medium])
-    //            //                         .presentationDragIndicator(.visible)
-    //            //                    }
-    //            //                }
-    //
-    //
-    //        }
-    //    }
-    
-     */
     @ViewBuilder
     func ImagePickerView() -> some View {
         let width = UIScreen.main.bounds.width
@@ -420,9 +297,7 @@ struct AddItemView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                             .frame(maxWidth: width * 0.8, maxHeight: width * 0.65)
                             .shadow(color: .black.opacity(0.27), radius: 10, x: 0, y: 5)
-                            .onTapGesture {
-                                isPhotoPickerPresented.toggle()
-                            }
+                            
                     } else {
                         ZStack {
                             LinearGradient(colors: [selectedCategory?.color(for: userData.colorTheme, colorScheme: colorScheme) ?? .gray, (colorScheme == .light ? .white : .black)], startPoint: .top, endPoint: .bottom)
@@ -480,6 +355,8 @@ struct AddItemView: View {
         .onChange(of: selectedPhotoItem) {
             Task {
                 await loadImage()
+                hasImageFromLibrary = true
+                
             }
         }
     }
@@ -495,7 +372,6 @@ struct AddItemView: View {
             await MainActor.run {
                 uiImage = loadedImage
                 infoObject?.image = loadedImage
-                infoObject?.hasImageFromLibrary = true
             }
     }
     

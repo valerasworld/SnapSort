@@ -78,7 +78,9 @@ struct InfoObjectCardView: View {
             }
             .onAppear {
                 Task {
-                    try? await viewModel.loadPreview()
+                    if !viewModel.infoObject.hasImageFromLibrary || !viewModel.infoObject.hasUsersTitle {
+                        try? await viewModel.loadPreview()
+                    }
                 }
             }
         }

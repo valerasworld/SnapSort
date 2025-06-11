@@ -116,7 +116,8 @@ final class LinkPreviewService: PreviewLoadingService {
         do {
             let metadata = try await metadataLoader.loadMetadata(for: url)
             infoObject.linkMetaData = metadata
-            infoObject.title = infoObject.hasUsersTitle ? infoObject.title : metadata.title
+            let currentObjectTitle = infoObject.title
+            infoObject.title = currentObjectTitle != "" && currentObjectTitle != metadata.title ? infoObject.title : metadata.title
         } catch {
             print("Metadata error: \(error)")
         }
