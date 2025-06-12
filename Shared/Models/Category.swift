@@ -42,6 +42,31 @@ extension Category {
     static let noCategory = Category(name: "No Category", colorName: "gray", iconName: "questionmark")
 }
 
+enum CategoryColor: String, CaseIterable {
+    case green, mint, teal, cyan, blue, indigo, purple, pink, red, orange, yellow, brown, gray
+}
+
+extension Array where Element == Category {
+    
+    func sortByColor() -> [Category] {
+        let colorOrder = CategoryColor.allCases
+        
+        return self.sorted { lhs, rhs in
+            let lhsColor = CategoryColor(rawValue: lhs.colorName)
+            let rhsColor = CategoryColor(rawValue: rhs.colorName)
+            
+            let lhsIndex = lhsColor.flatMap { colorOrder.firstIndex(of: $0) } ?? .max
+            let rhsIndex = rhsColor.flatMap { colorOrder.firstIndex(of: $0) } ?? .max
+            
+            if lhsIndex == rhsIndex {
+                return lhs.name > rhs.name
+            } else {
+                return lhsIndex < rhsIndex
+            }
+        }
+    }
+}
+
 enum ColorTheme: String, Codable, CaseIterable {
     case bright
     case pastel

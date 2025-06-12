@@ -457,4 +457,16 @@ struct SampleObjects {
                 isFavorite: false
             )
     ]
+    
+    static var shortContents: [InfoObject] = [
+        InfoObject(
+            title: "Renata",
+            stringURL: "https://t.me/renatalitvinova/5500",
+            tags: ["Actress", "Theater", "Zemfira", "Art", "Kirill Trubetskoy"],
+            category: Category(name: "Restaurants", colorName: "orange", iconName: "fork.knife"),
+            dateAdded: Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 30))!,
+            comment: "Wow! reanta is so cool! I love her movies! And the fact that she uses Zemfira's music in her films is amazing!",
+            isFavorite: false
+        )
+        ]
 }

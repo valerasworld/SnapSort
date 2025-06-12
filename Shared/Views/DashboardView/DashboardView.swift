@@ -18,16 +18,18 @@ struct DashboardView: View {
     
     @State var showFavorite: Bool = false
     @State var selectedCategories: [Category] = []
-    @State var selectedType: InfoType = InfoType.all
+    @State var selectedType: InfoType
 
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \InfoObject.dateAdded) private var infoObjects: [InfoObject]
+    @Query(sort: \InfoObject.dateAdded) var infoObjects: [InfoObject]
+    
+    @State var availableTypes: [InfoType]
     
     var filteredObjects: [InfoObject] {
         
         let selectedCtegoriesNames = selectedCategories.map(\.name)
         
-        return infoObjects.reversed().filter { infoObject in
+        return infoObjects.filter { infoObject in
             let matchesCategory = selectedCtegoriesNames.isEmpty || selectedCtegoriesNames.contains(infoObject.category.name)
             
             let matchesSearchText: Bool
@@ -40,33 +42,42 @@ struct DashboardView: View {
                 (infoObject.title?.lowercased().contains(lowercasedSearch) ?? false) ||
                 (infoObject.stringURL?.lowercased().contains(lowercasedSearch) ?? false) ||
                 (infoObject.comment?.lowercased().contains(lowercasedSearch) ?? false) ||
-                infoObject.tags.contains(where: { $0.lowercased().contains(lowercasedSearch) })
+                infoObject.tags.contains(where: { $0.lowercased().contains(lowercasedSearch) }) ||
+                infoObject.dateAdded.description.lowercased().contains(lowercasedSearch)
             }
             
             let matchesFavorite = !showFavorite || infoObject.isFavorite
             
             switch selectedType {
-                case .all:
-                    return matchesCategory && matchesFavorite && matchesSearchText
-                case .images:
-                    return matchesCategory && infoObject.imageData != nil && matchesFavorite && matchesSearchText
-                case .links:
-                    return matchesCategory && infoObject.stringURL != nil && !infoObject.stringURL!.isEmpty && matchesFavorite && matchesSearchText
-                }
+            case .all:
+                return matchesCategory && matchesFavorite && matchesSearchText
+            case .images:
+                return matchesCategory && infoObject.hasImageFromLibrary && matchesFavorite && matchesSearchText
+            case .links:
+                return matchesCategory && infoObject.stringURL != nil && !infoObject.stringURL!.isEmpty && matchesFavorite && matchesSearchText
+            }
         }
     }
     
     
     var body: some View {
-        NavigationStack/*(path: $navigationPath)*/ {
+        NavigationStack {
             
             ResizableHeaderScrollView {
                 
             } stickyHeader: {
-                ObjectTypeSegmentedControlView(infoObjects: infoObjects, selectedCategories: $selectedCategories, selectedType: $selectedType)
+                if availableTypes != [.all] {
+                    ObjectTypeSegmentedControlView(infoObjects: infoObjects, selectedCategories: $selectedCategories, selectedType: $selectedType, availableTypes: $availableTypes)
+                }
             } categoryFilter: {
-                CategoriesFilterView(infoObjects: infoObjects, selectedCategories: $selectedCategories)
-                    .frame(maxWidth: .infinity)
+                if infoObjects.findUniqueCategories().count > 1 {
+                    CategoriesFilterView(infoObjects: infoObjects, selectedCategories: $selectedCategories)
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Color.clear
+                        .frame(height: 6)
+                }
+                
             } background: {
                 Rectangle()
                     .fill(.ultraThinMaterial)
@@ -74,8 +85,18 @@ struct DashboardView: View {
                         Divider()
                     }
             } content: {
-                InfoObjectsGridView(filteredObjects: filteredObjects)
-                    .animation(.snappy, value: searchText)
+                if !infoObjects.isEmpty {
+                    InfoObjectsGridView(filteredObjects: filteredObjects.reversed())
+                        .animation(.snappy, value: searchText)
+                }
+            }
+            .overlay {
+                if infoObjects.isEmpty {
+                    ContentUnavailableView("Nothing Saved Yet", systemImage: "plus", description: Text("Press 'Plus Button' to Add Your First Item"))
+                        .onTapGesture {
+                            showModal.toggle()
+                        }
+                }
             }
             
             .navigationBarTitleDisplayMode(.inline)
@@ -134,27 +155,33 @@ struct DashboardView: View {
             .sheet(isPresented: $showModal) {
                 AddItemView(infoObject: nil, isEditing: false, infoObjects: infoObjects)
             }
-            //
-            //            .onAppear {
-            //                let demoObjects = SampleObjects.contents
-            //                for demoObject in demoObjects {
-            //                    modelContext.insert(demoObject)
-            //                }
-            //
-            //            }
-            
         }
-//        .environment(userData)
+        .onAppear {
+//            if !infoObjects.isEmpty {
+//                availableTypes = [.all]
+//            } else {
+                availableTypes = infoObjects.findInfoTypes()
+                selectedType = .all
+//            }
+        }
+        .onChange(of: infoObjects) { _, newValue in
+            withAnimation(.snappy) {
+                if !infoObjects.isEmpty {
+                    availableTypes = newValue.findInfoTypes()
+                    selectedType = .all
+                } else {
+                    availableTypes = [.all]
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    let (container, userDataManager) = /*previewBigContainer()*/previewContainer()
-    DashboardView(selectedCategories: [])
-//        .modelContainer(previewContainer)
+    let (container, userDataManager) = /*previewBigContainer()*/previewShortContainer()
+    DashboardView(selectedCategories: [], selectedType: .all, availableTypes: [.all])
         .modelContainer(container)
         .environment(userDataManager)
-//        .environment(userData)
                              
 }
 

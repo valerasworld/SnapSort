@@ -70,8 +70,25 @@ struct DetailedItemView: View {
                         
                         .frame(maxWidth: width, maxHeight: width)
                         .ignoresSafeArea()
-                        if infoObject.stringURL != nil && infoObject.stringURL != "" {
-                            LinkButtonOnDetailView(infoObject: infoObject)
+                        HStack {
+                            if infoObject.stringURL != nil && infoObject.stringURL != "" {
+                                LinkButtonOnDetailView(infoObject: infoObject)
+                            }
+                            Spacer(minLength: 0)
+                            // Category Label
+                            
+                            Image(systemName: infoObject.category.iconName)
+                                .foregroundStyle(colorScheme == .light ? .white : .black)
+                            
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .font(.body)
+                            .bold()
+                            .background {
+                                Circle()
+                                    .foregroundStyle(infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
+                            }
+                            .padding()
                         }
                     }
                     .frame(maxWidth: .infinity)

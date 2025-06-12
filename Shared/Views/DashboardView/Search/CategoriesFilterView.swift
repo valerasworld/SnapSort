@@ -15,7 +15,7 @@ struct CategoriesFilterView: View {
     
     var body: some View {
         HStack {
-            ForEach(infoObjects.findUniqueCategories(), id: \.self) { category in
+            ForEach(infoObjects.findUniqueCategories().sortByColor(), id: \.self) { category in
                 CategoryButtonView(category: category, selectedCategories: $selectedCategories)
             }
         }

@@ -60,6 +60,7 @@ struct InfoObjectsGridView: View {
 //                }
 //            }
         }
+        .scrollClipDisabled()
         .overlay {
             if filteredObjects.isEmpty {
                 ContentUnavailableView {

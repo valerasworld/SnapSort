@@ -32,6 +32,13 @@ class InfoObject: Hashable, Identifiable {
     
     var isFavorite: Bool = false
     
+    var hasImageFromLibrary: Bool = false
+    var hasUsersTitle: Bool = false
+    var hasValidLink: Bool {
+        guard let stringURL = stringURL else { return false }
+        return isValidURL(stringURL)
+    }
+    
     // Link Preview Data
     var previewLoading: Bool = false
     
@@ -53,7 +60,9 @@ class InfoObject: Hashable, Identifiable {
         previewLoading: Bool = false,
         linkMetaData: LPLinkMetadata? = nil,
         linkURL: URL? = nil,
-        isFavorite: Bool = false
+        isFavorite: Bool = false,
+        hasImageFromLibrary: Bool = false,
+        hasUsersTitle: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -67,6 +76,8 @@ class InfoObject: Hashable, Identifiable {
         self.linkMetaData = linkMetaData
         self.linkURL = linkURL
         self.isFavorite = isFavorite
+        self.hasImageFromLibrary = hasImageFromLibrary
+        self.hasUsersTitle = hasUsersTitle
     }
     
     static func == (lhs: InfoObject, rhs: InfoObject) -> Bool {
@@ -76,6 +87,16 @@ class InfoObject: Hashable, Identifiable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    func isValidURL(_ string: String) -> Bool {
+        guard let url = URL(string: string),
+              url.scheme?.hasPrefix("http") == true,
+              url.host != nil else {
+            return false
+        }
+        return true
+    }
+    
 }
 
 struct InfoObjectGroup: Identifiable {
@@ -126,16 +147,18 @@ extension Array where Element == InfoObject {
     }
 }
 
+
+
 extension Array where Element == InfoObject {
     func findInfoTypes() -> [InfoType] {
-        let hasLink = contains { $0.linkURL != nil }
-        let hasImage = contains { $0.image != nil }
+        let hasLink = contains { /*$0.linkURL != nil || $0.stringURL != ""*/ $0.hasValidLink}
+        let hasImage = contains { $0.hasImageFromLibrary }
         
         switch (hasLink, hasImage) {
         case (true, true): return [.all, .links, .images]
         case (true, false): return [.all, .links]
         case (false, true): return [.all, .images]
-        default: return []
+        case (false, false): return [.all]
         }
     }
 }
