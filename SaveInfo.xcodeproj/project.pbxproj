@@ -119,6 +119,7 @@
 		9FF1A5DF2DE9E312005A6C3A /* Exceptions for "SaveInfo" folder in "Share" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Extensions/String.swift,
 				Helpers/PreviewSampleData.swift,
 				Helpers/RoundedSpecificCorners.swift,
 				Helpers/SheetHelper.swift,

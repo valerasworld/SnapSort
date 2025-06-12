@@ -31,7 +31,7 @@ struct AddItemView: View {
     @State private var uiImage: UIImage? = nil
     @State private var title: String = ""
     @State private var stringURL: String = ""
-    @State private var selectedCategory: Category? = Category(name: "No Category", colorName: "gray", iconName: "questionmark")
+    @State private var selectedCategory: Category? = nil
     @State private var comment: String = ""
     @State private var hasImageFromLibrary: Bool = false
     @State private var hasUsersTitle: Bool = false
@@ -41,6 +41,10 @@ struct AddItemView: View {
     @State var isCreateCategorySheetPresented: Bool = false
     @State var isEditing: Bool
     var infoObjects: [InfoObject]
+    
+    var userCategories: [Category] {
+        infoObjects.findUniqueCategories()
+    }
     
     
     @Environment(\.modelContext) var modelContext
@@ -143,6 +147,9 @@ struct AddItemView: View {
         .padding(.horizontal, 16)
     }
     
+    // CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY
+    // CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY
+    // CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY CATEGORY
     private var categoryForm: some View {
         VStack(alignment: .leading) {
             Text("CATEGORY")
@@ -152,10 +159,18 @@ struct AddItemView: View {
                 .padding(.horizontal, 12)
             
             VStack(alignment: .leading) {
-                let userCategories = infoObjects.findUniqueCategories()
-                if !userCategories.isEmpty {
+                if userCategories.isEmpty && selectedCategory != nil {
+                    MenuCategoryLabel(selectedCategory: selectedCategory, colorScheme: _colorScheme, userData: _userData)
+                        .padding(.horizontal, 12)
+                        .padding(.top, 12)
+                        .padding(.bottom, 6)
+                    Divider()
+                        .padding(.horizontal, 12)
+                } else if userCategories.isEmpty {
+                    // Hides category if the user has no categories yet
+                } else {
                     MenuCategory(
-                        categories: infoObjects.findUniqueCategories(),
+                        categories: userCategories,
                         selectedCategory: $selectedCategory
                     )
                     .padding(.horizontal, 12)
@@ -164,6 +179,8 @@ struct AddItemView: View {
                     Divider()
                         .padding(.horizontal, 12)
                 }
+                    
+
                 
                 Button {
                     isCreateCategorySheetPresented.toggle()
@@ -234,7 +251,7 @@ struct AddItemView: View {
             // Edit the infoObject
             infoObject.title = title
             infoObject.category = selectedCategory ?? .noCategory
-            infoObject.stringURL = stringURL
+            infoObject.stringURL = stringURL.sanitizedURLString
             infoObject.comment = comment
             infoObject.hasImageFromLibrary = hasImageFromLibrary
             infoObject.hasUsersTitle = hasUsersTitle
@@ -246,7 +263,7 @@ struct AddItemView: View {
             // Add an infoObject
             let newInfoObject = InfoObject(
                 title: title,
-                stringURL: stringURL,
+                stringURL: stringURL.sanitizedURLString,
                 tags: [], // CHANGE CHANGE IN THE FUTURE
                 category: selectedCategory ?? .noCategory,
                 dateAdded: .now,
@@ -412,23 +429,35 @@ struct MenuCategory: View {
             }
             
         } label: {
-            HStack {
-                Image(systemName: selectedCategory?.iconName ?? Category.noCategory.iconName)
-                    .foregroundStyle(selectedCategory?.color(for: userData.colorTheme, colorScheme: colorScheme) ?? Category.noCategory.color(for: userData.colorTheme, colorScheme: colorScheme))
-                
-                
-                Text(selectedCategory?.name ?? Category.noCategory.name)
-                    .foregroundStyle((colorScheme == .light ? .black : .white))
-                
-                Image(systemName: "chevron.right")
-                    .foregroundStyle(Color.gray)
-                    .font(.footnote)
-                
-                
-            }
+            MenuCategoryLabel(selectedCategory: selectedCategory)
         }
         
         
     }
 }
 
+
+struct MenuCategoryLabel: View {
+    var selectedCategory: Category?
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(UserDataManager.self) var userData
+    var isInMenu: Bool = true
+    
+    var body: some View {
+        HStack {
+            Image(systemName: selectedCategory?.iconName ?? Category.noCategory.iconName)
+                .foregroundStyle(selectedCategory?.color(for: userData.colorTheme, colorScheme: colorScheme) ?? Category.noCategory.color(for: userData.colorTheme, colorScheme: colorScheme))
+            
+            
+            Text(selectedCategory?.name ?? Category.noCategory.name)
+                .foregroundStyle((colorScheme == .light ? .black : .white))
+            
+            if isInMenu {
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(Color.gray)
+                    .font(.footnote)
+            }
+            
+        }
+    }
+}

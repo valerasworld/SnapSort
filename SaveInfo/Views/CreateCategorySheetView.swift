@@ -116,7 +116,7 @@ struct CreateCategorySheetView: View {
                             .font(.title3)
                         
                         Spacer(minLength: 0)
-                            
+                        
                         Text(newCategoryName)
                         
                         ZStack {
@@ -246,7 +246,7 @@ struct CreateCategorySheetView: View {
                     .font(.title3)
                 
                 Spacer(minLength: 0)
-                    
+                
                 Text(newCategoryName)
                 
                 CategoryButtonImageLayerView(
@@ -301,26 +301,14 @@ struct IconPickerView: View {
         "camera.fill",
         "photo.fill",
         
-        // Electronics / Tech / Gadgets
-        "ipad.and.iphone",
-        "desktopcomputer",
-        "macbook.and.iphone",
-        "cpu.fill",
-        "gamecontroller.fill",
-        
-        // Music / Audio
-        "music.note.list",
-        "music.mic",
-        "headphones",
-        "guitars.fill",
-        
-        // Restaurants / Food / Cooking
-        "takeoutbag.and.cup.and.straw.fill",
-        "cup.and.saucer.fill",
-        "birthday.cake.fill",
-        "wineglass.fill",
+        // Sports
+        "volleyball.fill",
+        "tennisball.fill",
+        "soccerball.circle.fill.inverse",
+        "basketball.fill",
         
         // Memes / Fun / Entertainment
+        "gift.fill",
         "face.dashed.fill",
         "theatermasks.fill",
         "sparkles",
@@ -350,40 +338,11 @@ struct IconPickerView: View {
         "note.text",
         "list.bullet.rectangle.fill",
         
-        // Wellness / Fitness / Health
-        "figure.mind.and.body",
-        "heart.fill",
-        "bolt.heart.fill",
-        "cross.case.fill",
-        
-        // Work / Productivity
-        "briefcase.fill",
-        "calendar",
-        "clock.badge.checkmark",
-        "chart.bar.xaxis",
-        
         // Misc / Catch-All / Custom
         "square.grid.2x2.fill",
         "ellipsis.circle.fill",
         "questionmark.folder.fill",
         
-        // Finanace
-        "dollarsign.circle.fill",
-        "banknote.fill",
-        "creditcard.fill",
-        "wallet.pass.fill",
-        "chart.line.uptrend.xyaxis",
-        "chart.bar.fill",
-        "chart.pie.fill",
-        "percent",
-        "bitcoinsign.circle.fill",
-        "eurosign.circle.fill",
-        "sterlingsign.circle.fill",
-        "yensign.circle.fill",
-        "francsign.circle.fill",
-        "indianrupeesign.circle.fill",
-        "coloncurrencysign.circle.fill",
-        "cedisign.circle.fill",
         
         // Classic symbol for pets
         "pawprint.fill",
