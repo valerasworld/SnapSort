@@ -12,6 +12,7 @@ import SwiftData
 struct SaveInfoApp: App {
     
 //    init() { UINavigationBar.removeDividerLine() }
+    // NECESSARY COMMIT
     
     let container = try! ModelContainer(for: InfoObject.self, UserSettings.self)
     
