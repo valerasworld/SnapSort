@@ -157,12 +157,9 @@ struct DashboardView: View {
             }
         }
         .onAppear {
-//            if !infoObjects.isEmpty {
-//                availableTypes = [.all]
-//            } else {
+
                 availableTypes = infoObjects.findInfoTypes()
                 selectedType = .all
-//            }
         }
         .onChange(of: infoObjects) { _, newValue in
             withAnimation(.snappy) {

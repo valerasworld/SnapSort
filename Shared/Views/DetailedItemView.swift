@@ -215,6 +215,8 @@ struct LinkButtonOnDetailView: View {
             HStack {
                 Image(systemName: "link")
                 Text(URL(string: infoObject.stringURL ?? " ")?.host?.replacingOccurrences(of: "www.", with: "") ?? "")
+                    .lineLimit(1)
+                    .truncationMode(.middle)
                 
             }
             .padding(.vertical, 8)
