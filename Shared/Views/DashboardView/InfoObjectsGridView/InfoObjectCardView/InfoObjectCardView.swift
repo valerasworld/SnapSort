@@ -78,9 +78,10 @@ struct InfoObjectCardView: View {
             }
             .onAppear {
                 Task {
-                    if !viewModel.infoObject.hasImageFromLibrary || !viewModel.infoObject.hasUsersTitle {
-                        try? await viewModel.loadPreview()
+                    guard !viewModel.infoObject.hasMetadata else {
+                        return
                     }
+                    try? await viewModel.loadPreview()
                 }
             }
         }

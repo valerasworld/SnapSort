@@ -11,9 +11,6 @@ import SwiftData
 @main
 struct SaveInfoApp: App {
     
-//    init() { UINavigationBar.removeDividerLine() }
-    // NECESSARY COMMIT
-    
     let container = try! ModelContainer(for: InfoObject.self, UserSettings.self)
     
     var body: some Scene {
@@ -21,7 +18,7 @@ struct SaveInfoApp: App {
             let context = ModelContext(container)
             let userDataManager = UserDataManager.load(from: context)
             
-            DashboardView(selectedCategories: [], selectedType: .all, availableTypes: [])
+            DashboardView()
                 .environment(userDataManager)
                 .modelContainer(container)
         }

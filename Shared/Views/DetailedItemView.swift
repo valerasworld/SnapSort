@@ -165,9 +165,9 @@ struct DetailedItemView: View {
 
 
 #Preview {
-    let (container, userDataManager) = previewBigContainer()
+    let (container, userDataManager) = previewContainer(size: .large)
 
-    DetailedItemView(infoObject: SampleObjects.contents.first!)
+    DetailedItemView(infoObject: SampleObjects.mediumContents.first!)
         .modelContainer(container)
         .environment(userDataManager)
 }

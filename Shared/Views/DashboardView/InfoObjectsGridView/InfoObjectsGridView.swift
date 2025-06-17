@@ -85,15 +85,6 @@ struct InfoObjectsGridView: View {
 }
 
 struct DateSectionHeaderView: View {
-//    var group: (date: Date, infoObjects: [InfoObject])
-//    
-//    var body: some View {
-//        Text(formattedDate(group.date))
-//            .font(.title3)
-//            .bold()
-//            .frame(maxWidth: .infinity, alignment: .leading)
-//            .padding(.leading)
-//    }
     var group: InfoObjectGroup
 
         var body: some View {
@@ -103,17 +94,11 @@ struct DateSectionHeaderView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading)
         }
-    
-//    // Helper for formatting dates
-//    func formattedDate(_ date: Date) -> String {
-//        let formatter = DateFormatter()
-//        formatter.dateStyle = .medium
-//        return formatter.string(from: date)
-//    }
 }
 
 #Preview {
-//    InfoObjectsGridView(selectedCategories: [], selectedType: .all)
+    let (container, userDataManager) = previewContainer(size: .small)
     InfoObjectsGridView(filteredObjects: [])
-//        .modelContainer(previewContainer)
+        .modelContainer(container)
+        .environment(userDataManager)
 }

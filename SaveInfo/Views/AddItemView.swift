@@ -397,7 +397,7 @@ struct AddItemView: View {
 
 #Preview {
     
-    let (container, userDataManager) = previewBigContainer()
+    let (container, userDataManager) = previewContainer(size: .large)
     
     AddItemView(
             infoObject: nil,

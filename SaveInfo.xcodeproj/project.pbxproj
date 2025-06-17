@@ -62,9 +62,9 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DashboardView/DashboardView.swift,
-				DashboardView/InfoObjectsGridView.swift,
 				DashboardView/InfoObjectsGridView/InfoObjectCardView/InfoObjectCardView.swift,
 				DashboardView/InfoObjectsGridView/InfoObjectCardView/TagsView.swift,
+				DashboardView/InfoObjectsGridView/InfoObjectsGridView.swift,
 				DashboardView/ResizableHeaderScrollView.swift,
 				DashboardView/Search/CategoriesFilterView.swift,
 				DashboardView/Search/ObjectTypeSegmentedControlView.swift,
@@ -88,6 +88,7 @@
 		9F619C4D2DD5496F00D068BD /* Exceptions for "ViewModels" folder in "Share" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				DashboardViewModel.swift,
 				InfoObjectCardViewModel.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
@@ -119,6 +120,8 @@
 		9FF1A5DF2DE9E312005A6C3A /* Exceptions for "SaveInfo" folder in "Share" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Extensions/ColorTheme.swift,
+				Extensions/Date.swift,
 				Extensions/String.swift,
 				Helpers/PreviewSampleData.swift,
 				Helpers/RoundedSpecificCorners.swift,

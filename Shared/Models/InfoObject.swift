@@ -6,15 +6,13 @@
 //
 import SwiftUI
 import LinkPresentation
-import UniformTypeIdentifiers
 import SwiftData
 
 @Model
-class InfoObject: Hashable, Identifiable {
+class InfoObject: Identifiable {
     var id = UUID().uuidString
     var title: String? = ""
     
-//    @Transient
     @Attribute(.externalStorage)
     var imageData: Data?
     
@@ -36,8 +34,9 @@ class InfoObject: Hashable, Identifiable {
     var hasUsersTitle: Bool = false
     var hasValidLink: Bool {
         guard let stringURL = stringURL else { return false }
-        return isValidURL(stringURL)
+        return stringURL.isValidURL()
     }
+    var hasMetadata: Bool = false
     
     // Link Preview Data
     var previewLoading: Bool = false
@@ -48,22 +47,8 @@ class InfoObject: Hashable, Identifiable {
     @Transient
     var linkURL: URL?
     
-    init(
-        id: String = UUID().uuidString,
-        title: String? = "",
-        imageData: Data? = nil,
-        stringURL: String? = "",
-        tags: [String] = [],
-        category: Category,
-        dateAdded: Date = .now,
-        comment: String? = "",
-        previewLoading: Bool = false,
-        linkMetaData: LPLinkMetadata? = nil,
-        linkURL: URL? = nil,
-        isFavorite: Bool = false,
-        hasImageFromLibrary: Bool = false,
-        hasUsersTitle: Bool = false
-    ) {
+    init(id: String = UUID().uuidString, title: String? = "", imageData: Data? = nil, stringURL: String? = "", tags: [String] = [], category: Category, dateAdded: Date = .now, comment: String? = "", previewLoading: Bool = false, linkMetaData: LPLinkMetadata? = nil, linkURL: URL? = nil, isFavorite: Bool = false, hasImageFromLibrary: Bool = false, hasUsersTitle: Bool = false) {
+
         self.id = id
         self.title = title
         self.imageData = imageData
@@ -79,7 +64,9 @@ class InfoObject: Hashable, Identifiable {
         self.hasImageFromLibrary = hasImageFromLibrary
         self.hasUsersTitle = hasUsersTitle
     }
-    
+}
+
+extension InfoObject: Hashable {
     static func == (lhs: InfoObject, rhs: InfoObject) -> Bool {
         lhs.id == rhs.id
     }
@@ -87,57 +74,14 @@ class InfoObject: Hashable, Identifiable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
-    func isValidURL(_ string: String) -> Bool {
-        guard let url = URL(string: string),
-              url.scheme?.hasPrefix("http") == true,
-              url.host != nil else {
-            return false
-        }
-        return true
-    }
-    
 }
+
 
 struct InfoObjectGroup: Identifiable {
     var id: String { formattedDate }
     let formattedDate: String
     let infoObjects: [InfoObject]
 }
-
-///extension Array where Element == InfoObject {
-///    func groupByDate() -> [InfoObjectGroup] {
-///        let formatter = DateFormatter()
-///        formatter.dateStyle = .medium
-///
-///        let groupedDict = Dictionary(grouping: self) { infoObject -> String in
-///            formatter.string(from: infoObject.dateAdded)
-///        }
-///
-///        let result = groupedDict.map { (formattedDate, objects) in
-///            InfoObjectGroup(formattedDate: formattedDate, infoObjects: objects)
-///        }
-///
-///        return result.sorted { $0.formattedDate > $1.formattedDate }
-///    }
-///}
-
-//extension Array where Element == InfoObject {
-//    func groupByDate() -> [(date: Date, infoObjects: [InfoObject])] {
-//        let groupedDictionary = Dictionary(grouping: self) { $0.dateAdded.startOfDay() }
-//        return groupedDictionary
-//            .map { ($0.key, $0.value) }
-//            .sorted { $0.0 > $1.0 }
-//    }
-//}
-
-//extension Array where Element == InfoObject {
-//    func findUniqueCategories() -> [Category] {
-//        let categories = self.map { $0.category }
-//        let uniqueCategories = Dictionary(grouping: categories, by: { $0.id }).compactMap { $0.value.first }
-//        return Set(uniqueCategories).sorted { $0.name < $1.name }
-//    }
-//}
 
 extension Array where Element == InfoObject {
     func findUniqueCategories() -> [Category] {
@@ -147,11 +91,9 @@ extension Array where Element == InfoObject {
     }
 }
 
-
-
 extension Array where Element == InfoObject {
     func findInfoTypes() -> [InfoType] {
-        let hasLink = contains { /*$0.linkURL != nil || $0.stringURL != ""*/ $0.hasValidLink}
+        let hasLink = contains { $0.hasValidLink }
         let hasImage = contains { $0.hasImageFromLibrary }
         
         switch (hasLink, hasImage) {

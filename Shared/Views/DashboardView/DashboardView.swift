@@ -8,22 +8,27 @@
 import SwiftUI
 import SwiftData
 
+@Observable
+class DashboardViewModel {
+    var showAddNewObjectModal: Bool = false
+    var availableTypes: [InfoType] = [.all]
+}
+
 struct DashboardView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
+    
+    @State var viewModel: DashboardViewModel = DashboardViewModel()
         
     @State var searchText: String = ""
-    @State var showModal: Bool = false
     
     @State var showFavorite: Bool = false
     @State var selectedCategories: [Category] = []
-    @State var selectedType: InfoType
+    @State var selectedType: InfoType = .all
 
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \InfoObject.dateAdded) var infoObjects: [InfoObject]
-    
-    @State var availableTypes: [InfoType]
     
     var filteredObjects: [InfoObject] {
         
@@ -66,8 +71,8 @@ struct DashboardView: View {
             ResizableHeaderScrollView {
                 
             } stickyHeader: {
-                if availableTypes != [.all] {
-                    ObjectTypeSegmentedControlView(infoObjects: infoObjects, selectedCategories: $selectedCategories, selectedType: $selectedType, availableTypes: $availableTypes)
+                if viewModel.availableTypes != [.all] {
+                    ObjectTypeSegmentedControlView(infoObjects: infoObjects, selectedCategories: $selectedCategories, selectedType: $selectedType, availableTypes: $viewModel.availableTypes)
                 }
             } categoryFilter: {
                 if infoObjects.findUniqueCategories().count > 1 {
@@ -94,7 +99,7 @@ struct DashboardView: View {
                 if infoObjects.isEmpty {
                     ContentUnavailableView("Nothing Saved Yet", systemImage: "plus", description: Text("Press 'Plus Button' to Add Your First Item"))
                         .onTapGesture {
-                            showModal.toggle()
+                            viewModel.showAddNewObjectModal.toggle()
                         }
                 }
             }
@@ -144,7 +149,7 @@ struct DashboardView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showModal = true
+                        viewModel.showAddNewObjectModal = true
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(colorScheme == .light ? .black : .white)
@@ -152,22 +157,21 @@ struct DashboardView: View {
                     }
                 }
             })
-            .sheet(isPresented: $showModal) {
+            .sheet(isPresented: $viewModel.showAddNewObjectModal) {
                 AddItemView(infoObject: nil, isEditing: false, infoObjects: infoObjects)
             }
         }
         .onAppear {
-
-                availableTypes = infoObjects.findInfoTypes()
-                selectedType = .all
+            viewModel.availableTypes = infoObjects.findInfoTypes()
+            selectedType = .all
         }
         .onChange(of: infoObjects) { _, newValue in
             withAnimation(.snappy) {
                 if !infoObjects.isEmpty {
-                    availableTypes = newValue.findInfoTypes()
+                    viewModel.availableTypes = newValue.findInfoTypes()
                     selectedType = .all
                 } else {
-                    availableTypes = [.all]
+                    viewModel.availableTypes = [.all]
                 }
             }
         }
@@ -175,8 +179,8 @@ struct DashboardView: View {
 }
 
 #Preview {
-    let (container, userDataManager) = /*previewBigContainer()*/previewShortContainer()
-    DashboardView(selectedCategories: [], selectedType: .all, availableTypes: [.all])
+    let (container, userDataManager) = previewContainer(size: .large)
+    DashboardView()
         .modelContainer(container)
         .environment(userDataManager)
                              
