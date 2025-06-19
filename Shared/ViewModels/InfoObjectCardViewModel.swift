@@ -6,14 +6,12 @@
 //
 
 import SwiftUI
+import LinkPresentation
 
 @Observable
 class InfoObjectCardViewModel {
     
     var infoObject: InfoObject
-    
-//    private let metadataLoader: MetadataLoadable
-//    private let imageLoader: ImageLoadable
     private let previewService: PreviewLoadingService
     
     // View Properties
@@ -22,73 +20,24 @@ class InfoObjectCardViewModel {
     
     init(
         infoObject: InfoObject,
-//        metadataLoader: MetadataLoadable = LinkPreviewLoader(),
-//        imageLoader: ImageLoadable = LinkPreviewLoader()
         previewService: PreviewLoadingService = LinkPreviewService(
-                    metadataLoader: LinkPreviewLoader(),
-                    imageLoader: LinkPreviewLoader()
-                )
+            metadataLoader: LinkPreviewLoader(),
+            imageLoader: LinkPreviewLoader()
+        )
     ) {
         self.infoObject = infoObject
-//        self.metadataLoader = metadataLoader
-//        self.imageLoader = imageLoader
         self.previewService = previewService
     }
-        
-    // Load preview data (Metadata and Image)
-//    func loadPreview() async throws {
-//        
-//        guard let url = validatedURL() else { return }
-//        
-//        previewLoading = true
-//        infoObject.linkURL = url
-//        
-//        await loadMetadata(for: url)
-//        await loadImageIfAvailable()
-//
-//        previewLoading = false
-//    }
     
     func loadPreview() async throws {
-            previewLoading = true
-            do {
-                try await previewService.loadPreview(for: infoObject)
-            } catch {
-                print("Preview loading failed: \(error)")
-            }
-            previewLoading = false
+        previewLoading = true
+        do {
+            try await previewService.loadPreview(for: infoObject)
+        } catch {
+            print("Preview loading failed: \(error)")
         }
-    
-    // MARK: - Private Helper Methods
-    
-//    private func validatedURL() -> URL? {
-//        guard let stringURL = infoObject.stringURL,
-//              let url = URL(string: stringURL),
-//              url.scheme == "http" || url.scheme == "https" else {
-//            return nil
-//        }
-//        return url
-//    }
-//    
-//    private func loadMetadata(for url: URL) async {
-//        do {
-//            let metadata = try await metadataLoader.loadMetadata(for: url)
-//            infoObject.linkMetaData = metadata
-//            infoObject.title = metadata.title ?? infoObject.title
-//        } catch {
-//            print("Error loading Metadata: \(error)")
-//        }
-//    }
-//    
-//    private func loadImageIfAvailable() async {
-//        guard let imageProvider = infoObject.linkMetaData?.imageProvider else { return }
-//        do {
-//            infoObject.image = try await imageLoader.loadImage(from: imageProvider)
-//        } catch {
-//            print("Error loading Image: \(error)")
-//        }
-//    }
-    
+        previewLoading = false
+    }
 }
 
 protocol PreviewLoadingService {
@@ -106,8 +55,8 @@ final class LinkPreviewService: PreviewLoadingService {
     
     func loadPreview(for infoObject: InfoObject) async throws {
         guard let stringURL = infoObject.stringURL,
-              let url = URL(string: stringURL),
-              url.scheme == "http" || url.scheme == "https" else {
+              stringURL.isValidURL(),
+              let url = URL(string: stringURL) else {
             return
         }
         
@@ -115,12 +64,12 @@ final class LinkPreviewService: PreviewLoadingService {
         
         do {
             let metadata = try await metadataLoader.loadMetadata(for: url)
-            infoObject.linkMetaData = metadata
-            let currentObjectTitle = infoObject.title
-            infoObject.title = currentObjectTitle != "" && currentObjectTitle != metadata.title ? infoObject.title : metadata.title
+            setFetchedMetadata(metadata, for: infoObject)
+            infoObject.hasMetadata = true
         } catch {
             print("Metadata error: \(error)")
         }
+        
         if !infoObject.hasImageFromLibrary {
             if let imageProvider = infoObject.linkMetaData?.imageProvider {
                 do {
@@ -135,5 +84,10 @@ final class LinkPreviewService: PreviewLoadingService {
                 }
             }
         }
+    }
+    
+    private func setFetchedMetadata(_ metadata: LPLinkMetadata, for infoObject: InfoObject) {
+        infoObject.linkMetaData = metadata
+        infoObject.title = infoObject.hasUsersTitle ? infoObject.title : metadata.title
     }
 }

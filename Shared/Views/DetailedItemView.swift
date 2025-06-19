@@ -10,17 +10,18 @@ import SwiftData
 
 struct DetailedItemView: View {
     let infoObject: InfoObject
-//    @Environment(Favorites.self) var favorites
+
     @Environment(\.dismiss) var dismiss
     
-    @State var isEditing: Bool = false
+    @State var isEditItemViewPresented: Bool = false
     @State var imageIsClicked: Bool = false
     
-    @Query var infoObjects: [InfoObject]
     @Environment(\.modelContext) var modelContext
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
+    
+    var dashboardViewModel: DashboardViewModel
     
     var body: some View {
         NavigationStack {
@@ -70,8 +71,30 @@ struct DetailedItemView: View {
                         
                         .frame(maxWidth: width, maxHeight: width)
                         .ignoresSafeArea()
-                        if infoObject.stringURL != nil && infoObject.stringURL != "" {
-                            LinkButtonOnDetailView(infoObject: infoObject)
+                        .onChange(of: infoObject.hasImageFromLibrary || infoObject.hasValidLink) { _, _ in
+                            withAnimation(.snappy) {
+                                dashboardViewModel.updateInfoTypes()
+                            }
+                        }
+                        HStack {
+                            if infoObject.stringURL != nil && infoObject.stringURL != "" {
+                                LinkButtonOnDetailView(infoObject: infoObject)
+                            }
+                            Spacer(minLength: 0)
+                            // Category Label
+                            
+                            Image(systemName: infoObject.category.iconName)
+                                .foregroundStyle(colorScheme == .light ? .white : .black)
+                            
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .font(.body)
+                            .bold()
+                            .background {
+                                Circle()
+                                    .foregroundStyle(infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
+                            }
+                            .padding()
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -129,17 +152,16 @@ struct DetailedItemView: View {
                 }
                 ToolbarItem {
                     Button {
-                        isEditing.toggle()
+                        isEditItemViewPresented.toggle()
                     } label: {
-//                        Text("Edit")
                         Image(systemName: "pencil")
                             .font(.title3)
                             .foregroundStyle(colorScheme == .light ? .black : .white)
                     }
                 }
             }
-            .sheet(isPresented: $isEditing) {
-                AddItemView(infoObject: infoObject, isEditing: true, infoObjects: infoObjects)
+            .sheet(isPresented: $isEditItemViewPresented) {
+                AddOrEditItemView(infoObject: infoObject, userCategories: dashboardViewModel.findUniqueCategories())
             }
             
         }
@@ -148,9 +170,9 @@ struct DetailedItemView: View {
 
 
 #Preview {
-    let (container, userDataManager) = previewBigContainer()
+    let (container, userDataManager) = previewContainer(size: .large)
 
-    DetailedItemView(infoObject: SampleObjects.contents.first!)
+    DetailedItemView(infoObject: SampleObjects.mediumContents.first!, dashboardViewModel: DashboardViewModel())
         .modelContainer(container)
         .environment(userDataManager)
 }
@@ -198,6 +220,8 @@ struct LinkButtonOnDetailView: View {
             HStack {
                 Image(systemName: "link")
                 Text(URL(string: infoObject.stringURL ?? " ")?.host?.replacingOccurrences(of: "www.", with: "") ?? "")
+                    .lineLimit(1)
+                    .truncationMode(.middle)
                 
             }
             .padding(.vertical, 8)

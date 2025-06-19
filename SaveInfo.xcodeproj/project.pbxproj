@@ -62,7 +62,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DashboardView/DashboardView.swift,
-				DashboardView/InfoObjectsGridView.swift,
 				DashboardView/InfoObjectsGridView/InfoObjectCardView/InfoObjectCardView.swift,
 				DashboardView/InfoObjectsGridView/InfoObjectCardView/TagsView.swift,
 				DashboardView/ResizableHeaderScrollView.swift,
@@ -122,8 +121,6 @@
 				Helpers/PreviewSampleData.swift,
 				Helpers/RoundedSpecificCorners.swift,
 				Helpers/SheetHelper.swift,
-				Views/AddItemView.swift,
-				Views/AddOrEditView.swift,
 			);
 			target = 9F619C0A2DD4E7E000D068BD /* Share */;
 		};

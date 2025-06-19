@@ -18,7 +18,7 @@ struct SaveInfoApp: App {
             let context = ModelContext(container)
             let userDataManager = UserDataManager.load(from: context)
             
-            DashboardView(selectedCategories: [])
+            DashboardView()
                 .environment(userDataManager)
                 .modelContainer(container)
         }

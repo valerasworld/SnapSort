@@ -47,7 +47,7 @@ fileprivate struct ShareView: View {
             
             Group {
                 if let infoObject {
-                    DetailedItemView(infoObject: infoObject)
+//                    DetailedItemView(infoObject: infoObject, viewModel: DashboardViewModel())
 //                        .toolbar {
 //                            ToolbarItem(placement: .cancellationAction) {
 //                                Button("Cancel", action: dismiss)

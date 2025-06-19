@@ -28,6 +28,7 @@ struct ResizableHeaderScrollView<Header: View, StickyHeader: View, CategoryFilte
         ScrollView(.vertical) {
             content
         }
+        .scrollClipDisabled()
         .frame(maxWidth: .infinity)
         .onScrollGeometryChange(for: CGFloat.self, of: {
             $0.contentOffset.y + $0.contentInsets.top
@@ -80,12 +81,13 @@ struct ResizableHeaderScrollView<Header: View, StickyHeader: View, CategoryFilte
             stickyHeader
             categoryFilter
         }
-//        .offset(y: -headerOffset)
-//        .clipped()
+        .offset(y: -headerOffset)
+        .clipped()
         .background {
             background
                 .ignoresSafeArea()
         }
+        .padding(.top, -10)
         
     }
 }

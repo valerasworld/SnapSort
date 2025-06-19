@@ -12,61 +12,30 @@ struct DashboardView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
-        
-    @State var searchText: String = ""
-    @State var showModal: Bool = false
     
-    @State var showFavorite: Bool = false
-    @State var selectedCategories: [Category] = []
-    @State var selectedType: InfoType = InfoType.all
+    @State var viewModel = DashboardViewModel()
 
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \InfoObject.dateAdded) private var infoObjects: [InfoObject]
-    
-    var filteredObjects: [InfoObject] {
-        
-        let selectedCtegoriesNames = selectedCategories.map(\.name)
-        
-        return infoObjects.reversed().filter { infoObject in
-            let matchesCategory = selectedCtegoriesNames.isEmpty || selectedCtegoriesNames.contains(infoObject.category.name)
-            
-            let matchesSearchText: Bool
-            
-            if searchText.isEmpty {
-                matchesSearchText = true
-            } else {
-                let lowercasedSearch = searchText.lowercased()
-                matchesSearchText =
-                (infoObject.title?.lowercased().contains(lowercasedSearch) ?? false) ||
-                (infoObject.stringURL?.lowercased().contains(lowercasedSearch) ?? false) ||
-                (infoObject.comment?.lowercased().contains(lowercasedSearch) ?? false) ||
-                infoObject.tags.contains(where: { $0.lowercased().contains(lowercasedSearch) })
-            }
-            
-            let matchesFavorite = !showFavorite || infoObject.isFavorite
-            
-            switch selectedType {
-                case .all:
-                    return matchesCategory && matchesFavorite && matchesSearchText
-                case .images:
-                return matchesCategory && infoObject.hasImageFromLibrary && matchesFavorite && matchesSearchText
-                case .links:
-                    return matchesCategory && infoObject.stringURL != nil && !infoObject.stringURL!.isEmpty && matchesFavorite && matchesSearchText
-                }
-        }
-    }
-    
+    @Query(sort: \InfoObject.dateAdded) var infoObjects: [InfoObject]
     
     var body: some View {
-        NavigationStack/*(path: $navigationPath)*/ {
+        NavigationStack {
             
             ResizableHeaderScrollView {
                 
             } stickyHeader: {
-                ObjectTypeSegmentedControlView(infoObjects: infoObjects, selectedCategories: $selectedCategories, selectedType: $selectedType)
+                if viewModel.availableTypes != [.all] {
+                    ObjectTypeSegmentedControlView(viewModel: viewModel)
+                }
             } categoryFilter: {
-                CategoriesFilterView(infoObjects: infoObjects, selectedCategories: $selectedCategories)
-                    .frame(maxWidth: .infinity)
+                if viewModel.findUniqueCategories().count > 1 {
+                    CategoriesFilterView(viewModel: viewModel)
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Color.clear
+                        .frame(height: 6)
+                }
+                
             } background: {
                 Rectangle()
                     .fill(.ultraThinMaterial)
@@ -74,94 +43,62 @@ struct DashboardView: View {
                         Divider()
                     }
             } content: {
-                InfoObjectsGridView(filteredObjects: filteredObjects)
-                    .animation(.snappy, value: searchText)
+                if !infoObjects.isEmpty {
+                    InfoObjectsGridView(dashboardViewModel: viewModel)
+                        .animation(.snappy, value: viewModel.searchText)
+                }
+            }
+            .overlay {
+                if infoObjects.isEmpty {
+                    ContentUnavailableView("Nothing Saved Yet", systemImage: "plus", description: Text("Press 'Plus Button' to Add Your First Item"))
+                        .onTapGesture {
+                            viewModel.showAddNewObjectModal.toggle()
+                        }
+                }
             }
             
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("SnapSort")
             .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
-            .onChange(of: searchText) { _, newValue in
+            .onChange(of: viewModel.searchText) { _, newValue in
                 withAnimation(.snappy) {
-                    self.searchText = newValue
+                    viewModel.searchText = newValue
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer)
-            .toolbar(content: {
+            .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer)
+            .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Menu {
-                        Menu("Color Theme") {
-                            Picker("Color Theme", selection: Binding(
-                                get: { userData.colorTheme },
-                                set: { userData.colorTheme = $0 }
-                            )) {
-                                ForEach(ColorTheme.allCases, id: \.self) { theme in
-                                    Text(theme.rawValue.capitalized).tag(theme)
-                                }
-                            }
-                        }
-                        .pickerStyle(.inline)
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundStyle(colorScheme == .light ? .black : .white)
-                            .font(.title3)
-                    }
-                    
-                    
+                    SettingsMenuToolbarButton(userData: userData)
                 }
+                
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        withAnimation(.snappy) {
-                            showFavorite.toggle()
-                        }
-                        
-                    } label: {
-                        Image(systemName: showFavorite ? "heart.fill" : "heart")
-                            .foregroundStyle(colorScheme == .light ? .black : .white)
-                            .font(.title3)
-                    }
+                    FavoritesFilterToolbarButton(showFavorite: $viewModel.showFavorite)
                 }
+                
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showModal = true
-                    } label: {
-                        Image(systemName: "plus")
-                            .foregroundStyle(colorScheme == .light ? .black : .white)
-                            .font(.title3)
-                    }
+                    AddNewToolbarButton(showModal: $viewModel.showAddNewObjectModal)
                 }
-            })
-            .sheet(isPresented: $showModal) {
-                AddItemView(infoObject: nil, isEditing: false, infoObjects: infoObjects)
             }
-            //
-            //            .onAppear {
-            //                let demoObjects = SampleObjects.contents
-            //                for demoObject in demoObjects {
-            //                    modelContext.insert(demoObject)
-            //                }
-            //
-            //            }
-            
+            .sheet(isPresented: $viewModel.showAddNewObjectModal) {
+                AddOrEditItemView(infoObject: nil, userCategories: viewModel.findUniqueCategories())
+            }
         }
-//        .environment(userData)
+        .onAppear {
+            viewModel.refreshViewModelData(infoObjects)
+            viewModel.selectedType = .all
+        }
+        .onChange(of: infoObjects) { _, newValue in
+            withAnimation(.snappy) {
+                viewModel.refreshViewModelData(newValue)
+            }
+        }
     }
 }
 
 #Preview {
-    let (container, userDataManager) = /*previewBigContainer()*/previewContainer()
-    DashboardView(selectedCategories: [])
-//        .modelContainer(previewContainer)
-        .modelContainer(container)
+    let (container, userDataManager) = previewContainer(size: .empty)
+    DashboardView()
         .environment(userDataManager)
-//        .environment(userData)
+        .modelContainer(container)
                              
 }
-
-
-
-
-
-
-
-
