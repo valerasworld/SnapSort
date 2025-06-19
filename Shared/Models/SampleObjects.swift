@@ -8,6 +8,8 @@
 import Foundation
 
 struct SampleObjects {
+    static var emptyContents: [InfoObject] = []
+    
     static var smallContents: [InfoObject] = [
         InfoObject(
             title: "Renata",
@@ -472,6 +474,7 @@ struct SampleObjects {
     
     static func contents(of size: PreviewContainerSize) -> [InfoObject] {
         switch size {
+        case .empty: return emptyContents
         case .small: return smallContents
         case .medium: return mediumContents
         case .large: return largeContents

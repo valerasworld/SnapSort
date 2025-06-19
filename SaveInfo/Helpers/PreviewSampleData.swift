@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 enum PreviewContainerSize {
-    case small, medium, large
+    case empty, small, medium, large
 }
 
 @MainActor

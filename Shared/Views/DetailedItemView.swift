@@ -10,17 +10,18 @@ import SwiftData
 
 struct DetailedItemView: View {
     let infoObject: InfoObject
-//    @Environment(Favorites.self) var favorites
+
     @Environment(\.dismiss) var dismiss
     
-    @State var isEditing: Bool = false
+    @State var isEditItemViewPresented: Bool = false
     @State var imageIsClicked: Bool = false
     
-    @Query var infoObjects: [InfoObject]
     @Environment(\.modelContext) var modelContext
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
+    
+    var dashboardViewModel: DashboardViewModel
     
     var body: some View {
         NavigationStack {
@@ -70,6 +71,11 @@ struct DetailedItemView: View {
                         
                         .frame(maxWidth: width, maxHeight: width)
                         .ignoresSafeArea()
+                        .onChange(of: infoObject.hasImageFromLibrary || infoObject.hasValidLink) { _, _ in
+                            withAnimation(.snappy) {
+                                dashboardViewModel.updateInfoTypes()
+                            }
+                        }
                         HStack {
                             if infoObject.stringURL != nil && infoObject.stringURL != "" {
                                 LinkButtonOnDetailView(infoObject: infoObject)
@@ -146,17 +152,16 @@ struct DetailedItemView: View {
                 }
                 ToolbarItem {
                     Button {
-                        isEditing.toggle()
+                        isEditItemViewPresented.toggle()
                     } label: {
-//                        Text("Edit")
                         Image(systemName: "pencil")
                             .font(.title3)
                             .foregroundStyle(colorScheme == .light ? .black : .white)
                     }
                 }
             }
-            .sheet(isPresented: $isEditing) {
-                AddItemView(infoObject: infoObject, isEditing: true, infoObjects: infoObjects)
+            .sheet(isPresented: $isEditItemViewPresented) {
+                AddOrEditItemView(infoObject: infoObject, userCategories: dashboardViewModel.findUniqueCategories())
             }
             
         }
@@ -167,7 +172,7 @@ struct DetailedItemView: View {
 #Preview {
     let (container, userDataManager) = previewContainer(size: .large)
 
-    DetailedItemView(infoObject: SampleObjects.mediumContents.first!)
+    DetailedItemView(infoObject: SampleObjects.mediumContents.first!, dashboardViewModel: DashboardViewModel())
         .modelContainer(container)
         .environment(userDataManager)
 }

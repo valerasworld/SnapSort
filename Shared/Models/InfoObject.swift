@@ -83,24 +83,24 @@ struct InfoObjectGroup: Identifiable {
     let infoObjects: [InfoObject]
 }
 
-extension Array where Element == InfoObject {
-    func findUniqueCategories() -> [Category] {
-        let categories = self.map(\.category)
-        let uniqueCategories = Set(categories)
-        return Array<Category>(uniqueCategories).sorted { $0.name < $1.name }
-    }
-}
+//extension Array where Element == InfoObject {
+//    func findUniqueCategories() -> [Category] {
+//        let categories = self.map(\.category)
+//        let uniqueCategories = Set(categories)
+//        return Array<Category>(uniqueCategories).sorted { $0.name < $1.name }
+//    }
+//}
 
-extension Array where Element == InfoObject {
-    func findInfoTypes() -> [InfoType] {
-        let hasLink = contains { $0.hasValidLink }
-        let hasImage = contains { $0.hasImageFromLibrary }
-        
-        switch (hasLink, hasImage) {
-        case (true, true): return [.all, .links, .images]
-        case (true, false): return [.all, .links]
-        case (false, true): return [.all, .images]
-        case (false, false): return [.all]
-        }
-    }
-}
+//extension Array where Element == InfoObject {
+//    func findInfoTypes() -> [InfoType] {
+//        let hasLink = contains { $0.hasValidLink }
+//        let hasImage = contains { $0.hasImageFromLibrary }
+//        
+//        switch (hasLink, hasImage) {
+//        case (true, true): return [.all, .links, .images]
+//        case (true, false): return [.all, .links]
+//        case (false, true): return [.all, .images]
+//        case (false, false): return [.all]
+//        }
+//    }
+//}

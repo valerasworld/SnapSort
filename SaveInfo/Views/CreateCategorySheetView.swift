@@ -249,7 +249,7 @@ struct CreateCategorySheetView: View {
                 
                 Text(newCategoryName)
                 
-                CategoryButtonImageLayerView(
+                CategoryButtonLabel(
                     category: Category(
                         name: newCategoryName,
                         colorName: selectedColorName,
