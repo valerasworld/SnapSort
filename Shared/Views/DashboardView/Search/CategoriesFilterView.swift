@@ -9,14 +9,13 @@ import SwiftUI
 struct CategoriesFilterView: View {
     
     @Environment(\.colorScheme) var colorScheme
-    
-    var infoObjects: [InfoObject]
-    @Binding var selectedCategories: [Category]
+        
+    var viewModel: DashboardViewModel
     
     var body: some View {
         HStack {
-            ForEach(infoObjects.findUniqueCategories().sortByColor(), id: \.self) { category in
-                CategoryButtonView(category: category, selectedCategories: $selectedCategories)
+            ForEach(viewModel.findUniqueCategories().sortByColor(), id: \.self) { category in
+                CategoryButtonView(category: category, viewModel: viewModel)
             }
         }
         .padding(.bottom, 12)
@@ -27,26 +26,31 @@ struct CategoriesFilterView: View {
 struct CategoryButtonView: View {
         
     var category: Category
-    @Binding var selectedCategories: [Category]
-    @State var isSelected: Bool = false
+    
+    var viewModel: DashboardViewModel
+    
+    var isSelected: Bool {
+        viewModel.selectedCategories.contains(category)
+    }
     
     var body: some View {
-        CategoryButtonImageLayerView(category: category, isSelected: isSelected)
-        .onTapGesture {
+        Button {
             withAnimation(.snappy) {
-                isSelected.toggle()
                 if isSelected {
-                    selectedCategories.append(category)
+                    viewModel.selectedCategories.removeAll { $0 == category }
                 } else {
-                    selectedCategories.removeAll { $0 == category }
+                    viewModel.selectedCategories.append(category)
                 }
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
-            print(selectedCategories.first?.name ?? "")
+        } label : {
+            CategoryButtonLabel(category: category, isSelected: isSelected)
         }
+        .buttonStyle(.plain)
     }
 }
 
-struct CategoryButtonImageLayerView: View {
+struct CategoryButtonLabel: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
@@ -59,7 +63,10 @@ struct CategoryButtonImageLayerView: View {
             Circle()
                 .foregroundColor(isSelected ? .clear : (colorScheme == .light ? .white : Color(#colorLiteral(red: 0.113725476, green: 0.113725476, blue: 0.113725476, alpha: 1))))
                 .padding(isSelected ? 0 : 2)
-                .background(coloredCircled)
+                .background {
+                    Circle()
+                        .fill(category.color(for: userData.colorTheme, colorScheme: colorScheme))
+                }
             if isSelected {
                 Image(systemName: category.iconName)
                     .resizable()
@@ -71,7 +78,10 @@ struct CategoryButtonImageLayerView: View {
             } else {
                 Circle()
                     .foregroundStyle(.clear)
-                    .background(coloredCircled/*.opacity(0.7)*/)
+                    .background {
+                        Circle()
+                            .fill(category.color(for: userData.colorTheme, colorScheme: colorScheme))
+                    }
                     .mask {
                         Image(systemName: category.iconName)
                             .resizable()
@@ -83,12 +93,5 @@ struct CategoryButtonImageLayerView: View {
             }
         }
         .frame(width: 40)
-    }
-    
-    var coloredCircled: some View {
-        ZStack {
-            Circle()
-                .fill(category.color(for: userData.colorTheme, colorScheme: colorScheme))
-        }
     }
 }

@@ -13,12 +13,14 @@ struct InfoObjectCardView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
     
-    @State var viewModel: InfoObjectCardViewModel
+    @State var cardViewModel: InfoObjectCardViewModel
     @State var gridPadding: CGFloat = 12
     @State var padding: CGFloat = 16
     
+    var dashboardViewModel: DashboardViewModel
+    
     var hasImage: Bool {
-        if viewModel.infoObject.image != nil {
+        if cardViewModel.infoObject.image != nil {
             return true
         } else {
             return false
@@ -26,14 +28,14 @@ struct InfoObjectCardView: View {
     }
     
     var body: some View {
-        NavigationLink(destination: DetailedItemView(infoObject: viewModel.infoObject)) {
+        NavigationLink(destination: DetailedItemView(infoObject: cardViewModel.infoObject, dashboardViewModel: dashboardViewModel)) {
             
             let width = UIScreen.main.bounds.width / 2
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 0) {
                     // Image Block
                     InfoCardImageLayerView(
-                        infoObject: viewModel.infoObject,
+                        infoObject: cardViewModel.infoObject,
                         width: width,
                         gridPadding: gridPadding,
                         padding: padding,
@@ -44,8 +46,8 @@ struct InfoObjectCardView: View {
                     ZStack {
                         colorScheme == .light ? Color.white : Color(#colorLiteral(red: 0.1137254902, green: 0.1137254902, blue: 0.1137254902, alpha: 1))
                         HStack(alignment: .top, spacing: 6) {
-                            InfoCardTextLayerView(infoObject: viewModel.infoObject)
-                            InfoCardBookmarkView(category: viewModel.infoObject.category)
+                            InfoCardTextLayerView(infoObject: cardViewModel.infoObject)
+                            InfoCardBookmarkView(category: cardViewModel.infoObject.category)
                         }
                         .padding(.horizontal, padding)
                     }
@@ -56,12 +58,12 @@ struct InfoObjectCardView: View {
                 .frame(maxWidth: width - gridPadding * 1.5 - padding / 2)
                 .shadow(color: .black.opacity(0.17), radius: 5, x: 0, y: 0)
                 
-                if viewModel.infoObject.isFavorite {
+                if cardViewModel.infoObject.isFavorite {
                     ZStack {
                         Image(systemName: "heart.fill")
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(viewModel.infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
+                            .foregroundStyle(cardViewModel.infoObject.category.color(for: userData.colorTheme, colorScheme: colorScheme))
                             .shadow(color: (hasImage ? (colorScheme == .light ? Color.black.opacity(0.17) : Color.white.opacity(0.17)) : Color.clear), radius: 5)
                             .font(.title3)
                         
@@ -78,9 +80,10 @@ struct InfoObjectCardView: View {
             }
             .onAppear {
                 Task {
-                    if !viewModel.infoObject.hasImageFromLibrary || !viewModel.infoObject.hasUsersTitle {
-                        try? await viewModel.loadPreview()
+                    guard !cardViewModel.infoObject.hasMetadata else {
+                        return
                     }
+                    try? await cardViewModel.loadPreview()
                 }
             }
         }
@@ -101,8 +104,8 @@ struct InfoObjectCardView: View {
         )
     )
     
-    InfoObjectCardView(viewModel: InfoObjectCardViewModel(infoObject: /*SampleObjects.contents.last!*/ infoObject))
-    InfoObjectCardView(viewModel: InfoObjectCardViewModel(infoObject: /*SampleObjects.contents.last!*/ infoObject))
+    InfoObjectCardView(cardViewModel: InfoObjectCardViewModel(infoObject: infoObject), dashboardViewModel: DashboardViewModel())
+    InfoObjectCardView(cardViewModel: InfoObjectCardViewModel(infoObject: infoObject), dashboardViewModel: DashboardViewModel())
     
 }
 

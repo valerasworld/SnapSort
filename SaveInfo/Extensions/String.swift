@@ -4,6 +4,7 @@
 //
 //  Created by Valery Zazulin on 11/06/25.
 //
+import SwiftUI
 
 extension String {
     var sanitizedURLString: String {
@@ -19,5 +20,16 @@ extension String {
         } else {
             return urlString.lowercased()
         }
+    }
+}
+
+extension String {
+    func isValidURL() -> Bool {
+        guard let url = URL(string: self),
+              url.scheme?.hasPrefix("http") == true,
+              url.host != nil else {
+            return false
+        }
+        return true
     }
 }
