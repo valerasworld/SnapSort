@@ -76,7 +76,7 @@ Also, we gave the user the opportunity to select their **own type of colours**, 
 
 # Try the App on TestFlight!
 
-<img src="/Assets/tflink_snapsort.png" width=200 height=200>      
+<img src="/Assets/qr-code - snapsort.png" width=200 height=200>      
 
 
 ---
