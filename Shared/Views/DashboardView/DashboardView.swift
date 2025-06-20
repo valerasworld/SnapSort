@@ -112,3 +112,11 @@ struct DashboardView: View {
                              
 }
 
+#Preview("Русский") {
+    let (container, userDataManager) = previewContainer(size: .empty)
+    DashboardView()
+        .environment(\.locale, Locale(identifier: "ru"))
+        .environment(userDataManager)
+        .modelContainer(container)
+                             
+}

@@ -24,6 +24,12 @@
             "state" : "translated",
             "value" : "Aggiungi commento"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить комментарий"
+          }
         }
       }
     },
@@ -98,6 +104,12 @@
             "state" : "translated",
             "value" : "Aggiungi nuova categoria"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить новую категорию"
+          }
         }
       }
     },
@@ -107,6 +119,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aggiungi nuova immagine"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить новое фото"
           }
         }
       }
@@ -118,6 +136,12 @@
             "state" : "translated",
             "value" : "Aggiungi titolo"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить название"
+          }
         }
       }
     },
@@ -127,6 +151,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aggiungi ai Preferiti"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить в избранное"
           }
         }
       }
@@ -138,6 +168,12 @@
             "state" : "translated",
             "value" : "Indietro"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Назад"
+          }
         }
       }
     },
@@ -147,6 +183,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancella"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отмена"
           }
         }
       }
@@ -174,6 +216,12 @@
             "state" : "translated",
             "value" : "Colore"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цвет"
+          }
         }
       }
     },
@@ -183,6 +231,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sistema di colori"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цветовая тема"
           }
         }
       }
@@ -194,6 +248,12 @@
             "state" : "translated",
             "value" : "COMMENTO"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "КОММЕНТАРИЙ"
+          }
         }
       }
     },
@@ -203,6 +263,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Crea una nuova categoria"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать новую категорию"
           }
         }
       }
@@ -214,6 +280,12 @@
             "state" : "translated",
             "value" : "Elimina"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить"
+          }
         }
       }
     },
@@ -223,6 +295,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modifica oggetto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить элемент"
           }
         }
       }
@@ -237,6 +315,12 @@
             "state" : "translated",
             "value" : "Icona"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Иконка"
+          }
         }
       }
     },
@@ -246,6 +330,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "LINK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ССЫЛКА"
           }
         }
       }
@@ -257,6 +347,12 @@
             "state" : "translated",
             "value" : "Nome"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя"
+          }
         }
       }
     },
@@ -266,6 +362,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ancora nessuna immagine qui"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь еще нет фото"
           }
         }
       }
@@ -277,6 +379,12 @@
             "state" : "translated",
             "value" : "Nessun testo"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет Текста"
+          }
         }
       }
     },
@@ -286,6 +394,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ancora Niente Salvato"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ещё ничего не сохранено"
           }
         }
       }
@@ -297,6 +411,12 @@
             "state" : "translated",
             "value" : "Premi sul ‘Plus’ per Aggiungere Il Tuo Primo Oggetto"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нажмите кнопку «Плюс», чтобы добавить первый элемент"
+          }
         }
       }
     },
@@ -306,6 +426,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anteprima"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Просмотр"
           }
         }
       }
@@ -317,6 +443,12 @@
             "state" : "translated",
             "value" : "Rimuovi dai Preferiti"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить из избранного"
+          }
         }
       }
     },
@@ -327,12 +459,24 @@
             "state" : "translated",
             "value" : "Salva"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранить"
+          }
         }
       }
     },
     "SnapSort" : {
       "localizations" : {
         "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SnapSort"
+          }
+        },
+        "ru" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "SnapSort"
@@ -346,6 +490,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TITOLO"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "НАЗВАНИЕ"
           }
         }
       }
