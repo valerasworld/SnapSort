@@ -75,3 +75,14 @@ Also, we gave the user the opportunity to select their **own type of colours**, 
 * **Valerii Zazulin**
 
 # Try the App on TestFlight!
+
+<img src="/Assets/tflink_snapsort.png" width=200 height=200>      
+
+
+---
+
+*SnapSort. **Stop Searching. Start Finding.***
+
+---
+
+
