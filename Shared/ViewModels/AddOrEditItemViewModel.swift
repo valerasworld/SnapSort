@@ -48,7 +48,7 @@ class AddOrEditItemViewModel {
         }
         if let imageData = data.imageData {
             self.uiImage = UIImage(data: imageData)
-            self.hasImageFromLibrary = false
+            self.hasImageFromLibrary = data.hasChosenImage
         }
         
         if let urlString = data.urlString {

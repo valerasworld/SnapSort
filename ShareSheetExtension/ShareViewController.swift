@@ -85,7 +85,8 @@ final class ShareViewModel {
                                     self.shareSheetData = ShareSheetData(
                                         title: nil,
                                         imageData: image.jpegData(compressionQuality: 0.9),
-                                        urlString: nil
+                                        urlString: nil,
+                                        hasChosenImage: true
                                     )
                                     self.isLoading = false
                                 }
@@ -117,7 +118,8 @@ final class ShareViewModel {
                         self.shareSheetData = ShareSheetData(
                             title: nil,
                             imageData: image.jpegData(compressionQuality: 0.9),
-                            urlString: nil
+                            urlString: nil,
+                            hasChosenImage: true
                         )
                         self.isLoading = false
                     }
@@ -146,14 +148,16 @@ final class ShareViewModel {
             self.shareSheetData = ShareSheetData(
                 title: title,
                 imageData: imageData,
-                urlString: url.absoluteString
+                urlString: url.absoluteString,
+                hasChosenImage: false
             )
         } catch {
             print("Failed to load preview: \(error)")
             self.shareSheetData = ShareSheetData(
                 title: nil,
                 imageData: nil,
-                urlString: url.absoluteString
+                urlString: url.absoluteString,
+                hasChosenImage: false
             )
         }
         
