@@ -9,7 +9,7 @@ import LinkPresentation
 import SwiftData
 
 @Model
-class InfoObject: Identifiable {
+final class InfoObject: Identifiable, Sendable {
     var id = UUID().uuidString
     var title: String? = ""
     
@@ -17,9 +17,9 @@ class InfoObject: Identifiable {
     var imageData: Data?
     
     var image: UIImage? {
-            get { imageData.flatMap { UIImage(data: $0) } }
-            set { imageData = newValue?.jpegData(compressionQuality: 0.9) }
-        }
+        get { imageData.flatMap { UIImage(data: $0) } }
+        set { imageData = newValue?.jpegData(compressionQuality: 0.9) }
+    }
     
     var stringURL: String? = ""
     
@@ -47,7 +47,22 @@ class InfoObject: Identifiable {
     @Transient
     var linkURL: URL?
     
-    init(id: String = UUID().uuidString, title: String? = "", imageData: Data? = nil, stringURL: String? = "", tags: [String] = [], category: Category, dateAdded: Date = .now, comment: String? = "", previewLoading: Bool = false, linkMetaData: LPLinkMetadata? = nil, linkURL: URL? = nil, isFavorite: Bool = false, hasImageFromLibrary: Bool = false, hasUsersTitle: Bool = false) {
+    init(
+        id: String = UUID().uuidString,
+        title: String? = "",
+        imageData: Data? = nil,
+        stringURL: String? = "",
+        tags: [String] = [],
+        category: Category = .noCategory,
+        dateAdded: Date = .now,
+        comment: String? = "",
+        previewLoading: Bool = false,
+        linkMetaData: LPLinkMetadata? = nil,
+        linkURL: URL? = nil,
+        isFavorite: Bool = false,
+        hasImageFromLibrary: Bool = false,
+        hasUsersTitle: Bool = false
+    ) {
 
         self.id = id
         self.title = title
@@ -83,24 +98,3 @@ struct InfoObjectGroup: Identifiable {
     let infoObjects: [InfoObject]
 }
 
-//extension Array where Element == InfoObject {
-//    func findUniqueCategories() -> [Category] {
-//        let categories = self.map(\.category)
-//        let uniqueCategories = Set(categories)
-//        return Array<Category>(uniqueCategories).sorted { $0.name < $1.name }
-//    }
-//}
-
-//extension Array where Element == InfoObject {
-//    func findInfoTypes() -> [InfoType] {
-//        let hasLink = contains { $0.hasValidLink }
-//        let hasImage = contains { $0.hasImageFromLibrary }
-//        
-//        switch (hasLink, hasImage) {
-//        case (true, true): return [.all, .links, .images]
-//        case (true, false): return [.all, .links]
-//        case (false, true): return [.all, .images]
-//        case (false, false): return [.all]
-//        }
-//    }
-//}

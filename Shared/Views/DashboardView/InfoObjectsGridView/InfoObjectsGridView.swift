@@ -22,7 +22,7 @@ struct InfoObjectsGridView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(dashboardViewModel.filteredObjects, id: \.id) { object in
+                ForEach(dashboardViewModel.filteredObjects.reversed(), id: \.id) { object in
                     InfoObjectCardView(cardViewModel: InfoObjectCardViewModel(infoObject: object), dashboardViewModel: dashboardViewModel)
                     
                         .contextMenu {

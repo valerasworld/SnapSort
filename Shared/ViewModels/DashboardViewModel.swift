@@ -29,12 +29,6 @@ class DashboardViewModel {
         let composite = CompositeFilter(filters: filters)
         return infoObjects.filter { composite.matches($0) }
     }
-    
-    func findUniqueCategories() -> [Category] {
-        let categories = infoObjects.map(\.category)
-        let uniqueCategories = Set(categories)
-        return Array<Category>(uniqueCategories).sorted { $0.name < $1.name }
-    }
 
     private func findAvailableTypes(for infoObjects: [InfoObject]) -> [InfoType] {
         guard !infoObjects.isEmpty else { return [.all] }

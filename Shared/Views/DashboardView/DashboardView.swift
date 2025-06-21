@@ -18,6 +18,10 @@ struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \InfoObject.dateAdded) var infoObjects: [InfoObject]
     
+    var uniqueCategories: [Category] {
+        CategoryManager.findUniqueCategories(from: infoObjects)
+    }
+    
     var body: some View {
         NavigationStack {
             
@@ -28,8 +32,8 @@ struct DashboardView: View {
                     ObjectTypeSegmentedControlView(viewModel: viewModel)
                 }
             } categoryFilter: {
-                if viewModel.findUniqueCategories().count > 1 {
-                    CategoriesFilterView(viewModel: viewModel)
+                if uniqueCategories.count > 1 {
+                    CategoriesFilterView(selectedCategories: $viewModel.selectedCategories)
                         .frame(maxWidth: .infinity)
                 } else {
                     Color.clear
@@ -80,9 +84,14 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showAddNewObjectModal) {
-                AddOrEditItemView(infoObject: nil, userCategories: viewModel.findUniqueCategories())
+                AddOrEditItemView(
+                    infoObject: nil,
+                    shareSheetData: nil,
+                    viewModel: AddOrEditItemViewModel()
+                )
             }
         }
+        .environment(\.uniqueCategories, uniqueCategories)
         .onAppear {
             viewModel.refreshViewModelData(infoObjects)
             viewModel.selectedType = .all

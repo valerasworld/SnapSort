@@ -15,8 +15,10 @@ struct AddOrEditItemView: View {
     @Environment(UserDataManager.self) var userData
     
     let infoObject: InfoObject?
+    let shareSheetData: ShareSheetData?
 
     @State var viewModel = AddOrEditItemViewModel()
+    var onDismissFromShareExtension: (() -> Void)? = nil
     
     var isEditing: Bool {
         guard infoObject != nil else {
@@ -24,9 +26,7 @@ struct AddOrEditItemView: View {
         }
         return true
     }
-    
-    var userCategories: [Category]
-    
+        
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
@@ -43,7 +43,7 @@ struct AddOrEditItemView: View {
                     
                     TitleFormAddOrEditItemView(title: $viewModel.title, infoObject: infoObject)
                     
-                    CategoriesSectionAddOrEditItemView(userCategories: userCategories, viewModel: $viewModel)
+                    CategoriesSectionAddOrEditItemView(viewModel: $viewModel)
                     
                     LinkFormAddOrEditItemView(stringURL: $viewModel.stringURL)
                     
@@ -62,7 +62,7 @@ struct AddOrEditItemView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
-                        dismiss()
+                        onDismissFromShareExtension?() ?? dismiss()
                     }
                     .foregroundStyle(colorScheme == .light ? .black : .white)
                 }
@@ -71,7 +71,7 @@ struct AddOrEditItemView: View {
                     Button(isEditing ? "Save" : "Add") {
                         withAnimation(.snappy) {
                             viewModel.save(infoObject, to: modelContext)
-                            dismiss()
+                            onDismissFromShareExtension?() ?? dismiss()
                         }
                     }
                     .foregroundStyle(colorScheme == .light ? .black : .white)
@@ -79,18 +79,10 @@ struct AddOrEditItemView: View {
             }
         }
         .onAppear {
-            viewModel.updateViewModelData(from: infoObject)
+            viewModel.updateViewModelData(from: infoObject, shareSheetData: shareSheetData)
+        }
+        .onChange(of: shareSheetData) { _, newValue in
+            viewModel.updateViewModelData(from: infoObject, shareSheetData: newValue)
         }
     }
-}
-
-#Preview {
-    let (container, userDataManager) = previewContainer(size: .large)
-    
-    AddOrEditItemView(
-        infoObject: nil,
-        userCategories: DashboardViewModel().findUniqueCategories()
-    )
-    .modelContainer(container)
-    .environment(userDataManager)
 }
