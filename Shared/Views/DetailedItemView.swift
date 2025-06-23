@@ -20,6 +20,7 @@ struct DetailedItemView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
+    @Environment(\.uniqueCategories) var uniqueCategories
     
     var dashboardViewModel: DashboardViewModel
     
@@ -161,7 +162,7 @@ struct DetailedItemView: View {
                 }
             }
             .sheet(isPresented: $isEditItemViewPresented) {
-                AddOrEditItemView(infoObject: infoObject, userCategories: dashboardViewModel.findUniqueCategories())
+                AddOrEditItemView(infoObject: infoObject, shareSheetData: nil)
             }
             
         }

@@ -13,7 +13,6 @@ protocol MetadataLoadable {
 }
 
 protocol ImageLoadable {
-//    func loadImage(from provider: NSItemProvider?) async throws -> UIImage?
     func loadImageData(from provider: NSItemProvider?) async throws -> Data?
 }
 
@@ -22,20 +21,6 @@ class LinkPreviewLoader: MetadataLoadable, ImageLoadable {
         let provider = LPMetadataProvider()
         return try await provider.startFetchingMetadata(for: url)
     }
-    
-//    // Convert NSItemProvider to UIImage
-//    func loadImage(from provider: NSItemProvider?) async throws -> UIImage? {
-//        let typeIdentifier = UTType.image.identifier
-//        
-//        // Check if the provider contains the image type
-//        guard let provider,
-//              provider.hasItemConformingToTypeIdentifier(typeIdentifier) else { return nil }
-//        
-//        // Load the item asynchronously
-//        let item = try await loadImageItem(from: provider, for: typeIdentifier)
-//
-//        return try decodeImage(from: item)
-//    }
     
     func loadImageData(from provider: NSItemProvider?) async throws -> Data? {
         let typeIdentifier = UTType.image.identifier
@@ -64,18 +49,7 @@ class LinkPreviewLoader: MetadataLoadable, ImageLoadable {
             }
         }
     }
-    
-//    private func decodeImage(from item: NSSecureCoding) throws -> UIImage? {
-//        if let image = item as? UIImage {
-//            return image
-//        } else if let url = item as? URL {
-//            let data = try Data(contentsOf: url)
-//            return UIImage(data: data)
-//        } else if let data = item as? Data {
-//            return UIImage(data: data)
-//        }
-//        return nil
-//    }
+
     private func extractImageData(from item: NSSecureCoding) throws -> Data? {
         if let image = item as? UIImage {
             return image.jpegData(compressionQuality: 0.9) // or pngData()

@@ -9,17 +9,58 @@ import SwiftUI
 struct CategoriesFilterView: View {
     
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.uniqueCategories) var uniqueCategories
         
-    var viewModel: DashboardViewModel
+    @Binding var selectedCategories: [Category]
     
     var body: some View {
-        HStack {
-            ForEach(viewModel.findUniqueCategories().sortByColor(), id: \.self) { category in
-                CategoryButtonView(category: category, viewModel: viewModel)
+        if uniqueCategories.count <= 7 {
+            
+            ZStack {
+                HStack {
+                    ForEach(uniqueCategories.sortByColor(), id: \.self) { category in
+                        CategoryButtonView(category: category, selectedCategories: $selectedCategories)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 12)
+                .padding(.horizontal, 16)
             }
+        } else {
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(uniqueCategories.sortByColor(), id: \.self) { category in
+                        CategoryButtonView(category: category, selectedCategories: $selectedCategories)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 12)
+                .padding(.horizontal, 16)
+            }
+            .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize)
         }
-        .padding(.bottom, 12)
-        .padding(.horizontal, 16)
+        // ClearButton
+//        .overlay(alignment: .trailing) {
+//            if !selectedCategories.isEmpty {
+//                Button {
+//                    withAnimation(.snappy) {
+//                        selectedCategories = []
+//                    }
+//                } label: {
+//                    Image(systemName: "xmark.circle.fill")
+//                        .font(.title)
+//                        .foregroundStyle(Color.gray, Color.primary.opacity(0.1))
+//                        // Animate scale and opacity together
+//                        .scaleEffect(selectedCategories.isEmpty ? 0.5 : 1)
+//                        .opacity(selectedCategories.isEmpty ? 0 : 1)
+//                        .animation(.snappy, value: selectedCategories)
+//                }
+//                // Disable button hit testing when text is empty
+//                .disabled(selectedCategories.isEmpty)
+//                .padding(.trailing, 20)
+//            }
+//        }
     }
 }
 
@@ -27,19 +68,19 @@ struct CategoryButtonView: View {
         
     var category: Category
     
-    var viewModel: DashboardViewModel
+    @Binding var selectedCategories: [Category]
     
     var isSelected: Bool {
-        viewModel.selectedCategories.contains(category)
+        selectedCategories.contains(category)
     }
     
     var body: some View {
         Button {
             withAnimation(.snappy) {
                 if isSelected {
-                    viewModel.selectedCategories.removeAll { $0 == category }
+                    selectedCategories.removeAll { $0 == category }
                 } else {
-                    viewModel.selectedCategories.append(category)
+                    selectedCategories.append(category)
                 }
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
@@ -50,48 +91,4 @@ struct CategoryButtonView: View {
     }
 }
 
-struct CategoryButtonLabel: View {
-    
-    @Environment(\.colorScheme) var colorScheme
-    @Environment(UserDataManager.self) var userData
-    
-    var category: Category
-    var isSelected: Bool
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .foregroundColor(isSelected ? .clear : (colorScheme == .light ? .white : Color(#colorLiteral(red: 0.113725476, green: 0.113725476, blue: 0.113725476, alpha: 1))))
-                .padding(isSelected ? 0 : 2)
-                .background {
-                    Circle()
-                        .fill(category.color(for: userData.colorTheme, colorScheme: colorScheme))
-                }
-            if isSelected {
-                Image(systemName: category.iconName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                    .foregroundStyle(colorScheme == .light ? .white : .black)
-                    .fontWeight(.semibold)
-                    .bold()
-            } else {
-                Circle()
-                    .foregroundStyle(.clear)
-                    .background {
-                        Circle()
-                            .fill(category.color(for: userData.colorTheme, colorScheme: colorScheme))
-                    }
-                    .mask {
-                        Image(systemName: category.iconName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .fontWeight(.semibold)
-                            .bold()
-                    }
-            }
-        }
-        .frame(width: 40)
-    }
-}
+

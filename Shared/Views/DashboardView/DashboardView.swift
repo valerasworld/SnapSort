@@ -18,6 +18,10 @@ struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \InfoObject.dateAdded) var infoObjects: [InfoObject]
     
+    var uniqueCategories: [Category] {
+        CategoryManager.findUniqueCategories(from: infoObjects)
+    }
+    
     var body: some View {
         NavigationStack {
             
@@ -28,8 +32,8 @@ struct DashboardView: View {
                     ObjectTypeSegmentedControlView(viewModel: viewModel)
                 }
             } categoryFilter: {
-                if viewModel.findUniqueCategories().count > 1 {
-                    CategoriesFilterView(viewModel: viewModel)
+                if uniqueCategories.count > 1 {
+                    CategoriesFilterView(selectedCategories: $viewModel.selectedCategories)
                         .frame(maxWidth: .infinity)
                 } else {
                     Color.clear
@@ -80,9 +84,21 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showAddNewObjectModal) {
-                AddOrEditItemView(infoObject: nil, userCategories: viewModel.findUniqueCategories())
+                AddOrEditItemView(
+                    infoObject: nil,
+                    shareSheetData: nil,
+                    viewModel: AddOrEditItemViewModel()
+                )
+                .background {
+                    if colorScheme == .light {
+                        Color(#colorLiteral(red: 0.9490196109, green: 0.9490196109, blue: 0.9490196109, alpha: 1)).ignoresSafeArea()
+                    } else {
+                        Color(#colorLiteral(red: 0.1098036841, green: 0.1098041013, blue: 0.1183909252, alpha: 1)).ignoresSafeArea()
+                    }
+                }
             }
         }
+        .environment(\.uniqueCategories, uniqueCategories)
         .onAppear {
             viewModel.refreshViewModelData(infoObjects)
             viewModel.selectedType = .all
@@ -96,15 +112,16 @@ struct DashboardView: View {
 }
 
 #Preview {
-    let (container, userDataManager) = previewContainer(size: .empty)
+    let (container, userDataManager) = previewContainer(size: .large)
     DashboardView()
         .environment(userDataManager)
         .modelContainer(container)
                              
 }
 
+
 #Preview("Italian") {
-    let (container, userDataManager) = previewContainer(size: .empty)
+    let (container, userDataManager) = previewContainer(size: .large)
     DashboardView()
         .environment(\.locale, Locale(identifier: "it"))
         .environment(userDataManager)
@@ -112,11 +129,15 @@ struct DashboardView: View {
                              
 }
 
-#Preview("Русский") {
-    let (container, userDataManager) = previewContainer(size: .empty)
+
+
+
+#Preview("Russian") {
+    let (container, userDataManager) = previewContainer(size: .large)
     DashboardView()
         .environment(\.locale, Locale(identifier: "ru"))
         .environment(userDataManager)
         .modelContainer(container)
                              
 }
+

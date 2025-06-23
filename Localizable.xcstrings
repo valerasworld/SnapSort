@@ -22,13 +22,13 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aggiungi commento"
+            "value" : "Commento"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Добавить заметку"
+            "value" : "Заметка"
           }
         }
       }
@@ -70,13 +70,29 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aggiungi link"
+            "value" : "Link"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Добавить ссылку"
+            "value" : "Ссылка"
+          }
+        }
+      }
+    },
+    "Add Name" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TItolo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Название"
           }
         }
       }
@@ -108,7 +124,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Создать новую категорию"
+            "value" : "Новая категория"
           }
         }
       }
@@ -134,13 +150,13 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aggiungi titolo"
+            "value" : "Titolo"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Добавить название"
+            "value" : "Название"
           }
         }
       }
@@ -161,6 +177,22 @@
         }
       }
     },
+    "All" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все"
+          }
+        }
+      }
+    },
     "Back" : {
       "localizations" : {
         "it" : {
@@ -173,6 +205,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Назад"
+          }
+        }
+      }
+    },
+    "Bright" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vivace"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Яркая"
           }
         }
       }
@@ -209,22 +257,6 @@
         }
       }
     },
-    "Color" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Colore"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Цвет"
-          }
-        }
-      }
-    },
     "Color Theme" : {
       "localizations" : {
         "it" : {
@@ -253,6 +285,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ЗАМЕТКА"
+          }
+        }
+      }
+    },
+    "Create" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crea"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать"
           }
         }
       }
@@ -305,21 +353,18 @@
         }
       }
     },
-    "Hello, World!" : {
-
-    },
-    "Icon" : {
+    "Images" : {
       "localizations" : {
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Icona"
+            "value" : "Immagini"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Символ"
+            "value" : "Фото"
           }
         }
       }
@@ -340,6 +385,22 @@
         }
       }
     },
+    "Links" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ссылки"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "it" : {
@@ -351,7 +412,29 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Заголовок"
+            "value" : "Название"
+          }
+        }
+      }
+    },
+    "No Category" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Category"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nessuna categoria"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет категорий"
           }
         }
       }
@@ -367,7 +450,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Здесь пока нет фото"
+            "value" : "Здесь пока ничего нет"
           }
         }
       }
@@ -404,6 +487,22 @@
         }
       }
     },
+    "Pastel" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pastello"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пастельная"
+          }
+        }
+      }
+    },
     "Press 'Plus Button' to Add Your First Item" : {
       "localizations" : {
         "it" : {
@@ -416,22 +515,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Нажмите ‘’+’’, чтобы добавить первый обьект"
-          }
-        }
-      }
-    },
-    "Preview" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anteprima"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Просмотр"
           }
         }
       }

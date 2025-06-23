@@ -10,8 +10,8 @@ import SwiftUI
 struct CategoriesSectionAddOrEditItemView: View {
     
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.uniqueCategories) var uniqueCategories
     
-    var userCategories: [Category]
     @Binding var viewModel: AddOrEditItemViewModel
     
     var body: some View {
@@ -23,7 +23,7 @@ struct CategoriesSectionAddOrEditItemView: View {
                 .padding(.horizontal, 12)
             
             VStack(alignment: .leading) {
-                if userCategories.isEmpty {
+                if uniqueCategories.isEmpty {
                     if let selectedCategory = viewModel.selectedCategory {
                         CategoriesMenuLabel(selectedCategory: selectedCategory)
                             .padding(.horizontal, 12)
@@ -33,10 +33,7 @@ struct CategoriesSectionAddOrEditItemView: View {
                             .padding(.horizontal, 12)
                     }
                 } else {
-                    CategoriesMenu(
-                        categories: userCategories,
-                        selectedCategory: $viewModel.selectedCategory
-                    )
+                    CategoriesMenu(selectedCategory: $viewModel.selectedCategory)
                     .padding(.horizontal, 12)
                     .padding(.top, 12)
                     .padding(.bottom, 6)
@@ -47,7 +44,6 @@ struct CategoriesSectionAddOrEditItemView: View {
                 
                 
                 AddNewCategoryButton(
-                    userCategories: userCategories,
                     isCreateCategorySheetPresented: $viewModel.isCreateCategorySheetPresented,
                     selectedCategory: $viewModel.selectedCategory
                 )
@@ -63,5 +59,5 @@ struct CategoriesSectionAddOrEditItemView: View {
 }
 
 #Preview {
-    CategoriesSectionAddOrEditItemView(userCategories: [], viewModel: .constant(AddOrEditItemViewModel()))
+    CategoriesSectionAddOrEditItemView(viewModel: .constant(AddOrEditItemViewModel()))
 }

@@ -12,12 +12,13 @@ struct CategoriesMenu: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
     
-    let categories: [Category]
+    @Environment(\.uniqueCategories) var uniqueCategories
+    
     @Binding var selectedCategory: Category?
     
     var body: some View {
         Menu {
-            ForEach(categories, id: \.self) { category in
+            ForEach(uniqueCategories, id: \.self) { category in
                 Button {
                     selectedCategory = category
                 } label: {
@@ -30,7 +31,6 @@ struct CategoriesMenu: View {
         }
     }
 }
-
 
 struct CategoriesMenuLabel: View {
     
@@ -61,5 +61,5 @@ struct CategoriesMenuLabel: View {
 }
 
 #Preview {
-    CategoriesMenu(categories: [], selectedCategory: .constant(nil))
+    CategoriesMenu(selectedCategory: .constant(nil))
 }

@@ -11,7 +11,7 @@ enum InfoType {
     case links
     case images
     
-    var typeName: String {
+    var typeName: LocalizedStringKey {
         switch self {
         case .all: return "All"
         case .links: return "Links"
