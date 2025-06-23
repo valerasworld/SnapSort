@@ -15,26 +15,53 @@ struct CustomColorPickerView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
-    
-    var body: some View {
-//        ScrollView(.horizontal) {
-//            HStack {
-        CustomHoneycombsSnakeLayout(spacing: 10) {
-            ForEach(colorNames, id: \.self) { colorName in
-                colorCircle(colorName: colorName)
-                    .onTapGesture {
-                        withAnimation(.snappy) {
-                            selectedColorName = colorName
-                        }
-                    }
-                
+    var colorNameRows: [[String]] {
+            let groupSize = 7
+
+           return stride(from: 0, to: colorNames.count, by: groupSize).map {
+               Array(colorNames[$0..<min($0 + groupSize, colorNames.count)])
             }
         }
-//            }
-//        }
-//        .scrollIndicators(.hidden)
-//        .scrollClipDisabled()
-    }
+    
+    var body: some View {
+    //        ScrollView(.horizontal) {
+    //            HStack {
+    //        CustomHoneycombsSnakeLayout(spacing: 10) {
+            VStack {
+                ForEach(colorNameRows.indices, id: \.self) { index in
+                    if index == 0 {
+                        HStack {
+                            ForEach(colorNameRows[index], id: \.self) { colorName in
+                                
+                                colorCircle(colorName: colorName)
+                                    .onTapGesture {
+                                        withAnimation(.snappy) {
+                                            selectedColorName = colorName
+                                        }
+                                    }
+                            }
+                        }
+                    } else {
+                        HStack {
+                            ForEach(colorNameRows[index].reversed(), id: \.self) { colorName in
+                                colorCircle(colorName: colorName)
+                                    .onTapGesture {
+                                        withAnimation(.snappy) {
+                                            selectedColorName = colorName
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                    
+                }
+            }
+    //        }
+    //            }
+    //        }
+    //        .scrollIndicators(.hidden)
+    //        .scrollClipDisabled()
+        }
     
     func colorCircle(colorName: String) -> some View {
         let circleWidthAndHeight: CGFloat = 43
