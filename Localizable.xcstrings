@@ -1,0 +1,99 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Add" : {
+
+    },
+    "Add Comment" : {
+
+    },
+    "Add Image" : {
+
+    },
+    "Add Item" : {
+
+    },
+    "Add Link" : {
+
+    },
+    "Add Name..." : {
+
+    },
+    "Add New" : {
+
+    },
+    "Add New Category" : {
+
+    },
+    "Add New Image" : {
+
+    },
+    "Add Title" : {
+
+    },
+    "Add to Favorites" : {
+
+    },
+    "Back" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "CATEGORY" : {
+
+    },
+    "Color Theme" : {
+
+    },
+    "COMMENT" : {
+
+    },
+    "Create" : {
+
+    },
+    "Create New Category" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Edit Item" : {
+
+    },
+    "Hello, World!" : {
+
+    },
+    "LINK" : {
+
+    },
+    "Name" : {
+
+    },
+    "No Image here yet" : {
+
+    },
+    "No Text" : {
+
+    },
+    "Nothing Saved Yet" : {
+
+    },
+    "Press 'Plus Button' to Add Your First Item" : {
+
+    },
+    "Remove from Favorites" : {
+
+    },
+    "Save" : {
+
+    },
+    "SnapSort" : {
+
+    },
+    "TITLE" : {
+
+    }
+  },
+  "version" : "1.0"
+}

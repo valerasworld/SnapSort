@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9FB1987F2E0733A6001243A2 /* ShareSheetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9FB198752E0733A6001243A2 /* ShareSheetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E3F2A58C2E09AFEF003CEBDE /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E3F2A58B2E09AFEF003CEBDE /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 /* Begin PBXFileReference section */
 		9F63BE092DC2785800A09138 /* SaveInfo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SaveInfo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FB198752E0733A6001243A2 /* ShareSheetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareSheetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E3F2A58B2E09AFEF003CEBDE /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -287,6 +289,7 @@
 		9F63BE002DC2785800A09138 = {
 			isa = PBXGroup;
 			children = (
+				E3F2A58B2E09AFEF003CEBDE /* Localizable.xcstrings */,
 				9F619C1C2DD5481D00D068BD /* Shared */,
 				9F63BE0B2DC2785800A09138 /* SaveInfo */,
 				9FB198762E0733A6001243A2 /* ShareSheetExtension */,
@@ -380,6 +383,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 9F63BE002DC2785800A09138;
 			minimizedProjectReferenceProxies = 1;
@@ -399,6 +403,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3F2A58C2E09AFEF003CEBDE /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,6 +509,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -560,6 +566,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
