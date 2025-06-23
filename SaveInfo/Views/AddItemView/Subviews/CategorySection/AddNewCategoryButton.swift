@@ -30,7 +30,7 @@ struct AddNewCategoryButton: View {
         .padding(.horizontal, 12)
         .padding(.top, !uniqueCategories.isEmpty || selectedCategory != nil ? 6 : 12)
         .padding(.bottom, 12)
-        .sheet(isPresented: $isCreateCategorySheetPresented) {
+        .systemSheetView($isCreateCategorySheetPresented) {
             CreateCategorySheetView(selectedCategory: $selectedCategory)
         }
     }

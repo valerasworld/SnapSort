@@ -89,6 +89,13 @@ struct DashboardView: View {
                     shareSheetData: nil,
                     viewModel: AddOrEditItemViewModel()
                 )
+                .background {
+                    if colorScheme == .light {
+                        Color(#colorLiteral(red: 0.9490196109, green: 0.9490196109, blue: 0.9490196109, alpha: 1)).ignoresSafeArea()
+                    } else {
+                        Color(#colorLiteral(red: 0.1098036841, green: 0.1098041013, blue: 0.1183909252, alpha: 1)).ignoresSafeArea()
+                    }
+                }
             }
         }
         .environment(\.uniqueCategories, uniqueCategories)
@@ -105,7 +112,7 @@ struct DashboardView: View {
 }
 
 #Preview {
-    let (container, userDataManager) = previewContainer(size: .empty)
+    let (container, userDataManager) = previewContainer(size: .large)
     DashboardView()
         .environment(userDataManager)
         .modelContainer(container)

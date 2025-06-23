@@ -14,13 +14,53 @@ struct CategoriesFilterView: View {
     @Binding var selectedCategories: [Category]
     
     var body: some View {
-        HStack {
-            ForEach(uniqueCategories.sortByColor(), id: \.self) { category in
-                CategoryButtonView(category: category, selectedCategories: $selectedCategories)
+        if uniqueCategories.count <= 7 {
+            
+            ZStack {
+                HStack {
+                    ForEach(uniqueCategories.sortByColor(), id: \.self) { category in
+                        CategoryButtonView(category: category, selectedCategories: $selectedCategories)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 12)
+                .padding(.horizontal, 16)
             }
+        } else {
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(uniqueCategories.sortByColor(), id: \.self) { category in
+                        CategoryButtonView(category: category, selectedCategories: $selectedCategories)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 12)
+                .padding(.horizontal, 16)
+            }
+            .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize)
         }
-        .padding(.bottom, 12)
-        .padding(.horizontal, 16)
+        // ClearButton
+//        .overlay(alignment: .trailing) {
+//            if !selectedCategories.isEmpty {
+//                Button {
+//                    withAnimation(.snappy) {
+//                        selectedCategories = []
+//                    }
+//                } label: {
+//                    Image(systemName: "xmark.circle.fill")
+//                        .font(.title)
+//                        .foregroundStyle(Color.gray, Color.primary.opacity(0.1))
+//                        // Animate scale and opacity together
+//                        .scaleEffect(selectedCategories.isEmpty ? 0.5 : 1)
+//                        .opacity(selectedCategories.isEmpty ? 0 : 1)
+//                        .animation(.snappy, value: selectedCategories)
+//                }
+//                // Disable button hit testing when text is empty
+//                .disabled(selectedCategories.isEmpty)
+//                .padding(.trailing, 20)
+//            }
+//        }
     }
 }
 

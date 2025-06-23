@@ -48,8 +48,11 @@ struct AddOrEditItemView: View {
                     LinkFormAddOrEditItemView(stringURL: $viewModel.stringURL)
                     
                     CommentFormAddOrEditItemView(comment: $viewModel.comment)
+                        .padding(.bottom, 60)
                 }
             }
+            .navigationTitle(isEditing ? "Edit Item" : "Add Item")
+            .navigationBarTitleDisplayMode(.inline)
             .background {
                 if colorScheme == .light {
                     Color.black.opacity(0.05).ignoresSafeArea()
@@ -57,8 +60,6 @@ struct AddOrEditItemView: View {
                     Color(#colorLiteral(red: 0.1098036841, green: 0.1098041013, blue: 0.1183909252, alpha: 1)).ignoresSafeArea()
                 }
             }
-            .navigationTitle(isEditing ? "Edit Item" : "Add Item")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
@@ -77,6 +78,7 @@ struct AddOrEditItemView: View {
                     .foregroundStyle(colorScheme == .light ? .black : .white)
                 }
             }
+            
         }
         .onAppear {
             viewModel.updateViewModelData(from: infoObject, shareSheetData: shareSheetData)
@@ -86,3 +88,11 @@ struct AddOrEditItemView: View {
         }
     }
 }
+
+#Preview {
+    let (container, userDataManager) = previewContainer(size: .empty)
+    AddOrEditItemView(infoObject: nil, shareSheetData: nil)
+        .environment(userDataManager)
+        .modelContainer(container)
+}
+

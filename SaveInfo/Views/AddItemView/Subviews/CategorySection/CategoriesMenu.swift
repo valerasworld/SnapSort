@@ -11,6 +11,7 @@ struct CategoriesMenu: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
+    
     @Environment(\.uniqueCategories) var uniqueCategories
     
     @Binding var selectedCategory: Category?
@@ -30,7 +31,6 @@ struct CategoriesMenu: View {
         }
     }
 }
-
 
 struct CategoriesMenuLabel: View {
     

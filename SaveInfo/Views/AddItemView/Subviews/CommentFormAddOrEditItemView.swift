@@ -19,6 +19,7 @@ struct CommentFormAddOrEditItemView: View {
                 .padding(.top, 16)
                 .padding(.horizontal, 12)
             TextField("Add Comment", text: $comment, axis: .vertical)
+                .clearButton(text: $comment)
                 .padding(12)
                 .lineLimit(nil)
                 .multilineTextAlignment(.leading)

@@ -21,6 +21,7 @@ struct TitleFormAddOrEditItemView: View {
                 .padding(.top, 8)
                 .padding(.horizontal, 12)
             TextField("Add Title", text: $title)
+                .clearButton(text: $title)
                 .font(.title3)
                 .padding(8)
                 .padding(.horizontal, 4)

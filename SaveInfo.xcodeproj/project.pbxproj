@@ -67,6 +67,7 @@
 			membershipExceptions = (
 				Category.swift,
 				FIltering/InfoObjectFilters.swift,
+				IconData.swift,
 				InfoObject.swift,
 				InfoType.swift,
 				SampleObjects.swift,
@@ -111,7 +112,9 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Category.swift,
+				IconData.swift,
 				InfoObject.swift,
+				SampleObjects.swift,
 				ShareSheetData.swift,
 				UserSettings.swift,
 			);
@@ -137,8 +140,11 @@
 			membershipExceptions = (
 				Extensions/ColorTheme.swift,
 				Extensions/String.swift,
+				Helpers/PreviewSampleData.swift,
 				Helpers/RoundedSpecificCorners.swift,
 				Helpers/SheetHelper.swift,
+				Helpers/TextFieldClearButton.swift,
+				Layout/Layout.swift,
 				Views/AddItemView/AddOrEditItemView.swift,
 				Views/AddItemView/Subviews/CategoriesSectionAddOrEditItemView.swift,
 				Views/AddItemView/Subviews/CategorySection/AddNewCategoryButton.swift,
@@ -150,7 +156,13 @@
 				Views/AddItemView/Subviews/ImageAreaSubviews/ExistingImageView.swift,
 				Views/AddItemView/Subviews/LinkFormAddOrEditItemView.swift,
 				Views/AddItemView/Subviews/TitleFormAddOrEditItemView.swift,
-				Views/CreateCategorySheetView.swift,
+				Views/CreateNewCateegory/CreateCategorySheetView.swift,
+				Views/CreateNewCateegory/Subviews/CategoryNameTextFieldView.swift,
+				Views/CreateNewCateegory/Subviews/CreateNewCategoryButton.swift,
+				Views/CreateNewCateegory/Subviews/CreateNewCategorySheetHeaderView.swift,
+				Views/CreateNewCateegory/Subviews/CustomColorPickerView.swift,
+				Views/CreateNewCateegory/Subviews/IconPicker/IconPickerView.swift,
+				Views/CreateNewCateegory/Subviews/IconPicker/Subviews/IconPickerLabel.swift,
 			);
 			target = 9FB198742E0733A6001243A2 /* ShareSheetExtension */;
 		};
