@@ -10,7 +10,7 @@ import SwiftData
 
 enum SharedModel {
     static let storeURL: URL = {
-        let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.vzazulin.SnapSort")!
+        let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.pasqualepiserchia.SnapSort")!
         return container.appendingPathComponent("SaveInfo.sqlite")
     }()
 
