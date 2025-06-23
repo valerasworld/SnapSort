@@ -39,7 +39,11 @@ extension Category: Hashable, Equatable {
 }
 
 extension Category {
-    static let noCategory = Category(name: "No Category", colorName: "gray", iconName: "questionmark")
+    static let noCategory = Category(
+        name: String(localized: "No Category"),
+        colorName: "gray",
+        iconName: "questionmark"
+    )
 }
 
 enum CategoryColor: String, CaseIterable {

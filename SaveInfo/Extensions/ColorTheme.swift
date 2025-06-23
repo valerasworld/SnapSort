@@ -10,12 +10,12 @@ enum ColorTheme: String, Codable, CaseIterable {
     case bright
     case pastel
     
-    var name: String {
+    var name: LocalizedStringKey {
         switch self {
         case .bright:
             return "Bright"
         case .pastel:
-            return"Pastel"
+            return "Pastel"
         }
     }
 }

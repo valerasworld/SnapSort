@@ -20,7 +20,7 @@ struct CategoryNameTextFieldView: View {
             Text("Name")
                 .font(.title3)
             
-            TextField("Add Name...", text: $newCategoryName)
+            TextField("Add Name", text: $newCategoryName)
                 .clearButton(text: $newCategoryName)
                 .padding(12)
                 .background {
