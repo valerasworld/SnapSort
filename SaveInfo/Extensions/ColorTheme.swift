@@ -9,6 +9,15 @@ import SwiftUI
 enum ColorTheme: String, Codable, CaseIterable {
     case bright
     case pastel
+    
+    var name: LocalizedStringKey {
+        switch self {
+        case .bright:
+            return "Bright"
+        case .pastel:
+            return "Pastel"
+        }
+    }
 }
 
 extension Color {

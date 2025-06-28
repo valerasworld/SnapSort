@@ -15,8 +15,10 @@ struct AddOrEditItemView: View {
     @Environment(UserDataManager.self) var userData
     
     let infoObject: InfoObject?
+    let shareSheetData: ShareSheetData?
 
     @State var viewModel = AddOrEditItemViewModel()
+    var onDismissFromShareExtension: (() -> Void)? = nil
     
     var isEditing: Bool {
         guard infoObject != nil else {
@@ -24,9 +26,7 @@ struct AddOrEditItemView: View {
         }
         return true
     }
-    
-    var userCategories: [Category]
-    
+        
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
@@ -43,13 +43,16 @@ struct AddOrEditItemView: View {
                     
                     TitleFormAddOrEditItemView(title: $viewModel.title, infoObject: infoObject)
                     
-                    CategoriesSectionAddOrEditItemView(userCategories: userCategories, viewModel: $viewModel)
+                    CategoriesSectionAddOrEditItemView(viewModel: $viewModel)
                     
                     LinkFormAddOrEditItemView(stringURL: $viewModel.stringURL)
                     
                     CommentFormAddOrEditItemView(comment: $viewModel.comment)
+                        .padding(.bottom, 60)
                 }
             }
+            .navigationTitle(isEditing ? "Edit Item" : "Add Item")
+            .navigationBarTitleDisplayMode(.inline)
             .background {
                 if colorScheme == .light {
                     Color.black.opacity(0.05).ignoresSafeArea()
@@ -57,12 +60,10 @@ struct AddOrEditItemView: View {
                     Color(#colorLiteral(red: 0.1098036841, green: 0.1098041013, blue: 0.1183909252, alpha: 1)).ignoresSafeArea()
                 }
             }
-            .navigationTitle(isEditing ? "Edit Item" : "Add Item")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
-                        dismiss()
+                        onDismissFromShareExtension?() ?? dismiss()
                     }
                     .foregroundStyle(colorScheme == .light ? .black : .white)
                 }
@@ -71,26 +72,27 @@ struct AddOrEditItemView: View {
                     Button(isEditing ? "Save" : "Add") {
                         withAnimation(.snappy) {
                             viewModel.save(infoObject, to: modelContext)
-                            dismiss()
+                            onDismissFromShareExtension?() ?? dismiss()
                         }
                     }
                     .foregroundStyle(colorScheme == .light ? .black : .white)
                 }
             }
+            
         }
         .onAppear {
-            viewModel.updateViewModelData(from: infoObject)
+            viewModel.updateViewModelData(from: infoObject, shareSheetData: shareSheetData)
+        }
+        .onChange(of: shareSheetData) { _, newValue in
+            viewModel.updateViewModelData(from: infoObject, shareSheetData: newValue)
         }
     }
 }
 
 #Preview {
-    let (container, userDataManager) = previewContainer(size: .large)
-    
-    AddOrEditItemView(
-        infoObject: nil,
-        userCategories: DashboardViewModel().findUniqueCategories()
-    )
-    .modelContainer(container)
-    .environment(userDataManager)
+    let (container, userDataManager) = previewContainer(size: .empty)
+    AddOrEditItemView(infoObject: nil, shareSheetData: nil)
+        .environment(userDataManager)
+        .modelContainer(container)
 }
+

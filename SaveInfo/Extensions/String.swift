@@ -18,7 +18,7 @@ extension String {
         if urlString.lowercased() == "https://" {
             return ""
         } else {
-            return urlString.lowercased()
+            return urlString
         }
     }
 }

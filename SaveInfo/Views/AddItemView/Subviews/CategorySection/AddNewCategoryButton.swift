@@ -11,8 +11,8 @@ struct AddNewCategoryButton: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
+    @Environment(\.uniqueCategories) var uniqueCategories
     
-    var userCategories: [Category]
     @Binding var isCreateCategorySheetPresented: Bool
     @Binding var selectedCategory: Category?
     
@@ -28,14 +28,14 @@ struct AddNewCategoryButton: View {
             .foregroundStyle(colorScheme == .light ? .black : .white)
         }
         .padding(.horizontal, 12)
-        .padding(.top, !userCategories.isEmpty || selectedCategory != nil ? 6 : 12)
+        .padding(.top, !uniqueCategories.isEmpty || selectedCategory != nil ? 6 : 12)
         .padding(.bottom, 12)
-        .sheet(isPresented: $isCreateCategorySheetPresented) {
+        .systemSheetView($isCreateCategorySheetPresented) {
             CreateCategorySheetView(selectedCategory: $selectedCategory)
         }
     }
 }
 
 #Preview {
-    AddNewCategoryButton(userCategories: [], isCreateCategorySheetPresented: .constant(false), selectedCategory: .constant(nil))
+    AddNewCategoryButton(isCreateCategorySheetPresented: .constant(false), selectedCategory: .constant(nil))
 }

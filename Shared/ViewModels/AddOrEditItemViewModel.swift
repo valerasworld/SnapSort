@@ -23,16 +23,38 @@ class AddOrEditItemViewModel {
     var hasUsersTitle: Bool = false
     
     
-    func updateViewModelData(from infoObject: InfoObject?) {
+    func updateViewModelData(from infoObject: InfoObject?, shareSheetData: ShareSheetData?) {
         if let infoObject {
-            title = infoObject.title ?? ""
-            selectedCategory = infoObject.category
-            stringURL = infoObject.stringURL ?? ""
-            comment = infoObject.comment ?? ""
-            uiImage = infoObject.image
-            hasImageFromLibrary = infoObject.hasImageFromLibrary
-            hasUsersTitle = infoObject.hasUsersTitle
+            updateFromInfoObject(infoObject)
+        } else if let data = shareSheetData {
+            populateFromShareSheet(data)
         }
+    }
+    
+    private func updateFromInfoObject(_ infoObject: InfoObject) {
+        title = infoObject.title ?? ""
+        selectedCategory = infoObject.category
+        stringURL = infoObject.stringURL ?? ""
+        comment = infoObject.comment ?? ""
+        uiImage = infoObject.image
+        hasImageFromLibrary = infoObject.hasImageFromLibrary
+        hasUsersTitle = infoObject.hasUsersTitle
+    }
+    
+    private func populateFromShareSheet(_ data: ShareSheetData) {
+        print("populateFromShareSheet called, imageData is nil? \(data.imageData == nil)")
+        if let title = data.title {
+            self.title = title
+        }
+        if let imageData = data.imageData {
+            self.uiImage = UIImage(data: imageData)
+            self.hasImageFromLibrary = data.hasChosenImage
+        }
+        
+        if let urlString = data.urlString {
+            self.stringURL = urlString
+        }
+        
     }
     
     func save(_ infoObject: InfoObject?, to modelContext: ModelContext) {
@@ -74,4 +96,6 @@ class AddOrEditItemViewModel {
             print("Failed to save context: \(error)")
         }
     }
+    
+    
 }

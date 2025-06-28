@@ -20,7 +20,7 @@ struct SettingsMenuToolbarButton: View {
                     set: { userData.colorTheme = $0 }
                 )) {
                     ForEach(ColorTheme.allCases, id: \.self) { theme in
-                        Text(theme.rawValue.capitalized).tag(theme)
+                        Text(theme.name).tag(theme)
                     }
                 }
             }

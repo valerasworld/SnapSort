@@ -11,6 +11,7 @@ struct ObjectTypeSegmentedControlView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(UserDataManager.self) var userData
+    @Environment(\.uniqueCategories) var uniqueCategories
     
     var viewModel: DashboardViewModel
     @Namespace private var animation
@@ -19,7 +20,7 @@ struct ObjectTypeSegmentedControlView: View {
         .init(
             userData: userData,
             colorScheme: colorScheme,
-            uniqueCategories: viewModel.findUniqueCategories(),
+            uniqueCategories: uniqueCategories,
             selectedCategories: viewModel.selectedCategories,
             infoObjects: viewModel.infoObjects,
             availableTypes: viewModel.availableTypes,

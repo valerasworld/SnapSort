@@ -21,6 +21,7 @@ struct LinkFormAddOrEditItemView: View {
                 .padding(.horizontal, 12)
             
             TextField("Add Link", text: $stringURL)
+                .clearButton(text: $stringURL)
                 .padding(12)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
